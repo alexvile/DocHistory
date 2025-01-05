@@ -1,31 +1,35 @@
 import { NavLink } from "@remix-run/react";
+import { SideMenuProps } from "~/types";
 
-export default function SideMenu() {
+export default function SideMenu({ role }: SideMenuProps) {
   return (
     <aside>
       <nav>
-        Sidebar
         <ul>
-          <li>
-            <NavLink
-              className={({ isActive, isPending }) =>
-                isActive ? "active" : isPending ? "pending" : ""
-              }
-              to={"/login"}
-            >
-              Login
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              className={({ isActive, isPending }) =>
-                isActive ? "active" : isPending ? "pending" : ""
-              }
-              to={"/register"}
-            >
-              Register
-            </NavLink>
-          </li>
+          {role === "ADMIN" ? (
+            <>
+              <li>
+                <NavLink
+                  className={({ isActive, isPending }) =>
+                    isActive ? "active" : isPending ? "pending" : ""
+                  }
+                  to={"/home/register"}
+                >
+                  Register
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  className={({ isActive, isPending }) =>
+                    isActive ? "active" : isPending ? "pending" : ""
+                  }
+                  to={"/home/users"}
+                >
+                  Users
+                </NavLink>
+              </li>
+            </>
+          ) : null}
         </ul>
       </nav>
     </aside>

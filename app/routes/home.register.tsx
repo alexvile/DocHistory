@@ -1,5 +1,10 @@
-import { ActionFunctionArgs, json } from "@remix-run/node";
-import { register } from "~/server/auth.server";
+import {
+  ActionFunctionArgs,
+  json,
+  LoaderFunction,
+  LoaderFunctionArgs,
+} from "@remix-run/node";
+import { register, requireUserRole } from "~/server/auth.server";
 import { RegisterForm } from "~/server/types.server";
 import {
   validateEmail,
@@ -7,6 +12,15 @@ import {
   validatePassword,
 } from "~/server/validators.server";
 
+export const loader: LoaderFunction = async ({
+  request,
+}: LoaderFunctionArgs) => {
+  const role = await requireUserRole(request);
+  if (role !== "ADMIN") {
+    throw new Response("Forbidden: Access denied", { status: 403 });
+  }
+  return null
+};
 export const action = async ({ request }: ActionFunctionArgs) => {
   // invariant(params.contactId, "Missing contactId param");
   const formData = await request.formData();
@@ -53,11 +67,11 @@ export default function Register() {
         <label htmlFor="lastName">Last name</label>
         <input type="text" id="lastName" name="lastName" />
 
-        <label htmlFor="email">Email</label>
-        <input type="text" id="email" name="email" />
+        <label htmlFor="email-1">Email</label>
+        <input type="text" id="email" name="email" autoComplete="off"/>
 
         <label htmlFor="password">Password</label>
-        <input type="password" id="password" name="password" />
+        <input type="password" id="password" name="password" autoComplete="off"/>
 
         {/* todo - only superadmin can create ADMIN */}
         <select name="role" id="role">

@@ -1,8 +1,24 @@
-import { ActionFunctionArgs, json } from "@remix-run/node";
-import { login } from "~/server/auth.server";
+import {
+  ActionFunctionArgs,
+  json,
+  LoaderFunction,
+  LoaderFunctionArgs,
+  redirect,
+} from "@remix-run/node";
+import { getUserId, login } from "~/server/auth.server";
 import { LoginForm } from "~/server/types.server";
 import { validateEmail, validatePassword } from "~/server/validators.server";
 
+export const loader: LoaderFunction = async ({
+  request,
+}: LoaderFunctionArgs) => {
+  const userIdFromSession = await getUserId(request);
+  if(userIdFromSession) {
+    return redirect('/home')
+  }
+  return null
+
+};
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
@@ -40,7 +56,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   //     { status: 400 }
   //   );
   // }
-  return null
+  return null;
 };
 
 export default function Login() {

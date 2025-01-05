@@ -1,30 +1,39 @@
-import { ActionFunctionArgs, createCookieSessionStorage, json, LoaderFunction, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  createCookieSessionStorage,
+  json,
+  LoaderFunction,
+  LoaderFunctionArgs,
+  redirect,
+} from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import SideMenu from "~/components/SideMenu";
 import UserBar from "~/components/UserBar";
-import { requireUserId, requireUserRole } from "~/server/auth.server";
+import { getUser, requireUserId, requireUserRole } from "~/server/auth.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const role = await requireUserRole(request);
-  // await requireUserId(request);
-  return json({ role });
+  const user = await getUser(request);
+  if(!user) {
+    throw redirect("/login");
+  }
+  console.log('fetch in index')
+  return json({ user: user });
 };
 
 // todo - structure
 
 export default function Home() {
-  const { role } = useLoaderData<typeof loader>();
-
+  const { user } = useLoaderData<typeof loader>();
+// ts check
   return (
     <>
       <header>
         <h1>Website Header</h1>
-        <UserBar/>
+        <UserBar user={user} />
       </header>
-      <SideMenu />
+      <SideMenu role={user.role} />
       <main>
-        <h2>Main Content</h2>
-        <p> You role is: {role}</p>
         <Outlet />
       </main>
       <footer>

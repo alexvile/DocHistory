@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import type { RegisterForm } from "./types.server";
 import { prisma } from "./prisma.server";
+import { Prisma } from "@prisma/client";
 
 export const createUser = async ({
   email,
@@ -20,4 +21,27 @@ export const createUser = async ({
     },
   });
   return { id: newUser.id, email, role};
+};
+
+
+export const getFilteredUsers = async (
+  sortFilter: Prisma.UserOrderByWithRelationInput,
+  whereFilter: Prisma.UserWhereInput
+) => {
+  // todo - pagination !!!!
+  return await prisma.user.findMany({
+    orderBy: {
+      ...sortFilter,
+    },
+    where: {
+      ...whereFilter,
+    },
+    select: {
+      id: true,
+      email: true,
+      firstName: true,
+      lastName: true,
+      role: true
+    }
+  });
 };

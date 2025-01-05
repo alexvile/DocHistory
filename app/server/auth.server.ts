@@ -74,7 +74,7 @@ export async function requireUserRole(
   return role;
 }
 
-async function getUserId(request: Request) {
+export async function getUserId(request: Request) {
   const session = await getUserSession(request);
   const userId = session.get("userId");
   if (!userId || typeof userId !== "string") return null;
@@ -90,7 +90,7 @@ export async function getUser(request: Request) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, email: true, firstName: true, lastName: true },
+      select: { id: true, email: true, role: true, firstName: true, lastName: true },
     });
     return user;
   } catch {
@@ -99,7 +99,6 @@ export async function getUser(request: Request) {
 }
 
 export async function logout(request: Request) {
-  console.log("logout");
   const session = await getUserSession(request);
   return redirect("/login", {
     headers: {
