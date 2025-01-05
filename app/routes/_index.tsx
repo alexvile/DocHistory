@@ -1,11 +1,9 @@
-export default function Index() {
-    return (
-      <p id="index-page">
-        This is a demo for Remix.
-        <br />
-        Check out{" "}
-        <a href="https://remix.run">the docs at remix.run</a>.
-      </p>
-    );
-  }
-  
+import type { LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import { requireUserId } from "~/server/auth.server";
+
+export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
+  // todo - refactor
+  await requireUserId(request);
+  return redirect("/home");
+};
