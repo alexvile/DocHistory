@@ -13,11 +13,10 @@ export const loader: LoaderFunction = async ({
   request,
 }: LoaderFunctionArgs) => {
   const userIdFromSession = await getUserId(request);
-  if(userIdFromSession) {
-    return redirect('/home')
+  if (userIdFromSession) {
+    return redirect("/home");
   }
-  return null
-
+  return null;
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -64,11 +63,14 @@ export default function Login() {
     <>
       <h2>Login Route</h2>
       <form method="post">
-        <label htmlFor="email">Email</label>
-        <input type="text" id="email" name="email" />
-
-        <label htmlFor="password">Password</label>
-        <input type="password" id="password" name="password" />
+        <div>
+          <label htmlFor="email">Email</label>
+          <input type="text" id="email" name="email" />
+        </div>
+        <div>
+          <label htmlFor="password">Password</label>
+          <input type="password" id="password" name="password" />
+        </div>
 
         <button>Submit</button>
       </form>

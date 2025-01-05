@@ -28,4 +28,18 @@ model User {
   password  String
   firstName String
   lastName  String
+  norms     Norm[]   @relation("MyNorm")
+  // todo - if we remove customer - we leave his norms and changes
+}
+
+model Norm {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  productName String   @unique
+  // todo refactor fields
+  norm1       Int
+  norm2       Int
+  creator     User     @relation(references: [id], fields: [creatorId], "MyNorm")
+  creatorId   String   @db.ObjectId
 }

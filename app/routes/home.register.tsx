@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async ({
   if (role !== "ADMIN") {
     throw new Response("Forbidden: Access denied", { status: 403 });
   }
-  return null
+  return null;
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
   // invariant(params.contactId, "Missing contactId param");
@@ -61,25 +61,36 @@ export default function Register() {
     <>
       <h2>Register (only for admin)</h2>
       <form method="post">
-        <label htmlFor="firstName">First name</label>
-        <input type="text" id="firstName" name="firstName" />
+        <div>
+          <label htmlFor="firstName">First name</label>
+          <input type="text" id="firstName" name="firstName" />
+        </div>
 
-        <label htmlFor="lastName">Last name</label>
-        <input type="text" id="lastName" name="lastName" />
-
-        <label htmlFor="email-1">Email</label>
-        <input type="text" id="email" name="email" autoComplete="off"/>
-
-        <label htmlFor="password">Password</label>
-        <input type="password" id="password" name="password" autoComplete="off"/>
-
-        {/* todo - only superadmin can create ADMIN */}
-        <select name="role" id="role">
-          <option value="ADMIN">Admin</option>
-          <option value="COMMITER">Commiter</option>
-          <option value="VIEWER">Viewer</option>
-        </select>
-
+        <div>
+          <label htmlFor="lastName">Last name</label>
+          <input type="text" id="lastName" name="lastName" />
+        </div>
+        <div>
+          <label htmlFor="email-1">Email</label>
+          <input type="text" id="email" name="email" autoComplete="off" />
+        </div>
+        <div>
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            autoComplete="off"
+          />
+        </div>
+        <div>
+          {/* todo - only superadmin can create ADMIN */}
+          <select name="role" id="role">
+            <option value="ADMIN">Admin</option>
+            <option value="COMMITER">Commiter</option>
+            <option value="VIEWER">Viewer</option>
+          </select>
+        </div>
         <button>Submit</button>
       </form>
     </>
