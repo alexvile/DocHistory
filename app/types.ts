@@ -11,7 +11,8 @@ export type UserBarProps = Pick<
 export type UsersListProps = {
   users: Pick<User, "id" | "email" | "firstName" | "lastName" | "role">[];
 };
+export type NormItem = Norm;
 
 export type NormsListProps = {
-  norms: Norm[];
+  norms: NormItem[];
 };
