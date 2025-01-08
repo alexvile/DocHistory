@@ -57,3 +57,74 @@ export const getNormById = async (id: string) => {
     },
   });
 };
+
+// todo - need refactor
+
+
+export const updateNormById = async ({
+  id,
+  productName,
+  norm1,
+  norm2
+}) => {
+  return await prisma.norm.update({
+    where: {
+      id,
+    },
+    data: {
+      productName,
+      norm1,
+      norm2
+    },
+  });
+};
+
+
+
+// await prisma.object.update({
+//   where: { id: objectId },
+//   data: {
+//     data: { ...currentObject.data, ...newData },
+//   },
+// });
+// export async function updateNorm(
+//   objectId: string,
+//   userId: string,
+//   newData: Record<string, any>
+// ) {
+  // Отримати поточний стан об'єкта
+  // const currentObject = await prisma.object.findUnique({
+  //   where: { id: objectId },
+  // });
+  // if (!currentObject) throw new Error("Object not found");
+
+ 
+
+  // Оновити об'єкт
+  // await prisma.norm.update({
+  //   where: { id: objectId },
+  //   data: {
+  //     data: { ...currentObject.data, ...newData },
+  //   },
+  // });
+
+  // Зберегти зміну
+  
+// }
+
+
+// await prisma.change.create({
+//   data: {
+//     user: {
+//       connect: {
+//         id: userId,
+//       },
+//     },
+//     norm: {
+//       connect: {
+//         id: objectId, 
+//       },
+//     },
+//     changes,
+//   },
+// });
