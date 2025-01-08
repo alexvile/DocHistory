@@ -40,6 +40,16 @@ export default function SideMenu({ role }: SideMenuProps) {
               Norms
             </NavLink>
           </li>
+          <li>
+            <NavLink
+              className={({ isActive, isPending }) =>
+                isActive ? "active" : isPending ? "pending" : ""
+              }
+              to={"/home/changes"}
+            >
+              Changes
+            </NavLink>
+          </li>
         </ul>
       </nav>
     </aside>
