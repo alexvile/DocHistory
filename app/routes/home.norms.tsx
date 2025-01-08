@@ -21,11 +21,12 @@ export const loader: LoaderFunction = async ({
 // todo - show all norms
 export default function Norms() {
     const { norms } = useLoaderData<typeof loader>();
-    console.log(111, norms)
+    // console.log(111, norms)
   return (
     <>
       <h2>Norms</h2>
       <Link to={"new"}>Add new+</Link>
+      <h3>All norms</h3>
       {norms.length ? <NormsList norms={norms}/> : null}
       <Outlet />
     </>

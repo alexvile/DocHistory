@@ -17,7 +17,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   if(!user) {
     throw redirect("/login");
   }
-  console.log('fetch in index')
+  // console.log('fetch in index')
   return json({ user: user });
 };
 

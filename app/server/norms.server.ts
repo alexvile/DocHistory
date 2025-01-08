@@ -39,3 +39,21 @@ export const getFilteredNorms = async () => {
     // },
   });
 };
+
+export const getNormById = async (id: string) => {
+  // todo - get Last 50 changes with creator
+  //  add Link for filter all changes by this norm
+  return await prisma.norm.findUnique({
+    where: {
+      id: id,
+    },
+    select: {
+      id: true,
+      productName: true,
+      norm1: true,
+      norm2: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+};
