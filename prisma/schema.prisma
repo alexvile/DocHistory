@@ -28,8 +28,9 @@ model User {
   password  String
   firstName String
   lastName  String
-  norms     Norm[]   @relation("MyNorm")
+  norms     Norm[]   @relation("UserNorms")
   // todo - if we remove customer - we leave his norms and changes
+  changes   Change[] @relation("UserChanges")
 }
 
 model Norm {
@@ -40,6 +41,19 @@ model Norm {
   // todo refactor fields
   norm1       Int
   norm2       Int
-  creator     User     @relation(references: [id], fields: [creatorId], "MyNorm")
+  creator     User     @relation(references: [id], fields: [creatorId], "UserNorms")
   creatorId   String   @db.ObjectId
+  changes     Change[] @relation("NormChanges")
 }
+
+model Change {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  objectId  String   @db.ObjectId
+  createdAt DateTime @default(now())
+  changes   Json
+  user      User     @relation("UserChanges", fields: [userId], references: [id])
+  norm      Norm     @relation("NormChanges", fields: [objectId], references: [id])
+}
+
+// JSON з інформацією про зміни: { field: "value_before", newValue: "value_after" }
