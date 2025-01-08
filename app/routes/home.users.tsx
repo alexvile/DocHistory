@@ -1,5 +1,5 @@
 import { json, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import UsersList from "~/components/UsersList";
 import { requireUserRole } from "~/server/auth.server";
 import { getFilteredUsers } from "~/server/user.server";
@@ -41,17 +41,22 @@ export const loader: LoaderFunction = async ({
   }
   whereFilter = { ...textFilter };
 
-  const filteredUsers: Pick<User, "id" | "email" | "firstName" | "lastName" | "role">[] = await getFilteredUsers(sortOptions, whereFilter);
+  const filteredUsers: Pick<
+    User,
+    "id" | "email" | "firstName" | "lastName" | "role"
+  >[] = await getFilteredUsers(sortOptions, whereFilter);
   return json({ filteredUsers });
 };
 
 export default function Users() {
   const { filteredUsers } = useLoaderData<typeof loader>();
- 
+
   return (
     <>
       <h2>Users</h2>
-      {filteredUsers.length ? <UsersList users={filteredUsers}/> : null}
+      {/* todo - if he is commiter or admin- show all his changes */}
+      {filteredUsers.length ? <UsersList users={filteredUsers} /> : null}
+      <Outlet />
     </>
   );
 }

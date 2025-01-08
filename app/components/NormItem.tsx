@@ -16,7 +16,7 @@ export default function NormsList({
         {productName}
         {/* use NavLink to prevent rerendering in parent component */}
         {/* usememo to prevent rerender */}
-        <Link to={id}>link</Link>
+        <Link to={id}>norm details</Link>
 
       {/* {productName}--{createdAt.toString()}--{updatedAt.toString()}--{norm1}--
       {norm2}--{creatorId} */}

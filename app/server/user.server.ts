@@ -45,3 +45,24 @@ export const getFilteredUsers = async (
     }
   });
 };
+
+export const getUserById = async (id: string) => {
+  // dont need user data
+  // all norms and last 50 changes
+  return await prisma.user.findUnique({
+    where: {
+      id: id,
+    },
+    select: {
+      id: true,
+      norms: {
+        select: {
+          id: true,
+          productName: true,
+          norm1: true,
+          norm2: true
+        }
+      }
+    }
+  });
+};

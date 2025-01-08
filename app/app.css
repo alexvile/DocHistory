@@ -14,7 +14,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+/* 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
@@ -394,7 +394,7 @@ i {
   align-items: center;
   justify-content: center;
   width: 100%;
-}
+} */
 
 
 body {
