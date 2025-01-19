@@ -35,9 +35,9 @@ export default function SideMenu({ role }: SideMenuProps) {
               className={({ isActive, isPending }) =>
                 isActive ? "active" : isPending ? "pending" : ""
               }
-              to={"/home/norms"}
+              to={"/home/products"}
             >
-              Norms
+              Products
             </NavLink>
           </li>
           <li>

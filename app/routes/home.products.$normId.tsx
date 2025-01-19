@@ -5,7 +5,7 @@ import type { ContactRecord } from "../data";
 import { getContact, updateContact } from "../data";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
-import { getNormById, updateNormById } from "~/server/norms.server";
+import { getNormById, updateNormById } from "~/server/products.server";
 import { getChanges } from "~/server/getChanges.server";
 import { createChange } from "~/server/changes.server";
 import { getUserId } from "~/server/auth.server";

@@ -4,7 +4,7 @@ import UsersList from "~/components/UsersList";
 import { getUserId, requireUserRole } from "~/server/auth.server";
 import { getFilteredUsers } from "~/server/user.server";
 import type { User, Prisma } from "@prisma/client";
-import { createNorm } from "~/server/norms.server";
+import { createNorm } from "~/server/products.server";
 
 // todo use _new
 export const action: ActionFunction = async ({ request }: ActionFunctionArgs) => {

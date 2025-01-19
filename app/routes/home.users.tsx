@@ -1,11 +1,10 @@
 import { json, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import UsersList from "~/components/UsersList";
 import { requireUserRole } from "~/server/auth.server";
 import { getFilteredUsers } from "~/server/user.server";
-import type { User, Prisma } from "@prisma/client";
-import Table from "~/components/Table";
-import UsersTable from "~/components/UserTable";
+import type { Prisma } from "@prisma/client";
+import UsersTable from "~/components/UsersTable";
+import { FilteredUser } from "~/types";
 
 export const loader: LoaderFunction = async ({
   request,
@@ -43,22 +42,20 @@ export const loader: LoaderFunction = async ({
   }
   whereFilter = { ...textFilter };
 
-  const filteredUsers: Pick<
-    User,
-    "id" | "email" | "firstName" | "lastName" | "role"
-  >[] = await getFilteredUsers(sortOptions, whereFilter);
+  const filteredUsers: FilteredUser[] = await getFilteredUsers(
+    sortOptions,
+    whereFilter
+  );
   return json({ filteredUsers });
 };
 
 export default function Users() {
   const { filteredUsers } = useLoaderData<typeof loader>();
-
+  const typedUsers = filteredUsers as FilteredUser[];
   return (
     <>
       <h2>Users</h2>
-      <UsersTable users={filteredUsers} />
-
-      {/* todo - if he is commiter or admin- show all his changes */}
+      <UsersTable users={typedUsers} />
       <Outlet />
     </>
   );

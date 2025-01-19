@@ -20,30 +20,28 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   role      Role
-  email     String   @unique
+  email     String    @unique
   password  String
   firstName String
   lastName  String
-  norms     Norm[]   @relation("UserNorms")
+  products  Product[] @relation("UserProducts")
   // todo - if we remove customer - we leave his norms and changes
-  changes   Change[] @relation("UserChanges")
+  changes   Change[]  @relation("UserChanges")
 }
 
-model Norm {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  productName String   @unique
-  // todo refactor fields
-  norm1       Int
-  norm2       Int
-  creator     User     @relation(references: [id], fields: [creatorId], "UserNorms")
-  creatorId   String   @db.ObjectId
-  changes     Change[] @relation("NormChanges")
+model Product {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  productTitle String   @unique
+  norms        Json
+  creator      User     @relation(references: [id], fields: [creatorId], "UserProducts")
+  creatorId    String   @db.ObjectId
+  changes      Change[] @relation("ProductChanges")
 }
 
 model Change {
@@ -53,7 +51,7 @@ model Change {
   createdAt DateTime @default(now())
   changes   Json
   user      User     @relation("UserChanges", fields: [userId], references: [id])
-  norm      Norm     @relation("NormChanges", fields: [objectId], references: [id])
+  product   Product  @relation("ProductChanges", fields: [objectId], references: [id])
 }
 
 // JSON з інформацією про зміни: { field: "value_before", newValue: "value_after" }

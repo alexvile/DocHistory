@@ -8,9 +8,9 @@ export const createNorm = async ({
   norm1,
   norm2,
 }: Pick<Norm, "productName" | "norm1" | "norm2" | "creatorId">) => {
-  await prisma.norm.create({
+  await prisma.product.create({
     data: {
-      productName,
+      productTitle,
       norm1,
       norm2,
       creator: {
@@ -22,9 +22,9 @@ export const createNorm = async ({
   });
 };
 
-export const getFilteredNorms = async () => {
+export const getFilteredProducts = async () => {
   // todo - pagination !!!!
-  return await prisma.norm.findMany({
+  return await prisma.product.findMany({
     // select: {
     //   id: true,
     //   createdAt: true,
@@ -43,7 +43,7 @@ export const getFilteredNorms = async () => {
 export const getNormById = async (id: string) => {
   // todo - get Last 50 changes with creator
   //  add Link for filter all changes by this norm
-  return await prisma.norm.findUnique({
+  return await prisma.product.findUnique({
     where: {
       id: id,
     },

@@ -1,4 +1,4 @@
-import type { User, Norm } from "@prisma/client";
+import type { User, Product } from "@prisma/client";
 
 export type SideMenuProps = {
   role: User["role"];
@@ -8,11 +8,22 @@ export type UserBarProps = Pick<
   "id" | "firstName" | "lastName" | "email" | "role"
 >;
 
-export type UsersListProps = {
-  users: Pick<User, "id" | "email" | "firstName" | "lastName" | "role">[];
-};
-export type NormItem = Norm;
+export type FilteredUser = Pick<
+  User,
+  "id" | "email" | "firstName" | "lastName" | "role"
+>;
 
-export type NormsListProps = {
-  norms: NormItem[];
+export type UsersListProps = {
+  users: FilteredUser[];
+};
+
+
+
+export type FilteredProduct = Pick<
+  Product,
+  "id" | "productTitle" | "updatedAt"
+>;
+
+export type ProductsListProps = {
+  products: FilteredProduct[];
 };
