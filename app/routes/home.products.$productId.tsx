@@ -9,14 +9,17 @@ import { getNormById, updateNormById } from "~/server/products.server";
 import { getChanges } from "~/server/getChanges.server";
 import { createChange } from "~/server/changes.server";
 import { getUserId } from "~/server/auth.server";
+import {testValue} from "~/test"
+import { ProductWithNorms } from "~/types";
+import ProductNormsTable from "~/components/ProductNormsTable";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
-  invariant(params.normId, "Missing contactId param");
+  invariant(params.productId, "Missing contactId param");
     const userIdFromSession = await getUserId(request);
 
   // todo - use in future data from frontend to prevent ettra fetch
 
-  const detailedNorm = await getNormById(params.normId);
+  const detailedNorm = await getNormById(params.productId);
   if (!detailedNorm) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -59,12 +62,12 @@ const m = await createChange({userId: userIdFromSession, normId: id, changes})
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   // fetch all detail information for norm
-  invariant(params.normId, "Missing userId param");
-  const detailedNorm = await getNormById(params.normId);
-  if (!detailedNorm) {
-    throw new Response("Not Found", { status: 404 });
-  }
-  return json({ detailedNorm });
+  // invariant(params.normId, "Missing userId param");
+  // const detailedNorm = await getNormById(params.normId);
+  // if (!detailedNorm) {
+  //   throw new Response("Not Found", { status: 404 });
+  // }
+  // return json({ detailedNorm });
   // invariant(params.contactId, "Missing contactId param");
   // await GetNormByID
   // const contact = await getContact(params.contactId);
@@ -74,8 +77,10 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   return null;
 };
 
-export default function Norm() {
-  const { detailedNorm } = useLoaderData<typeof loader>();
+export default function ProductNorm() {
+const productNorm = testValue as unknown as ProductWithNorms;
+
+  // const { detailedNorm } = useLoaderData<typeof loader>();
   // console.log(111122, detailedNorm);
   const [isEditable, setIsEditable] = useState(false);
 
@@ -84,6 +89,7 @@ export default function Norm() {
   // state to edit and save
   return (
     <div>
+      Norm details
       {/* <Form key={contact.id} id="contact-form" method="post"></Form> */}
       <button
         type="button"
@@ -92,7 +98,10 @@ export default function Norm() {
       >
         {isEditable ? "Cancel" : "Edit"}
       </button>
-      <Form method="post">
+      <Form  method="post">
+        <ProductNormsTable {...productNorm}/>
+      </Form>
+      {/* <Form method="post">
         <div>
           <label htmlFor="productName">Product name</label>
           <input
@@ -126,7 +135,7 @@ export default function Norm() {
         </div>
 
         <button disabled={!isEditable}>Submit</button>
-      </Form>
+      </Form> */}
     </div>
   );
 }

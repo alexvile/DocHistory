@@ -17,8 +17,6 @@ export type UsersListProps = {
   users: FilteredUser[];
 };
 
-
-
 export type FilteredProduct = Pick<
   Product,
   "id" | "productTitle" | "updatedAt"
@@ -27,3 +25,9 @@ export type FilteredProduct = Pick<
 export type ProductsListProps = {
   products: FilteredProduct[];
 };
+
+export type ProductWithNorms = Pick<
+  Product,
+  "id" | "productTitle" | "norms" | "updatedAt"
+>;
+

@@ -97,3 +97,12 @@ footer {
 .table__cell {
   padding: 4px;
 }
+/* norms editing tmp */
+.norms__table th {
+  border: 1px solid #000;
+  padding: 4px;
+}
+.norms__table td {
+  border: 1px solid #000;
+  padding: 4px;
+}
