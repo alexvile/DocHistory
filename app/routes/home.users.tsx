@@ -4,6 +4,8 @@ import UsersList from "~/components/UsersList";
 import { requireUserRole } from "~/server/auth.server";
 import { getFilteredUsers } from "~/server/user.server";
 import type { User, Prisma } from "@prisma/client";
+import Table from "~/components/Table";
+import UsersTable from "~/components/UserTable";
 
 export const loader: LoaderFunction = async ({
   request,
@@ -54,8 +56,9 @@ export default function Users() {
   return (
     <>
       <h2>Users</h2>
+      <UsersTable users={filteredUsers} />
+
       {/* todo - if he is commiter or admin- show all his changes */}
-      {filteredUsers.length ? <UsersList users={filteredUsers} /> : null}
       <Outlet />
     </>
   );
