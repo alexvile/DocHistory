@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <>
       <header>
-        <h1>Website Header</h1>
+        <h1>Document history</h1>
         <UserBar user={user} />
       </header>
       <SideMenu role={user.role} />

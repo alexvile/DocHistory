@@ -60,21 +60,21 @@ export default function Register() {
   return (
     <>
       <h2>Register (only for admin)</h2>
-      <form method="post">
-        <div>
+      <form method="post" className="form form--register">
+        <div className="form__field">
           <label htmlFor="firstName">First name</label>
           <input type="text" id="firstName" name="firstName" />
         </div>
 
-        <div>
+        <div className="form__field">
           <label htmlFor="lastName">Last name</label>
           <input type="text" id="lastName" name="lastName" />
         </div>
-        <div>
+        <div className="form__field">
           <label htmlFor="email-1">Email</label>
           <input type="text" id="email" name="email" autoComplete="off" />
         </div>
-        <div>
+        <div className="form__field">
           <label htmlFor="password">Password</label>
           <input
             type="password"
@@ -83,8 +83,9 @@ export default function Register() {
             autoComplete="off"
           />
         </div>
-        <div>
+        <div className="form__field">
           {/* todo - only superadmin can create ADMIN */}
+          <label htmlFor="role">Role</label>
           <select name="role" id="role">
             <option value="ADMIN">Admin</option>
             <option value="COMMITER">Commiter</option>

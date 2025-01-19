@@ -62,12 +62,12 @@ export default function Login() {
   return (
     <>
       <h2>Login Route</h2>
-      <form method="post">
-        <div>
+      <form method="post" className="form">
+        <div className="form__field">
           <label htmlFor="email">Email</label>
           <input type="text" id="email" name="email" />
         </div>
-        <div>
+        <div className="form__field">
           <label htmlFor="password">Password</label>
           <input type="password" id="password" name="password" />
         </div>
