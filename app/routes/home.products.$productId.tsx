@@ -99,7 +99,7 @@ const productNorm = testValue as unknown as ProductWithNorms;
         {isEditable ? "Cancel" : "Edit"}
       </button>
       <Form  method="post">
-        <ProductNormsTable {...productNorm}/>
+        <ProductNormsTable {...productNorm} isEditable={isEditable}/>
       </Form>
       {/* <Form method="post">
         <div>
