@@ -105,6 +105,69 @@ footer {
 .norms__table td {
   border: 1px solid #000;
   padding: 4px;
+}
+
+/* extender starts */
+.extender {
+  height: 10px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+}
+.extender__line {
+  position: relative;
+  display: block;
+  height: 6px;
+  width: 100%;
+}
+.extender__line::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background-color: #005bd3;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: center;
+}
+
+.extender__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #005bd3;
+  font-size: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+  border: 1px solid #005bd3;
+  width: 22px;
+  height: 22px;
+}
+.extender__button:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.extender:hover {
+  .extender__line::before {
+    transform: scaleX(1);
+  }
+  .extender__button {
+    opacity: 1;
+    pointer-events: unset;
+  }
+}
+
+/* extender ends */
 
 /* modal */
 .modal-overlay {

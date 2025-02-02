@@ -2,6 +2,7 @@ import { ProductNormsTableProps } from "~/types";
 import Table from "./Table";
 import NormsGenerator from "~/utils/normsGenerator";
 import React, { useMemo } from "react";
+import Extender from "./Extender";
 
 const ProductNormsTable = React.memo(function ProductNormsTable({
   norms,
@@ -31,11 +32,13 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
           <Table.Cell>
             <input
               type="text"
-              name={'title_' + data?.id}
+              name={"title_" + data?.id}
               id={data?.id}
               defaultValue={data.title}
               disabled={!isEditable}
             />
+            {/* todo - refactor */}
+            {isEditable ? <Extender /> : null}
           </Table.Cell>
           <Table.Cell>e</Table.Cell>
           <Table.Cell>e</Table.Cell>
