@@ -1,53 +1,54 @@
 import { NavLink } from "@remix-run/react";
 import { SideMenuProps } from "~/types";
+import { Icon } from "./Icon";
 
 export default function SideMenu({ role }: SideMenuProps) {
   return (
     <aside>
       <nav>
-        <ul>
+        <ul className="side-menu__list">
           {role === "ADMIN" ? (
             <>
-              <li>
+              <li className="side-menu__item">
                 <NavLink
                   className={({ isActive, isPending }) =>
                     isActive ? "active" : isPending ? "pending" : ""
                   }
                   to={"/home/register"}
                 >
-                  Register
+                  <Icon name="create-user" /> Реєстрація
                 </NavLink>
               </li>
-              <li>
+              <li className="side-menu__item">
                 <NavLink
                   className={({ isActive, isPending }) =>
                     isActive ? "active" : isPending ? "pending" : ""
                   }
                   to={"/home/users"}
                 >
-                  Users
+                  <Icon name="users" /> Користувачі
                 </NavLink>
               </li>
             </>
           ) : null}
-          <li>
+          <li className="side-menu__item">
             <NavLink
               className={({ isActive, isPending }) =>
                 isActive ? "active" : isPending ? "pending" : ""
               }
               to={"/home/products"}
             >
-              Products
+              <Icon name="products" /> Продукти
             </NavLink>
           </li>
-          <li>
+          <li className="side-menu__item">
             <NavLink
               className={({ isActive, isPending }) =>
                 isActive ? "active" : isPending ? "pending" : ""
               }
               to={"/home/changes"}
             >
-              Changes
+              <Icon name="changes" /> Зміни
             </NavLink>
           </li>
         </ul>
