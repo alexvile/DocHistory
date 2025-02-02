@@ -82,7 +82,7 @@ const productNorm = testValue as unknown as ProductWithNorms;
 
   // const { detailedNorm } = useLoaderData<typeof loader>();
   // console.log(111122, detailedNorm);
-  const [isEditable, setIsEditable] = useState(false);
+  const [isEditable, setIsEditable] = useState(true);
 
   //   const { contact } = useLoaderData<typeof loader>();
 

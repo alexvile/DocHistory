@@ -5,11 +5,6 @@
 type DataTypes = "detail" | "group" | "heading" | "spacing";
 
 type Row = RowHeading | RowSpacing | RowDetail;
-// type RowProps = {
-//     id: string;
-//     title?:
-
-// }
 
 type RowDetail = {
   id: string;
@@ -24,6 +19,7 @@ type RowDetail = {
   sum?: number;
   notes?: number;
   groupId: string;
+  groupColor: string;
 };
 
 type RowHeading = {
@@ -43,6 +39,7 @@ type GroupProps = {
   title: string;
   code: string;
   detail_order: string[];
+  groupColor: string;
   details?: Record<string, DetailProps>;
 } & (
   | { type: "main"; modification?: string }
@@ -74,6 +71,7 @@ type DetailProps = {
   sum?: string;
   notes?: string;
   groupId?: string;
+  groupColor: string;
 };
 // inside group can be only the details
 class NormsGenerator {
@@ -144,22 +142,35 @@ class NormsGenerator {
   };
 
   private static createDetail(data: DetailProps) {
+    const {
+      id,
+      type,
+      title,
+      assortment,
+      standard,
+      unit,
+      consuption_rate,
+      consuption_rate_per_item,
+      groupId,
+      groupColor,
+    } = data;
     const row: RowDetail = {
-      id: data.id,
-      type: data.type,
-      title: data?.title,
-      unit: data?.unit,
-      consuption_rate: Number(data?.consuption_rate),
-      consuption_rate_per_item: Number(data?.consuption_rate_per_item),
-      groupId: data.groupId ? data.groupId : data.id,
-      groupColor: data.groupColor ? data.groupColor : NormsGenerator.getColor(),
+      id,
+      type,
+      title,
+      assortment,
+      standard,
+      unit,
+      consuption_rate: Number(consuption_rate),
+      consuption_rate_per_item: Number(consuption_rate_per_item),
+      groupId: groupId ? groupId : id,
+      groupColor: groupColor ? groupColor : NormsGenerator.getColor(),
     };
     NormsGenerator.rows.push(row);
   }
 
   private static createGroup(group: GroupProps) {
     const groupColor = NormsGenerator.getColor();
-    console.log(groupColor);
 
     const row = {
       id: group.id,

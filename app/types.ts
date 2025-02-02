@@ -30,4 +30,8 @@ export type ProductWithNorms = Pick<
   Product,
   "id" | "productTitle" | "norms" | "updatedAt"
 >;
+export type ProductNormsTableProps = {
+  norms: ProductWithNorms,
+  isEditable: boolean
+}
 
