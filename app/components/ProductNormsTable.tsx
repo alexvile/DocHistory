@@ -14,15 +14,16 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
     <Table
       headings={[
         "№",
-        "Title",
-        "Assortment",
-        "Standard",
-        "Unit",
-        "Consumption rate",
-        "Consumption rate per item",
-        "Price ?",
-        "Sum ?",
-        "Notes ?",
+        "G",
+        "Назва",
+        "Сортамент",
+        "ДСТУ",
+        "Од.",
+        "Норма",
+        "Норма на од.",
+        "Ціна ?",
+        "Сума ?",
+        "Примітки ?",
       ]}
     >
       {rows.map((data) => (
@@ -30,13 +31,25 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
           {/* todo different numbers */}
           <Table.Cell>-</Table.Cell>
           <Table.Cell>
+            <div
+              className="group-circle"
+              style={{
+                backgroundColor: data.groupColor ? data.groupColor : "#fff",
+              }}
+            ></div>
+          </Table.Cell>
+          <Table.Cell>
             <input
               type="text"
+              title={data.title}
               name={"title_" + data?.id}
               id={data?.id}
               defaultValue={data.title}
               disabled={!isEditable}
             />
+            <div className="show-full-info">
+              <span className="show-full-info__data">{data.title}</span>
+            </div>
             {/* todo - refactor */}
             {isEditable ? <Extender /> : null}
           </Table.Cell>

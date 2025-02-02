@@ -23,6 +23,7 @@ type RowDetail = {
   price?: number;
   sum?: number;
   notes?: number;
+  groupId: string;
 };
 
 type RowHeading = {
@@ -72,10 +73,75 @@ type DetailProps = {
   price?: string;
   sum?: string;
   notes?: string;
+  groupId?: string;
 };
 // inside group can be only the details
 class NormsGenerator {
   static rows: Row[] = [];
+  static colorIndex = 0;
+  static colorPreset = [
+    "#FF6347",
+    "#FFD700",
+    "#32CD32",
+    "#1E90FF",
+    "#FF69B4",
+    "#8A2BE2",
+    "#FF4500",
+    "#00FA9A",
+    "#9932CC",
+    "#FF8C00", // 10
+    "#FF1493",
+    "#ADFF2F",
+    "#F08080",
+    "#E0FFFF",
+    "#20B2AA",
+    "#7FFF00",
+    "#FFDAB9",
+    "#FF7F50",
+    "#FF6347",
+    "#8B4513", // 20
+    "#DAA520",
+    "#4B0082",
+    "#008080",
+    "#FFFF00",
+    "#800080",
+    "#C71585",
+    "#90EE90",
+    "#D3D3D3",
+    "#FF1493",
+    "#FFFFE0", // 30
+    "#A52A2A",
+    "#00BFFF",
+    "#D2691E",
+    "#F0E68C",
+    "#BDB76B",
+    "#FF00FF",
+    "#C71585",
+    "#D3D3D3",
+    "#98FB98",
+    "#8FBC8F", // 40
+    "#FFB6C1",
+    "#00008B",
+    "#556B2F",
+    "#FFD700",
+    "#20B2AA",
+    "#8B008B",
+    "#FA8072",
+    "#FF4500",
+    "#D2B48C",
+    "#8A2BE2", // 50
+  ];
+
+  private static generateRandomColor = () =>
+    `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+
+  private static getColor = () => {
+    if (NormsGenerator.colorIndex < NormsGenerator.colorPreset.length) {
+      return NormsGenerator.colorPreset[NormsGenerator.colorIndex++];
+    } else {
+      return NormsGenerator.generateRandomColor();
+    }
+  };
 
   private static createDetail(data: DetailProps) {
     const row: RowDetail = {
@@ -85,24 +151,43 @@ class NormsGenerator {
       unit: data?.unit,
       consuption_rate: Number(data?.consuption_rate),
       consuption_rate_per_item: Number(data?.consuption_rate_per_item),
+      groupId: data.groupId ? data.groupId : data.id,
+      groupColor: data.groupColor ? data.groupColor : NormsGenerator.getColor(),
     };
     NormsGenerator.rows.push(row);
   }
 
   private static createGroup(group: GroupProps) {
-    const row = { id: group.id, title: group?.title, type: group.type };
+    const groupColor = NormsGenerator.getColor();
+    console.log(groupColor);
+
+    const row = {
+      id: group.id,
+      title: group?.title,
+      type: group.type,
+      groupId: group.id,
+      groupColor: groupColor,
+    };
     NormsGenerator.rows.push(row);
 
     if (!group?.details || !group?.detail_order) return;
     group.detail_order.forEach((itemKey: string) => {
       const nestedElement = group.details?.[itemKey];
       if (nestedElement?.type !== "detail") return;
-      NormsGenerator.createDetail(nestedElement);
+      NormsGenerator.createDetail({
+        ...nestedElement,
+        groupId: group.id,
+        groupColor: groupColor,
+      });
     });
   }
 
   private static createHeading(data: HeadingProps) {
-    const row: RowHeading = { id: data.id, title: data?.title, type: data?.type };
+    const row: RowHeading = {
+      id: data.id,
+      title: data?.title,
+      type: data?.type,
+    };
     NormsGenerator.rows.push(row);
   }
   private static createSpacing(data: SpacingProps) {
@@ -113,6 +198,8 @@ class NormsGenerator {
   //   todo type for Main Data
   static createRows(data) {
     NormsGenerator.rows = [];
+    NormsGenerator.colorIndex = 0;
+
     data.order.forEach((itemKey: string) => {
       const item = data[itemKey];
       switch (item.type) {
