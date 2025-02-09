@@ -1,7 +1,9 @@
 import { useModal } from "./ModalProvider";
 import NewElement from "./NewElementPopup";
-
-export default function Extender() {
+type ExtenderProps = {
+  elements: string[];
+};
+export default function Extender({ elements }: ExtenderProps) {
   const { setModal } = useModal();
 
   return (
@@ -10,7 +12,7 @@ export default function Extender() {
       <button
         type="button"
         className="extender__button"
-        onClick={() => setModal(<NewElement />)}
+        onClick={() => setModal(<NewElement type={elements[0]} />)}
       >
         +
       </button>

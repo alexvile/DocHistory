@@ -25,7 +25,7 @@ export default function Products() {
   return (
     <>
       <h2>Products</h2>
-      <Link to={"new"}>Add new+</Link>
+      <Link to={"new"} className="link-unstyled button--primary">Add new+</Link>
       <h3>All products</h3>
       <ProductsTable products={products}/>
       <Outlet />

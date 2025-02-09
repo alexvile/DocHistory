@@ -200,12 +200,12 @@ footer {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* General piopup */
+/* General popup */
 .popup {
   position: relative;
 }
 .popup__close {
-  position: absolute;
+  /* position: absolute; */
   top: 0;
   right: 0;
 }
@@ -320,4 +320,23 @@ footer {
 }
 .side-menu__item a:not(.active):hover {
   background-color: #ffffff94;
+}
+
+
+
+
+/* reset */
+.link-unstyled {
+  text-decoration: none;
+}
+/* buttons */
+.button--primary {
+  padding: 6px 12px;
+  background-color: rgb(48, 48, 48);
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.button--primary:hover {
+  background-color: rgba(26, 26, 26, 1);
 }

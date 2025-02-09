@@ -44,7 +44,7 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
           <Table.Cell>
             {/* todo - refactor */}
             {data.type === "spacing" ? (
-              <Extender />
+              <Extender elements={["group"]}/>
             ) : (
               <div className="element__title">
                 <div>
@@ -56,7 +56,7 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
                     defaultValue={data.title}
                     disabled={!isEditable}
                   />
-                  {isEditable ? <Extender /> : null}
+                  {isEditable ? <Extender elements={["detail"]}/> : null}
                 </div>
                 <div className="show-full-info">
                   <Icon name="zoom" />
