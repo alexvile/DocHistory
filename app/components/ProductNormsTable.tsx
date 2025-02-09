@@ -32,7 +32,7 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
           {/* todo different numbers (including separate for groups) */}
           <Table.Cell>{index + 1}</Table.Cell>
           <Table.Cell>
-            {(data.type !== "heading" && data.type !== "spacing") && (
+            {data.type !== "spacing" && (
               <div
                 className="group-circle"
                 style={{

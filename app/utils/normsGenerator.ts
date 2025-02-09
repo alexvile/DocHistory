@@ -1,10 +1,8 @@
 // refactor??
 
-// type RowTypes = "detail" | "group" | "heading";
+type DataTypes = "detail" | "group" | "spacing";
 
-type DataTypes = "detail" | "group" | "heading" | "spacing";
-
-type Row = RowHeading | RowSpacing | RowDetail;
+type Row = RowSpacing | RowDetail;
 
 type RowDetail = {
   id: string;
@@ -22,11 +20,6 @@ type RowDetail = {
   groupColor: string;
 };
 
-type RowHeading = {
-  id: string;
-  title: string;
-  type: Extract<DataTypes, "heading">;
-};
 type RowSpacing = {
   id: string;
   title: "";
@@ -35,28 +28,13 @@ type RowSpacing = {
 
 type GroupProps = {
   id: string;
-  type: "main" | "group";
+  type: "group";
   title: string;
   code: string;
   detail_order: string[];
   groupColor: string;
   details?: Record<string, DetailProps>;
-} & (
-  | { type: "main"; modification?: string }
-  | { type: "group"; modification?: never }
-);
-
-type HeadingProps = {
-  id: string;
-  title: string;
-  type: Extract<DataTypes, "heading">;
-};
-
-type SpacingProps = {
-  id: string;
-  type: Extract<DataTypes, "spacing">;
-  title: "";
-};
+}
 
 type DetailProps = {
   id: string;
@@ -191,19 +169,13 @@ class NormsGenerator {
         groupColor: groupColor,
       });
     });
-  }
 
-  private static createHeading(data: HeadingProps) {
-    const row: RowHeading = {
-      id: data.id,
-      title: data?.title,
-      type: data?.type,
+    const spacing: RowSpacing = {
+      id: "spacing__" + group.id,
+      title: "",
+      type: "spacing",
     };
-    NormsGenerator.rows.push(row);
-  }
-  private static createSpacing(data: SpacingProps) {
-    const row: RowSpacing = { id: data.id, title: "", type: data?.type };
-    NormsGenerator.rows.push(row);
+    NormsGenerator.rows.push(spacing);
   }
 
   //   todo type for Main Data
@@ -213,27 +185,9 @@ class NormsGenerator {
 
     data.order.forEach((itemKey: string) => {
       const item = data[itemKey];
-      switch (item.type) {
-        case "main":
-          NormsGenerator.createGroup(item);
-          break;
-        case "group":
-          NormsGenerator.createGroup(item);
-          break;
-        case "heading":
-          NormsGenerator.createHeading(item);
-          break;
-        case "spacing":
-          NormsGenerator.createSpacing(item);
-          break;
-        case "detail":
-          NormsGenerator.createDetail(item);
-          break;
-        default:
-          console.error(`Unexpected item type: ${item?.type}`, item);
-          break;
-      }
+      NormsGenerator.createGroup(item);
     });
+    // todo - trim!!
     return NormsGenerator.rows;
   }
 }
