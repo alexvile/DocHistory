@@ -36,9 +36,6 @@ type RowGroup = {
   groupColor: string;
 };
 
-
-
-
 type GroupProps = {
   id: string;
   type: Extract<DataTypes, "group">;
@@ -147,7 +144,7 @@ class NormsGenerator {
       consuption_rate_per_item,
       groupId,
       groupColor,
-      order
+      order,
     } = data;
     const row: RowDetail = {
       id,
@@ -166,6 +163,7 @@ class NormsGenerator {
   }
 
   private static createGroup(group: GroupProps) {
+    console.log("GroupProps", group);
     const groupColor = NormsGenerator.getColor();
     const row: RowGroup = {
       id: group.id,
@@ -177,19 +175,21 @@ class NormsGenerator {
       groupColor: groupColor,
     };
     NormsGenerator.rows.push(row);
-    if (!group?.details?.length) return;
-    const sortedArray = group.details.sort(
-      (a, b) => Number(a.order) - Number(b.order)
-    );
 
-    sortedArray.forEach((detail) => {
-      if (detail?.type !== "detail") return;
-      NormsGenerator.createDetail({
-        ...detail,
-        groupId: group.id,
-        groupColor: groupColor,
+    if (group?.details?.length) {
+      const sortedArray = group.details.sort(
+        (a, b) => Number(a.order) - Number(b.order)
+      );
+
+      sortedArray.forEach((detail) => {
+        if (detail?.type !== "detail") return;
+        NormsGenerator.createDetail({
+          ...detail,
+          groupId: group.id,
+          groupColor: groupColor,
+        });
       });
-    });
+    }
 
     // update spacing logic
     const spacing: RowSpacing = {

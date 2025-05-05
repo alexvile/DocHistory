@@ -75,23 +75,17 @@ export default function NewProduct() {
   const initialData = useMemo(() => {
     const data = [
       {
-        orderRow: 0,
+        order: 0,
         id: id,
         type: "group",
         title: "title",
-      },
-      {
-        orderRow: 1,
-        id: "s__" + id,
-        type: "spacing",
-        title: "",
       },
     ];
     return data;
   }, [id]);
 
   if (!hasHydrated) {
-    return <div style={{ opacity: 0 }} />; // або скелетон / loader
+    return <div>hydrating..</div>; // або скелетон / loader
   }
   return (
     <>
