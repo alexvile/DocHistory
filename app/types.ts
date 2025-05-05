@@ -31,7 +31,16 @@ export type ProductWithNorms = Pick<
   "id" | "productTitle" | "norms" | "updatedAt"
 >;
 export type ProductNormsTableProps = {
-  norms: ProductWithNorms,
+  norms: ProductWithNorms['norms'],
   isEditable: boolean
 }
 
+// delete | addGroup | addElement
+export type TableAction<T> = [name: string, handler: (arg: T) => void];
+
+
+// type TableAction<T> = [name: string, handler: (arg: T) => void];
+
+// const updateCell: TableAction<number> = ["Update", (id) => console.log(`Updating cell ${id}`)];
+
+// processAction(updateCell, 42);

@@ -16,7 +16,7 @@ const ModalContext = createContext<ModalContextType | undefined>(undefined);
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [modalContent, setModal] = useState<ReactNode | null>(null);
   useEffect(() => {
-    console.log(11, modalContent);
+    // console.log(11, modalContent);
   }, [modalContent]);
   return (
     <ModalContext.Provider value={{ setModal }}>

@@ -1,8 +1,6 @@
 // refactor??
-
 type DataTypes = "detail" | "group" | "spacing";
-
-type Row = RowSpacing | RowDetail;
+type Row = RowSpacing | RowDetail | RowGroup;
 
 type RowDetail = {
   id: string;
@@ -18,26 +16,42 @@ type RowDetail = {
   notes?: number;
   groupId: string;
   groupColor: string;
+  order: number;
 };
 
 type RowSpacing = {
   id: string;
   title: "";
   type: Extract<DataTypes, "spacing">;
+  groupId: string;
 };
+
+type RowGroup = {
+  id: string;
+  groupId: string;
+  type: Extract<DataTypes, "group">;
+  order: number;
+  title: string;
+  code: string;
+  groupColor: string;
+};
+
+
+
 
 type GroupProps = {
   id: string;
-  type: "group";
+  type: Extract<DataTypes, "group">;
+  order: string;
   title: string;
   code: string;
-  detail_order: string[];
   groupColor: string;
-  details?: Record<string, DetailProps>;
-}
+  details?: DetailProps[];
+};
 
-type DetailProps = {
+interface DetailProps {
   id: string;
+  order: string;
   type: Extract<DataTypes, "detail">;
   title: string;
   assortment?: string;
@@ -49,8 +63,10 @@ type DetailProps = {
   sum?: string;
   notes?: string;
   groupId?: string;
+}
+interface DetailsWithColor extends DetailProps {
   groupColor: string;
-};
+}
 // inside group can be only the details
 class NormsGenerator {
   static rows: Row[] = [];
@@ -119,7 +135,7 @@ class NormsGenerator {
     }
   };
 
-  private static createDetail(data: DetailProps) {
+  private static createDetail(data: DetailsWithColor) {
     const {
       id,
       type,
@@ -131,6 +147,7 @@ class NormsGenerator {
       consuption_rate_per_item,
       groupId,
       groupColor,
+      order
     } = data;
     const row: RowDetail = {
       id,
@@ -139,6 +156,7 @@ class NormsGenerator {
       assortment,
       standard,
       unit,
+      order: Number(order),
       consuption_rate: Number(consuption_rate),
       consuption_rate_per_item: Number(consuption_rate_per_item),
       groupId: groupId ? groupId : id,
@@ -149,45 +167,46 @@ class NormsGenerator {
 
   private static createGroup(group: GroupProps) {
     const groupColor = NormsGenerator.getColor();
-
-    const row = {
+    const row: RowGroup = {
       id: group.id,
+      groupId: group.id,
+      order: Number(group.order),
+      code: group.code,
       title: group?.title,
       type: group.type,
-      groupId: group.id,
       groupColor: groupColor,
     };
     NormsGenerator.rows.push(row);
+    if (!group?.details?.length) return;
+    const sortedArray = group.details.sort(
+      (a, b) => Number(a.order) - Number(b.order)
+    );
 
-    if (!group?.details || !group?.detail_order) return;
-    group.detail_order.forEach((itemKey: string) => {
-      const nestedElement = group.details?.[itemKey];
-      if (nestedElement?.type !== "detail") return;
+    sortedArray.forEach((detail) => {
+      if (detail?.type !== "detail") return;
       NormsGenerator.createDetail({
-        ...nestedElement,
+        ...detail,
         groupId: group.id,
         groupColor: groupColor,
       });
     });
 
+    // update spacing logic
     const spacing: RowSpacing = {
-      id: "spacing__" + group.id,
+      id: "s__" + group.id,
       title: "",
       type: "spacing",
+      groupId: group.id,
     };
     NormsGenerator.rows.push(spacing);
   }
 
   //   todo type for Main Data
-  static createRows(data) {
+  static createRows(data: GroupProps[]) {
+    const sortedData = data.sort((a, b) => Number(a.order) - Number(b.order));
     NormsGenerator.rows = [];
     NormsGenerator.colorIndex = 0;
-
-    data.order.forEach((itemKey: string) => {
-      const item = data[itemKey];
-      NormsGenerator.createGroup(item);
-    });
-    // todo - trim!!
+    sortedData.forEach((group) => NormsGenerator.createGroup(group));
     return NormsGenerator.rows;
   }
 }

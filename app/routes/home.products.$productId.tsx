@@ -9,7 +9,7 @@ import { getNormById, updateNormById } from "~/server/products.server";
 import { getChanges } from "~/server/getChanges.server";
 import { createChange } from "~/server/changes.server";
 import { getUserId } from "~/server/auth.server";
-import {testValue} from "~/test"
+import {testNorms} from "~/test"
 import { ProductWithNorms } from "~/types";
 import ProductNormsTable from "~/components/ProductNormsTable";
 
@@ -78,7 +78,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 };
 
 export default function ProductNorm() {
-const productNorm = testValue as unknown as ProductWithNorms;
+const productNorm = testNorms as unknown as ProductWithNorms;
 
   // const { detailedNorm } = useLoaderData<typeof loader>();
   // console.log(111122, detailedNorm);
@@ -98,8 +98,8 @@ const productNorm = testValue as unknown as ProductWithNorms;
       >
         {isEditable ? "Cancel" : "Edit"}
       </button>
-      <Form  method="post">
-        <ProductNormsTable {...productNorm} isEditable={isEditable}/>
+      <Form method="post">
+        <ProductNormsTable norms={productNorm} isEditable={isEditable}/>
       </Form>
       {/* <Form method="post">
         <div>

@@ -5,22 +5,40 @@ import {
   LoaderFunction,
   LoaderFunctionArgs,
 } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import UsersList from "~/components/UsersList";
 import { getUserId, requireUserRole } from "~/server/auth.server";
 import { getFilteredUsers } from "~/server/user.server";
 import type { User, Prisma } from "@prisma/client";
 import { createNorm } from "~/server/products.server";
+import ProductNormsTableNew from "~/components/ProductNormsTableNew";
+import ProductNormsTable from "~/components/ProductNormsTable";
+import { useEffect, useMemo, useState } from "react";
+import { useModal } from "~/components/ModalProvider";
+import { shortId } from "~/utils/ttt";
+import { useHasHydrated } from "~/utils/hooks";
+import { parseFormData } from "~/utils/rowHandlers";
 
-// todo use _new
+// todo use _new !!!!
 export const action: ActionFunction = async ({
   request,
 }: ActionFunctionArgs) => {
-  const formData = await request.formData();
-  const data = Object.fromEntries(formData);
-  // validation
+  console.log("action");
   const userId = await getUserId(request);
   if (!userId) return;
+
+  const formData = await request.formData();
+  const updates = Object.fromEntries(formData);
+  console.log(11, updates);
+
+  // validation
+ 
+
+
+  const kkk = parseFormData(updates);
+  console.dir(kkk, { depth: true });
+  return kkk
+
   const { productName, norm1, norm2 } = data;
 
   // todo - handling if creation was with errors
@@ -32,11 +50,12 @@ export const action: ActionFunction = async ({
   });
   return null;
 };
+
 export const loader: LoaderFunction = async ({
   request,
 }: LoaderFunctionArgs) => {
   const role = await requireUserRole(request);
-
+  console.log(1212, role);
   // return null;
   return null;
 };
@@ -44,83 +63,55 @@ export const loader: LoaderFunction = async ({
 // todo - create can commiter or ADMIN
 // todo - show all norms
 export default function NewProduct() {
+  const data = useActionData();
+  console.log('actionData', data)
+
+  const hasHydrated = useHasHydrated();
+  const [title, setTitle] = useState("Новий котел");
+  const [isEditable, setIsEditable] = useState(true);
+  const [id] = useState(() => shortId());
+  // todo - when try to exit - show warning !!!
+
+  const initialData = useMemo(() => {
+    const data = [
+      {
+        orderRow: 0,
+        id: id,
+        type: "group",
+        title: "title",
+      },
+      {
+        orderRow: 1,
+        id: "s__" + id,
+        type: "spacing",
+        title: "",
+      },
+    ];
+    return data;
+  }, [id]);
+
+  if (!hasHydrated) {
+    return <div style={{ opacity: 0 }} />; // або скелетон / loader
+  }
   return (
     <>
-      <h3>Create new norm</h3>
-      {/* <form method="post">
+      <h3>Створення нового продукту</h3>
+      <>
+        <h4>{title} +++</h4>
+        <button
+          type="button"
+          onClick={() => setIsEditable((prev) => !prev)}
+          className="edit-button"
+        >
+          {isEditable ? "Cancel" : "Edit"}
+        </button>
         <div>
-          <label htmlFor="productName">Product name</label>
-          <input type="text" id="productName" name="productName" />
+          <Form method="post">
+            <ProductNormsTable norms={initialData} isEditable={true} />
+            <button type="submit">submit</button>
+          </Form>
         </div>
-
-        <div>
-          <label htmlFor="norm1">Norm 1</label>
-          <input type="number" id="norm1" name="norm1" />
-        </div>
-        <div>
-          <label htmlFor="norm2">Norm 2</label>
-          <input type="number" id="norm2" name="norm2" />
-        </div>
-
-        <button>Submit</button>
-      </form> */}
-      <div>
-        <form method="post">
-          <div className="">
-            <div>
-              <div>КС-Г(В)-010 СН</div>
-              <div>070.00.00.000</div>
-              <div>010CH</div>
-            </div>
-            <table className="norms__table">
-              <thead>
-                <tr>
-                  <th>№</th>
-                  <th>Material</th>
-                  <th>Range</th>
-                  <th>Standard</th>
-                  <th>Unit</th>
-                  <th>Consumption rate</th>
-                  <th>Consumption rate per item</th>
-                  <th>Price?</th>
-                  <th>Sum?</th>
-                  <th>Notes?</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>2</td>
-                  <td>3</td>
-                  <td>3</td>
-                  <td>3</td>
-                  <td>3</td>
-                  <td>3</td>
-                  <td>3</td>
-                  <td>3</td>
-                  <td>3</td>
-                </tr>
-                {/* <tr>
-              <td>
-                <input type="text" defaultValue="John Doe" />
-              </td>
-              <td>
-                <input type="number" defaultValue={30} />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input type="text" defaultValue="Jane Doe" />
-              </td>
-              <td>
-                <input type="number" defaultValue={25} />
-              </td>
-            </tr> */}
-              </tbody>
-            </table>
-          </div>
-        </form>
-      </div>
+      </>
     </>
   );
 }
