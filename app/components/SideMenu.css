@@ -1,0 +1,28 @@
+
+.side-menu__list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.side-menu__item a {
+  padding: 6px 8px;
+  text-decoration: none;
+  width: 100%;
+  display: inline-flex;
+  column-gap: 6px;
+  border-radius: 8px;
+  /* transition: background-color 300ms ease; */
+  align-items: center;
+}
+.side-menu__item:not(:last-child) {
+  margin-bottom: 4px;
+}
+.side-menu__item a {
+  color: #303030;
+}
+.side-menu__item a.active {
+  background-color: #fff;
+}
+.side-menu__item a:not(.active):hover {
+  background-color: #ffffff94;
+}

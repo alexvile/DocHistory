@@ -27,7 +27,7 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
       parentId?: string,
       groupColor?: string
     ) => {
-      console.log('parentId', parentId)
+      console.log("parentId", parentId);
       // todo - use settimeout + block to prevent throttle
       const rowsToAdd = createRows({ type, groupColor, groupId: parentId });
       setRows((prevRows) => {
@@ -45,7 +45,7 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
 
   // todo - option to remove row
   // todo - tree structure instead of colors
-  console.log('rows', rows);
+  console.log("rows", rows);
   return (
     <Table
       headings={[
@@ -90,6 +90,7 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
                 <div>
                   <input
                     type="text"
+                    required
                     title={data.title}
                     name={
                       data?.type === "detail"
@@ -99,7 +100,6 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
                     id={"title_" + data?.id}
                     defaultValue={data.title}
                     disabled={!isEditable}
-            
                   />
                   {isEditable ? (
                     <Extender
@@ -115,10 +115,10 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
                     />
                   ) : null}
                 </div>
-                {/* <div className="show-full-info">
+                <div className="show-full-info">
                   <Icon name="zoom" />
                   <span className="show-full-info__data">{data.title}</span>
-                </div> */}
+                </div>
               </div>
             )}
 
@@ -152,7 +152,7 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
             {data.type === "detail" ? (
               <input
                 type="text"
-                className="norms-table__input norms-table__input--small"
+                className="norms-table__input norms-table__input--xsmall"
                 title={data.unit}
                 name={`unit__${data.groupId}__${data.id}`}
                 id={"unit_" + data?.id}

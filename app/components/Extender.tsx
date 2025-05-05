@@ -1,7 +1,8 @@
 type ExtenderProps = {
-  action: () => void,
-  ariaLabel?: string
-}
+  action: () => void;
+  ariaLabel?: string;
+};
+
 export default function Extender({ action, ariaLabel }: ExtenderProps) {
   return (
     <div className="extender">

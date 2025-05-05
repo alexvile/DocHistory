@@ -1,4 +1,4 @@
-import { shortId } from "./ttt";
+import { shortId } from "./main";
 
 export const createRows = ({ type, groupColor, groupId }) => {
   const newRow = createNewRow(type, groupId, groupColor);

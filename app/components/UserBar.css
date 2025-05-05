@@ -1,0 +1,15 @@
+.userbar {
+  display: flex;
+  justify-content: space-between;
+}
+.userbar__logout {
+  padding: 0;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  width: 22px;
+  .icon-wrapper {
+    width: 100%;
+    height: 100%;
+  }
+}

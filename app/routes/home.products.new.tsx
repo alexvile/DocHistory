@@ -15,7 +15,7 @@ import ProductNormsTableNew from "~/components/ProductNormsTableNew";
 import ProductNormsTable from "~/components/ProductNormsTable";
 import { useEffect, useMemo, useState } from "react";
 import { useModal } from "~/components/ModalProvider";
-import { shortId } from "~/utils/ttt";
+import { shortId } from "~/utils/main";
 import { useHasHydrated } from "~/utils/hooks";
 import { parseFormData } from "~/utils/rowHandlers";
 
@@ -92,13 +92,6 @@ export default function NewProduct() {
       <h3>Створення нового продукту</h3>
       <>
         <h4>{title} +++</h4>
-        <button
-          type="button"
-          onClick={() => setIsEditable((prev) => !prev)}
-          className="edit-button"
-        >
-          {isEditable ? "Cancel" : "Edit"}
-        </button>
         <div>
           <Form method="post">
             <ProductNormsTable norms={initialData} isEditable={true} />

@@ -59,6 +59,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function Register() {
   return (
     <>
+       <button  className="link-unstyled button button--primary">
+        Add new+
+      </button>
+      <br />
+      <br />
+      <button className="button button--secondary">Add new+</button>
+      +++
       <h2>Register (only for admin)</h2>
       <form method="post" className="form form--register">
         <div className="form__field">

@@ -1,4 +1,3 @@
-import { TableAction } from "~/types";
 import { useModal } from "./ModalProvider";
 import NewElement from "./NewElementPopup";
 
