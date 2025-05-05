@@ -18,6 +18,7 @@ import { useModal } from "~/components/ModalProvider";
 import { shortId } from "~/utils/main";
 import { useHasHydrated } from "~/utils/hooks";
 import { parseFormData } from "~/utils/rowHandlers";
+import { Icon } from "~/components/Icon";
 
 // todo use _new !!!!
 export const action: ActionFunction = async ({
@@ -32,12 +33,10 @@ export const action: ActionFunction = async ({
   console.log(11, updates);
 
   // validation
- 
-
 
   const kkk = parseFormData(updates);
   console.dir(kkk, { depth: true });
-  return kkk
+  return kkk;
 
   const { productName, norm1, norm2 } = data;
 
@@ -64,7 +63,7 @@ export const loader: LoaderFunction = async ({
 // todo - show all norms
 export default function NewProduct() {
   const data = useActionData();
-  console.log('actionData', data)
+  console.log("actionData", data);
 
   const hasHydrated = useHasHydrated();
   const [title, setTitle] = useState("Новий котел");
@@ -78,7 +77,7 @@ export default function NewProduct() {
         order: 0,
         id: id,
         type: "group",
-        title: "title",
+        title: "Основна група",
       },
     ];
     return data;
@@ -89,13 +88,37 @@ export default function NewProduct() {
   }
   return (
     <>
-      <h3>Створення нового продукту</h3>
+      <h3 className="products-new__title">
+        Створення нового продукту &nbsp;
+        <Icon name="pencil" />
+      </h3>
       <>
-        <h4>{title} +++</h4>
-        <div>
+        <label>
+          Назва:
+          <input
+            type="text"
+            name="main_title"
+            placeholder="КС-Г(В)-010 СН"
+            required
+          />
+        </label>
+        <label>
+          Код:
+          <input
+            type="text"
+            name="main_code"
+            placeholder="070.00.00.000"
+            required
+          />
+        </label>
+        <label>
+          Код 2:
+          <input type="text" name="main_code2" placeholder="010 СН" required />
+        </label>
+        <div className="products-new__main-form">
           <Form method="post">
             <ProductNormsTable norms={initialData} isEditable={true} />
-            <button type="submit">submit</button>
+            <button className="button button--primary" aria-label="Збрегети зміни" type="submit">Зберегти</button>
           </Form>
         </div>
       </>

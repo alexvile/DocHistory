@@ -209,3 +209,11 @@ footer {
 .norms-table__input.norms-table__input--xsmall {
   width: 60px;
 }
+
+/* products styles */
+.products-new__title {
+  display: flex;
+}
+.products-new__main-form .button[type="submit"] {
+  margin-top: 12px;
+}

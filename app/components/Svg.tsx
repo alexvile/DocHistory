@@ -3,6 +3,7 @@ import { HiMagnifyingGlassCircle } from "react-icons/hi2";
 import { VscIndent } from "react-icons/vsc";
 import { GoHeading } from "react-icons/go";
 import { FaLayerGroup, FaUsers } from "react-icons/fa";
+import { FaPencil } from "react-icons/fa6";
 import { TbExchange } from "react-icons/tb";
 import { MdManageAccounts, MdLogout } from "react-icons/md";
 import { CgSmartHomeBoiler } from "react-icons/cg";
@@ -27,6 +28,8 @@ export function Svg({ name }: { name: string }) {
       return <MdLogout />;
     case "group":
       return <FaLayerGroup />;
+    case "pencil":
+      return <FaPencil />;
     default:
       return <AiOutlineStop />;
   }
