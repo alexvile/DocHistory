@@ -41,7 +41,7 @@ function ProductNormsTable({ normRows, isEditable }: ProductNormsTableProps) {
 
   // todo - option to remove row
   // todo - tree structure instead of colors
-  console.log("rows111", rows);
+  // console.log("rows111", rows);
   return (
     <Table
       headings={[

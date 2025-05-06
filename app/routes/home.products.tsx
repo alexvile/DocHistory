@@ -6,11 +6,13 @@ import ProductsTable from "~/components/ProductsTable";
 
 import extenderStyles from "~/components/Extender.css?url";
 import tableStyles from "~/components/ProductNormsTable.css?url";
+import lastChangedTooltipStyles from "~/components/LastChangedTooltip.css?url";
 
 export function links() {
   return [
     { rel: "stylesheet", href: extenderStyles },
     { rel: "stylesheet", href: tableStyles },
+    { rel: "stylesheet", href: lastChangedTooltipStyles },
   ];
 }
 export const loader: LoaderFunction = async ({
@@ -39,7 +41,9 @@ export default function Products() {
         Додати продукт
       </Link>
       <h3>Всі продукти</h3>
-      <ProductsTable products={products} />
+      <div className="products-table__wrapper">
+        <ProductsTable products={products} />
+      </div>
       <Outlet />
     </>
   );

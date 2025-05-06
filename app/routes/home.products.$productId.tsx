@@ -6,6 +6,7 @@ import { getProductbyId } from "~/server/products.server";
 import { getUserId } from "~/server/auth.server";
 import ProductNormsTable from "~/components/ProductNormsTable";
 import NormsGenerator from "~/utils/normsGenerator";
+import { LastChanged } from "~/components/LastChangedTooltip";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.productId, "Missing contactId param");
@@ -95,14 +96,17 @@ export default function ProductNorm() {
   useEffect(() => {
     console.log("DATA", data);
   }, [data]);
-  //   const { contact } = useLoaderData<typeof loader>();
-
-
   // state to edit and save
   return (
     <div>
       Norm details
-      {/* <Form key={contact.id} id="contact-form" method="post"></Form> */}
+      <div className="product-details__top">
+        <h3 className="product-details__title">
+          {data.product.productTitle}
+          <LastChanged date={data.product.updatedAt} />
+        </h3>
+        <p className="product-details__code">{data.product.code}</p>
+      </div>
       <button
         type="button"
         onClick={() => setIsEditable((prev) => !prev)}

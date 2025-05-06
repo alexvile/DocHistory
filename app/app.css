@@ -217,3 +217,10 @@ footer {
 .products-new__main-form .button[type="submit"] {
   margin-top: 12px;
 }
+
+
+
+.product-details__title {
+  display: flex;
+  column-gap: 6px;
+}
