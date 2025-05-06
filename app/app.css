@@ -172,7 +172,7 @@ footer {
   margin-bottom: 4px;
 }
 
-/* buttons */
+/* buttons starts */
 .button {
   padding: 6px 12px;
   border-radius: 8px;
@@ -201,6 +201,28 @@ footer {
 .button.button--primary:hover {
   background-color: rgba(26, 26, 26, 1);
 }
+/* buttons ends */
+/* links starts */
+.link {
+  font-size: 1rem;
+  line-height: 1.25rem;
+  color: #005bd3;
+  text-decoration: none;
+}
+.link:hover,
+.link:focus,
+.link:active {
+  text-decoration: underline;
+}
+.link:hover,
+.link:focus {
+  color: #004299;
+}
+.link:active {
+  color: #002e6a;
+}
+
+/* links ends */
 
 /* norms table */
 .norms-table__input.norms-table__input--small {
@@ -218,7 +240,7 @@ footer {
   margin-top: 12px;
 }
 
-
+/* move */
 
 .product-details__title {
   display: flex;

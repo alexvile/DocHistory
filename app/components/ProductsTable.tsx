@@ -3,7 +3,6 @@ import { ProductsListProps } from "~/types";
 import Table from "./Table";
 
 export default function ProductsTable({ products }: ProductsListProps) {
- 
   return (
     <Table headings={["Name", "Last update", "Details"]}>
       {products.map(({ id, productTitle, updatedAt }) => (
@@ -11,7 +10,13 @@ export default function ProductsTable({ products }: ProductsListProps) {
           <Table.Cell>{productTitle}</Table.Cell>
           <Table.Cell>{updatedAt.toString()}</Table.Cell>
           <Table.Cell>
-            <Link to={id}>details</Link>
+            <Link
+              className="link"
+              to={id}
+              aria-label={`Переглянути продукт "${productTitle}"`}
+            >
+              Перейти
+            </Link>
           </Table.Cell>
         </Table.Row>
       ))}
