@@ -1,18 +1,18 @@
 // todo - do we need to connect creator of norm ???
 import { prisma } from "./prisma.server";
-import { Norm, Prisma } from "@prisma/client";
+import { Product, Prisma } from "@prisma/client";
 
 export const createNorm = async ({
   creatorId,
-  productName,
-  norm1,
-  norm2,
-}: Pick<Norm, "productName" | "norm1" | "norm2" | "creatorId">) => {
+  productTitle,
+  code,
+  norms ,
+}: Pick<Product, "productTitle" | "code" | "norms" | "creatorId">) => {
   await prisma.product.create({
     data: {
       productTitle,
-      norm1,
-      norm2,
+      code,
+      norms: norms as unknown as Prisma.InputJsonValue,
       creator: {
         connect: {
           id: creatorId,

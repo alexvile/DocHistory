@@ -15,36 +15,32 @@ import ProductNormsTableNew from "~/components/ProductNormsTableNew";
 import ProductNormsTable from "~/components/ProductNormsTable";
 import { useEffect, useMemo, useState } from "react";
 import { useModal } from "~/components/ModalProvider";
-import { shortId } from "~/utils/main";
+import { filterStringEntries, shortId } from "~/utils/main";
 import { useHasHydrated } from "~/utils/hooks";
 import { parseFormData } from "~/utils/rowHandlers";
 import { Icon } from "~/components/Icon";
+import { validateMainFields } from "~/server/validators.server";
 
 // todo use _new !!!!
 export const action: ActionFunction = async ({
   request,
 }: ActionFunctionArgs) => {
-  console.log("action");
   const userId = await getUserId(request);
   if (!userId) return;
 
   const formData = await request.formData();
-  const updates = Object.fromEntries(formData);
-  console.log(11, updates);
-
-  // validation
-
-  const kkk = parseFormData(updates);
-  console.dir(kkk, { depth: true });
-  return kkk;
-
-  const { productName, norm1, norm2 } = data;
-
+  const raw = Object.fromEntries(formData);
+  const { main__title, main__code, ...rest } = raw;
+  const { title, code } = validateMainFields(main__title, main__code);
+  const safeObject = filterStringEntries(rest);
+  const jsonNorms = parseFormData(safeObject);
+  
   // todo - handling if creation was with errors
+  return null
   await createNorm({
-    productName,
-    norm1: Number(norm1),
-    norm2: Number(norm2),
+    productTitle: title,
+    code: code ?? null,
+    norms: jsonNorms,
     creatorId: userId,
   });
   return null;
@@ -92,36 +88,39 @@ export default function NewProduct() {
         Створення нового продукту &nbsp;
         <Icon name="pencil" />
       </h3>
-      <>
-        <label>
-          Назва:
-          <input
-            type="text"
-            name="main_title"
-            placeholder="КС-Г(В)-010 СН"
-            required
-          />
-        </label>
-        <label>
-          Код:
-          <input
-            type="text"
-            name="main_code"
-            placeholder="070.00.00.000"
-            required
-          />
-        </label>
-        <label>
-          Код 2:
-          <input type="text" name="main_code2" placeholder="010 СН" required />
-        </label>
-        <div className="products-new__main-form">
-          <Form method="post">
-            <ProductNormsTable norms={initialData} isEditable={true} />
-            <button className="button button--primary" aria-label="Збрегети зміни" type="submit">Зберегти</button>
-          </Form>
+      <Form method="post">
+        <div className="products-new__top-form">
+          <label>
+            Назва:
+            <input
+              type="text"
+              name="main__title"
+              placeholder="КС-Г(В)-010 СН"
+              minLength={4}
+              required
+            />
+          </label>
+          <label>
+            Код:
+            <input
+              type="text"
+              name="main__code"
+              placeholder="070.00.00.000"
+              required
+            />
+          </label>
         </div>
-      </>
+        <div className="products-new__main-form">
+          <ProductNormsTable norms={initialData} isEditable={true} />
+          <button
+            className="button button--primary"
+            aria-label="Збрегети зміни"
+            type="submit"
+          >
+            Зберегти
+          </button>
+        </div>
+      </Form>
     </>
   );
 }

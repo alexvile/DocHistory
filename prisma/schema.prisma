@@ -38,6 +38,7 @@ model Product {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   productTitle String   @unique
+  code         String?
   norms        Json
   creator      User     @relation(references: [id], fields: [creatorId], "UserProducts")
   creatorId    String   @db.ObjectId
