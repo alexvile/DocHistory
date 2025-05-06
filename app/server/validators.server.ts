@@ -1,20 +1,3 @@
-export function validateMainFields(main__title: unknown, main__code: unknown) {
-  if (typeof main__title !== 'string' || main__title.trim().length < 4) {
-    throw new Error('Invalid title');
-  }
-
-  if (main__code !== undefined && typeof main__code !== 'string') {
-    throw new Error('Invalid code');
-  }
-
-  return {
-    title: main__title.trim(),
-    code: main__code,
-  };
-}
-
-
-
 
 // todo - redo this
 // app/utils/validators.server.ts

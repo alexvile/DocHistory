@@ -1,49 +1,77 @@
 import {
   ActionFunction,
   ActionFunctionArgs,
-  json,
   LoaderFunction,
   LoaderFunctionArgs,
 } from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
-import UsersList from "~/components/UsersList";
+import { Form, useActionData } from "@remix-run/react";
 import { getUserId, requireUserRole } from "~/server/auth.server";
-import { getFilteredUsers } from "~/server/user.server";
-import type { User, Prisma } from "@prisma/client";
 import { createNorm } from "~/server/products.server";
-import ProductNormsTableNew from "~/components/ProductNormsTableNew";
 import ProductNormsTable from "~/components/ProductNormsTable";
-import { useEffect, useMemo, useState } from "react";
-import { useModal } from "~/components/ModalProvider";
+import { useMemo, useState } from "react";
 import { filterStringEntries, shortId } from "~/utils/main";
 import { useHasHydrated } from "~/utils/hooks";
 import { parseFormData } from "~/utils/rowHandlers";
 import { Icon } from "~/components/Icon";
-import { validateMainFields } from "~/server/validators.server";
+import {
+  buildDynamicTitleValidators,
+  validateFields,
+} from "~/utils/validation";
+
+type ActionResponse = {
+  success: boolean;
+  errors: Record<string, string>;
+};
 
 // todo use _new !!!!
 export const action: ActionFunction = async ({
   request,
 }: ActionFunctionArgs) => {
   const userId = await getUserId(request);
-  if (!userId) return;
+  if (!userId) {
+    const res: ActionResponse = {
+      success: false,
+      errors: { global: "Unauthorized" },
+    };
+    return Response.json(res, { status: 401 });
+  }
 
   const formData = await request.formData();
   const raw = Object.fromEntries(formData);
-  const { main__title, main__code, ...rest } = raw;
-  const { title, code } = validateMainFields(main__title, main__code);
-  const safeObject = filterStringEntries(rest);
-  const jsonNorms = parseFormData(safeObject);
-  
-  // todo - handling if creation was with errors
-  return null
+  const strings = filterStringEntries(raw);
+  const { main__title, main__code, ...rest } = strings;
+
+  const dynamicTitleFields = buildDynamicTitleValidators(rest);
+  const fieldErrors = validateFields({
+    title: {
+      value: main__title,
+      type: "string",
+      required: true,
+      minLength: 4,
+    },
+    code: {
+      value: main__code,
+      type: "string",
+      optional: true,
+    },
+    ...dynamicTitleFields,
+  });
+
+  if (Object.keys(fieldErrors).length > 0) {
+    const res: ActionResponse = { success: false, errors: fieldErrors };
+    return Response.json(res, { status: 400 });
+  }
+
+  const jsonNorms = parseFormData(rest);
+
   await createNorm({
-    productTitle: title,
-    code: code ?? null,
+    productTitle: main__title,
+    code: main__code ?? null,
     norms: jsonNorms,
     creatorId: userId,
   });
-  return null;
+  const res: ActionResponse = { success: true, errors: {} };
+  return Response.json(res, { status: 201 });
 };
 
 export const loader: LoaderFunction = async ({
@@ -57,13 +85,12 @@ export const loader: LoaderFunction = async ({
 
 // todo - create can commiter or ADMIN
 // todo - show all norms
+// todo - show errors in the frontend ?
 export default function NewProduct() {
   const data = useActionData();
   console.log("actionData", data);
 
   const hasHydrated = useHasHydrated();
-  const [title, setTitle] = useState("Новий котел");
-  const [isEditable, setIsEditable] = useState(true);
   const [id] = useState(() => shortId());
   // todo - when try to exit - show warning !!!
 
@@ -102,12 +129,7 @@ export default function NewProduct() {
           </label>
           <label>
             Код:
-            <input
-              type="text"
-              name="main__code"
-              placeholder="070.00.00.000"
-              required
-            />
+            <input type="text" name="main__code" placeholder="070.00.00.000" />
           </label>
         </div>
         <div className="products-new__main-form">
