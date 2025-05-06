@@ -6,7 +6,7 @@ export const createProduct = async ({
   creatorId,
   productTitle,
   code,
-  norms ,
+  norms,
 }: Pick<Product, "productTitle" | "code" | "norms" | "creatorId">) => {
   await prisma.product.create({
     data: {
@@ -22,9 +22,16 @@ export const createProduct = async ({
   });
 };
 
+export const getTotalProductsCount = async (
+  whereFilter: Prisma.ProductWhereInput
+) => {
+  return await prisma.product.count({ where: whereFilter });
+};
 export const getFilteredProducts = async (
   sortFilter: Prisma.ProductOrderByWithRelationInput,
-  whereFilter: Prisma.ProductWhereInput
+  whereFilter: Prisma.ProductWhereInput,
+  skip: number,
+  take: number
 ) => {
   return await prisma.product.findMany({
     orderBy: {
@@ -34,13 +41,14 @@ export const getFilteredProducts = async (
       // ownerId: userId,
       ...whereFilter,
     },
+    skip,
+    take,
     // include: {
     //   owner: true,
     //   records: true,
     // },
   });
 };
-
 
 export const getAllFilteredProducts = async () => {
   // todo - pagination !!!!
@@ -80,13 +88,7 @@ export const getProductbyId = async (id: string) => {
 
 // todo - need refactor
 
-
-export const updateNormById = async ({
-  id,
-  productName,
-  norm1,
-  norm2
-}) => {
+export const updateNormById = async ({ id, productName, norm1, norm2 }) => {
   return await prisma.norm.update({
     where: {
       id,
@@ -94,12 +96,10 @@ export const updateNormById = async ({
     data: {
       productName,
       norm1,
-      norm2
+      norm2,
     },
   });
 };
-
-
 
 // await prisma.object.update({
 //   where: { id: objectId },
@@ -112,26 +112,23 @@ export const updateNormById = async ({
 //   userId: string,
 //   newData: Record<string, any>
 // ) {
-  // Отримати поточний стан об'єкта
-  // const currentObject = await prisma.object.findUnique({
-  //   where: { id: objectId },
-  // });
-  // if (!currentObject) throw new Error("Object not found");
+// Отримати поточний стан об'єкта
+// const currentObject = await prisma.object.findUnique({
+//   where: { id: objectId },
+// });
+// if (!currentObject) throw new Error("Object not found");
 
- 
+// Оновити об'єкт
+// await prisma.norm.update({
+//   where: { id: objectId },
+//   data: {
+//     data: { ...currentObject.data, ...newData },
+//   },
+// });
 
-  // Оновити об'єкт
-  // await prisma.norm.update({
-  //   where: { id: objectId },
-  //   data: {
-  //     data: { ...currentObject.data, ...newData },
-  //   },
-  // });
+// Зберегти зміну
 
-  // Зберегти зміну
-  
 // }
-
 
 // await prisma.change.create({
 //   data: {
@@ -142,7 +139,7 @@ export const updateNormById = async ({
 //     },
 //     norm: {
 //       connect: {
-//         id: objectId, 
+//         id: objectId,
 //       },
 //     },
 //     changes,
