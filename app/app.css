@@ -81,27 +81,27 @@ footer {
   overscroll-behavior-x: contain;
   scrollbar-width: none;
   border-radius: 8px;
-  border: 1px solid black;
+  border: 1px solid #ddd;
 }
 .table {
   width: 100%;
   min-width: 100%;
   border-collapse: collapse;
-  /* border: 1px solid #000; */
+  color: #616161
 }
 .table__row {
-  border-top: 1px solid #000;
+  border-top: 1px solid #ddd;
 }
 
 .table__head {
-  background-color: rgb(247, 247, 247);
+  background-color: rgb(251, 251, 251);
 }
 .table__heading-cell {
   text-align: left;
-  padding: 4px;
+  padding: 8px 6px;
 }
 .table__cell {
-  padding: 4px;
+  padding: 4px 6px;
 }
 /* table base ends */
 
