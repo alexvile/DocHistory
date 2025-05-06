@@ -1,6 +1,19 @@
 import { useSearchParams } from "@remix-run/react";
 
-export function Pagination({ page, totalPages }: { page: number; totalPages: number }) {
+type PaginationProps = {
+  page: number;
+  totalPages: number;
+  fromPagination: number;
+  toPagination: number;
+  totalCount: number;
+};
+export function Pagination({
+  page,
+  totalPages,
+  fromPagination,
+  toPagination,
+  totalCount,
+}: PaginationProps) {
   const [searchParams] = useSearchParams();
 
   const createLink = (targetPage: number) => {
@@ -12,13 +25,20 @@ export function Pagination({ page, totalPages }: { page: number; totalPages: num
   return (
     <div className="pagination">
       {page > 1 && (
-        <a href={createLink(page - 1)} className="pagination__btn">← Назад</a>
+        <a href={createLink(page - 1)} className="pagination__btn">
+          ← Назад
+        </a>
       )}
       <span className="pagination__info">
         Сторінка {page} з {totalPages}
       </span>
+      <span>&nbsp;
+        Показано: {fromPagination}–{toPagination} з {totalCount}
+      </span>
       {page < totalPages && (
-        <a href={createLink(page + 1)} className="pagination__btn">Вперед →</a>
+        <a href={createLink(page + 1)} className="pagination__btn">
+          Вперед →
+        </a>
       )}
     </div>
   );

@@ -43,13 +43,19 @@ export const loader: LoaderFunction = async ({
   const totalCount = await getTotalProductsCount(whereFilter);
   const totalPages = Math.ceil(totalCount / take);
 
+  const fromPagination = skip + 1;
+  const toPagination = Math.min(skip + take, totalCount);
+
   const products = await getFilteredProducts(
     sortOptions,
     whereFilter,
     skip,
     take
   );
-  return Response.json({ products, page, totalPages }, { status: 200 });
+  return Response.json(
+    { products, page, totalPages, totalCount, fromPagination, toPagination },
+    { status: 200 }
+  );
 };
 
 // todo - create can commiter or ADMIN
@@ -60,7 +66,6 @@ export default function Products() {
   return (
     <>
       <SortAndFilterBar />
-      <Pagination page={data.page} totalPages={data.totalPages} />
       <div className="products-all__top">
         <h2 className="products-all__title">Всі продукти</h2>
         <Link
@@ -75,6 +80,13 @@ export default function Products() {
       <div className="products-table__wrapper">
         <ProductsTable products={data?.products} />
       </div>
+      <Pagination
+        page={data.page}
+        totalPages={data.totalPages}
+        fromPagination={data.fromPagination}
+        toPagination={data.toPagination}
+        totalCount={data.totalCount}
+      />
       <Outlet />
     </>
   );
