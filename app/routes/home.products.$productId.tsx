@@ -1,4 +1,4 @@
-import { Form, useLoaderData, useParams } from "@remix-run/react";
+import { Form, isRouteErrorResponse, useLoaderData, useParams, useRouteError } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
@@ -72,23 +72,23 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 };
 // todo - don't fetch for the same page !!
 
-// export function ErrorBoundary() {
-//   const error = useRouteError();
-//   if (isRouteErrorResponse(error)) {
-//     if (error.status === 404) {
-//       return <p>Продукт не знайдено (404)</p>;
-//     }
+export function ErrorBoundary() {
+  const error = useRouteError();
+  if (isRouteErrorResponse(error)) {
+    if (error.status === 404) {
+      return <p>Продукт не знайдено (404)</p>;
+    }
 
-//     return (
-//       <div>
-//         <h1>Помилка: {error.status}</h1>
-//         <p>{error.statusText}</p>
-//       </div>
-//     );
-//   }
+    return (
+      <div>
+        <h1>Помилка: {error.status}</h1>
+        <p>{error.statusText}</p>
+      </div>
+    );
+  }
 
-//   return <p>Щось пішло не так</p>;
-// }
+  return <p>Щось пішло не так</p>;
+}
 
 export default function ProductNorm() {
   const data = useLoaderData<typeof loader>();

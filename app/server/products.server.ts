@@ -22,7 +22,27 @@ export const createProduct = async ({
   });
 };
 
-export const getFilteredProducts = async () => {
+export const getFilteredProducts = async (
+  sortFilter: Prisma.ProductOrderByWithRelationInput,
+  whereFilter: Prisma.ProductWhereInput
+) => {
+  return await prisma.product.findMany({
+    orderBy: {
+      ...sortFilter,
+    },
+    where: {
+      // ownerId: userId,
+      ...whereFilter,
+    },
+    // include: {
+    //   owner: true,
+    //   records: true,
+    // },
+  });
+};
+
+
+export const getAllFilteredProducts = async () => {
   // todo - pagination !!!!
   return await prisma.product.findMany({
     // select: {
