@@ -1,4 +1,4 @@
-import { useSearchParams } from "@remix-run/react";
+import { Link, useSearchParams } from "@remix-run/react";
 
 type PaginationProps = {
   page: number;
@@ -25,20 +25,20 @@ export function Pagination({
   return (
     <div className="pagination">
       {page > 1 && (
-        <a href={createLink(page - 1)} className="pagination__btn">
+        <Link to={createLink(page - 1)} className="pagination__btn">
           ← Назад
-        </a>
+        </Link>
       )}
       <span className="pagination__info">
         Сторінка {page} з {totalPages}
       </span>
-      <span>&nbsp;
-        Показано: {fromPagination}–{toPagination} з {totalCount}
+      <span>
+        &nbsp; Показано: {fromPagination}–{toPagination} з {totalCount}
       </span>
       {page < totalPages && (
-        <a href={createLink(page + 1)} className="pagination__btn">
+        <Link to={createLink(page + 1)} className="pagination__btn">
           Вперед →
-        </a>
+        </Link>
       )}
     </div>
   );
