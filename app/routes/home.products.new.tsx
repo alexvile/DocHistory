@@ -4,7 +4,7 @@ import {
   LoaderFunction,
   LoaderFunctionArgs,
 } from "@remix-run/node";
-import { Form, useActionData, useParams } from "@remix-run/react";
+import { Form, Link, useActionData, useParams } from "@remix-run/react";
 import { getUserId, requireUserRole } from "~/server/auth.server";
 import { createProduct } from "~/server/products.server";
 import ProductNormsTable from "~/components/ProductNormsTable";
@@ -17,6 +17,7 @@ import {
   buildDynamicTitleValidators,
   validateFields,
 } from "~/utils/validation";
+import BackLink from "~/components/BackLink";
 
 type ActionResponse = {
   success: boolean;
@@ -83,6 +84,7 @@ export const loader: LoaderFunction = async ({
   return null;
 };
 
+// todo - back buttons
 // todo - create can commiter or ADMIN
 // todo - show all norms
 // todo - show errors in the frontend ?
@@ -99,10 +101,18 @@ export default function NewProduct() {
   const initialData = useMemo(() => {
     const data = [
       {
-        order: 0,
         id: id,
-        type: "group",
+        groupId: id,
+        order: 0,
         title: "Основна група",
+        type: "group",
+        groupColor: "#FF6347",
+      },
+      {
+        id: `s__${id}`,
+        title: "",
+        type: "spacing",
+        groupId: id,
       },
     ];
     return data;
@@ -113,10 +123,14 @@ export default function NewProduct() {
   }
   return (
     <>
-      <h3 className="products-new__title">
-        Створення нового продукту &nbsp;
-        <Icon name="pencil" />
-      </h3>
+      <div className="products-top-group">
+        <BackLink />
+        <h3 className="products-new__title">
+          Створення нового продукту &nbsp;
+          <Icon name="pencil" />
+        </h3>
+      </div>
+
       <Form method="post">
         <div className="products-new__top-form">
           <label>
@@ -135,11 +149,7 @@ export default function NewProduct() {
           </label>
         </div>
         <div className="products-new__main-form">
-          <ProductNormsTable
-            key={params.productId}
-            norms={initialData}
-            isEditable={true}
-          />
+          <ProductNormsTable normRows={initialData} isEditable={true} />
           <button
             className="button button--primary"
             aria-label="Збрегети зміни"

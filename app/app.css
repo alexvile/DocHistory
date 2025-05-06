@@ -252,3 +252,11 @@ footer {
   align-items: center;
   justify-content: space-between;
 }
+
+.products-top-group {
+  display: flex;
+  align-items: center;
+  column-gap: 12px;
+}
+
+

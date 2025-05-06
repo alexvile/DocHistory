@@ -2,11 +2,12 @@ import { AiOutlineStop } from "react-icons/ai";
 import { HiMagnifyingGlassCircle } from "react-icons/hi2";
 import { VscIndent } from "react-icons/vsc";
 import { GoHeading } from "react-icons/go";
-import { FaLayerGroup, FaUsers, FaRegClock  } from "react-icons/fa";
+import { FaLayerGroup, FaUsers, FaRegClock } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { TbExchange } from "react-icons/tb";
-import { MdManageAccounts, MdLogout } from "react-icons/md";
+import { MdManageAccounts, MdLogout, MdKeyboardArrowLeft } from "react-icons/md";
 import { CgSmartHomeBoiler } from "react-icons/cg";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 export function Svg({ name }: { name: string }) {
   switch (name) {
@@ -30,8 +31,10 @@ export function Svg({ name }: { name: string }) {
       return <FaLayerGroup />;
     case "pencil":
       return <FaPencil />;
-      case "clock":
-        return <FaRegClock />;
+    case "clock":
+      return <FaRegClock />;
+    case "back":
+      return <MdKeyboardArrowLeft />
     default:
       return <AiOutlineStop />;
   }

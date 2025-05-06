@@ -7,6 +7,7 @@ import { getUserId } from "~/server/auth.server";
 import ProductNormsTable from "~/components/ProductNormsTable";
 import NormsGenerator from "~/utils/normsGenerator";
 import { LastChanged } from "~/components/LastChangedTooltip";
+import BackLink from "~/components/BackLink";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.productId, "Missing contactId param");
@@ -99,13 +100,15 @@ export default function ProductNorm() {
   // state to edit and save
   return (
     <>
-      <div className="product-details__top">
+      <div className="products-top-group">
+        <BackLink />
         <h3 className="product-details__title">
           {data.product.productTitle}
           <LastChanged date={data.product.updatedAt} />
         </h3>
-        <p className="product-details__code">{data.product.code}</p>
       </div>
+      <p className="product-details__code">{data.product.code}</p>
+
       <button
         type="button"
         onClick={() => setIsEditable((prev) => !prev)}
