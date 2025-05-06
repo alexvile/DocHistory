@@ -22,15 +22,17 @@ export default function Products() {
   // console.log(111, norms)
   return (
     <>
-      <h2>== Продукти ==</h2>
-      <Link
-        to={"new"}
-        className="link-unstyled button button--primary"
-        aria-label="Додати продукт"
-      >
-        Додати продукт
-      </Link>
-      <h3>Всі продукти</h3>
+      <div className="products-all__top">
+        <h2 className="products-all__title">Всі продукти</h2>
+        <Link
+          to={"new"}
+          className="link-unstyled button button--primary"
+          aria-label="Додати продукт"
+        >
+          Додати
+        </Link>
+      </div>
+
       <div className="products-table__wrapper">
         <ProductsTable products={products} />
       </div>

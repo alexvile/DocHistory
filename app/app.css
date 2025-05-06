@@ -246,3 +246,9 @@ footer {
   display: flex;
   column-gap: 6px;
 }
+
+.products-all__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
