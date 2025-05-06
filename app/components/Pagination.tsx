@@ -1,4 +1,5 @@
 import { Link, useSearchParams } from "@remix-run/react";
+import { Icon } from "./Icon";
 
 type PaginationProps = {
   page: number;
@@ -24,22 +25,41 @@ export function Pagination({
 
   return (
     <div className="pagination">
-      {page > 1 && (
-        <Link to={createLink(page - 1)} className="pagination__btn">
-          ← Назад
-        </Link>
-      )}
+      <div className="pagination__buttons">
+        {page > 1 ? (
+          <Link
+            to={createLink(page - 1)}
+            className="link-unstyled pagination__btn pagination__btn--back"
+            aria-label="Назад"
+          >
+            <Icon name="back" />
+          </Link>
+        ) : (
+          <span className="link-unstyled pagination__btn pagination__btn--back disabled">
+            <Icon name="back" />
+          </span>
+        )}
+        {page < totalPages ? (
+          <Link
+            to={createLink(page + 1)}
+            className="link-unstyled pagination__btn pagination__btn--next"
+            aria-label="Вперед"
+          >
+            <Icon name="next" />
+          </Link>
+        ) : (
+          <span className="link-unstyled pagination__btn pagination__btn--next disabled">
+            <Icon name="next" />
+          </span>
+        )}
+      </div>
+
       <span className="pagination__info">
-        Сторінка {page} з {totalPages}
+        Сторінка: {page} з {totalPages}
       </span>
       <span>
         &nbsp; Показано: {fromPagination}–{toPagination} з {totalCount}
       </span>
-      {page < totalPages && (
-        <Link to={createLink(page + 1)} className="pagination__btn">
-          Вперед →
-        </Link>
-      )}
     </div>
   );
 }

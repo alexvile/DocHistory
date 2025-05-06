@@ -57,6 +57,11 @@ footer {
   text-decoration: none;
 }
 /* reset ends */
+.disabled {
+  pointer-events: none;
+  opacity: 0.4;
+  cursor: default;
+}
 /* form */
 .form__field:not(:last-child) {
   margin-bottom: 12px;
@@ -258,15 +263,3 @@ footer {
   align-items: center;
   column-gap: 12px;
 }
-
-
-
-
-
-
-
-
-
-
-
-

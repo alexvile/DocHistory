@@ -5,7 +5,7 @@ import { GoHeading } from "react-icons/go";
 import { FaLayerGroup, FaUsers, FaRegClock } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { TbExchange } from "react-icons/tb";
-import { MdManageAccounts, MdLogout, MdKeyboardArrowLeft } from "react-icons/md";
+import { MdManageAccounts, MdLogout, MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { CgSmartHomeBoiler } from "react-icons/cg";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
@@ -35,6 +35,8 @@ export function Svg({ name }: { name: string }) {
       return <FaRegClock />;
     case "back":
       return <MdKeyboardArrowLeft />
+      case "next":
+        return <MdKeyboardArrowRight />
     default:
       return <AiOutlineStop />;
   }
