@@ -2,7 +2,7 @@
 import { prisma } from "./prisma.server";
 import { Product, Prisma } from "@prisma/client";
 
-export const createNorm = async ({
+export const createProduct = async ({
   creatorId,
   productTitle,
   code,
@@ -40,7 +40,7 @@ export const getFilteredProducts = async () => {
   });
 };
 
-export const getNormById = async (id: string) => {
+export const getProductbyId = async (id: string) => {
   // todo - get Last 50 changes with creator
   //  add Link for filter all changes by this norm
   return await prisma.product.findUnique({
@@ -49,9 +49,9 @@ export const getNormById = async (id: string) => {
     },
     select: {
       id: true,
-      productName: true,
-      norm1: true,
-      norm2: true,
+      productTitle: true,
+      code: true,
+      norms: true,
       createdAt: true,
       updatedAt: true,
     },

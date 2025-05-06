@@ -6,7 +6,7 @@ import {
 } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { getUserId, requireUserRole } from "~/server/auth.server";
-import { createNorm } from "~/server/products.server";
+import { createProduct } from "~/server/products.server";
 import ProductNormsTable from "~/components/ProductNormsTable";
 import { useMemo, useState } from "react";
 import { filterStringEntries, shortId } from "~/utils/main";
@@ -64,7 +64,7 @@ export const action: ActionFunction = async ({
 
   const jsonNorms = parseFormData(rest);
 
-  await createNorm({
+  await createProduct({
     productTitle: main__title,
     code: main__code ?? null,
     norms: jsonNorms,
