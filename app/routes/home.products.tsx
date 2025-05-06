@@ -4,6 +4,7 @@ import extenderStyles from "~/components/Extender.css?url";
 import backLinkStyles from "~/components/BackLink.css?url";
 import tableStyles from "~/components/ProductNormsTable.css?url";
 import lastChangedTooltipStyles from "~/components/LastChangedTooltip.css?url";
+import sortAndFilterBarStyles from "~/components/SortAndFilterBar.css?url";
 
 export function links() {
   return [
@@ -11,6 +12,7 @@ export function links() {
     { rel: "stylesheet", href: tableStyles },
     { rel: "stylesheet", href: lastChangedTooltipStyles },
     { rel: "stylesheet", href: backLinkStyles },
+    { rel: "stylesheet", href: sortAndFilterBarStyles },
   ];
 }
 
