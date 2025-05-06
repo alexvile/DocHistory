@@ -98,6 +98,9 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
                         : `title__${data.id}`
                     }
                     id={"title_" + data?.id}
+                    aria-label={`Заголовок ${
+                      data?.type === "detail" ? "деталі" : "групи"
+                    }`}
                     defaultValue={data.title}
                     disabled={!isEditable}
                   />
@@ -131,6 +134,7 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
                 className="norms-table__input norms-table__input--small"
                 name={`assortment__${data.groupId}__${data.id}`}
                 id={"assortment_" + data?.id}
+                aria-label="Сортамент"
                 defaultValue={data.assortment}
                 disabled={!isEditable}
               />
@@ -143,6 +147,7 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
                 className="norms-table__input norms-table__input--small"
                 name={`standard__${data.groupId}__${data.id}`}
                 id={"standard_" + data?.id}
+                aria-label="ДСТУ"
                 defaultValue={data.standard}
                 disabled={!isEditable}
               />
@@ -156,6 +161,7 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
                 title={data.unit}
                 name={`unit__${data.groupId}__${data.id}`}
                 id={"unit_" + data?.id}
+                aria-label="Одиниця виміру"
                 defaultValue={data.unit}
                 disabled={!isEditable}
               />
@@ -168,6 +174,7 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
                 type="text"
                 name={`cr__${data.groupId}__${data.id}`}
                 id={"consuption_rate_" + data?.id}
+                aria-label="Норма витрат"
                 defaultValue={data.consuption_rate}
                 disabled={!isEditable}
               />
@@ -180,6 +187,7 @@ const ProductNormsTable = React.memo(function ProductNormsTable({
                 className="norms-table__input norms-table__input--small"
                 name={`cr_pi__${data.groupId}__${data.id}`}
                 id={"consuption_rate_per_item_" + data?.id}
+                aria-label="Норма витрат на одиницю"
                 defaultValue={data.consuption_rate_per_item}
                 disabled={!isEditable}
               />
