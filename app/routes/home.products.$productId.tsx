@@ -98,8 +98,7 @@ export default function ProductNorm() {
   }, [data]);
   // state to edit and save
   return (
-    <div>
-      Norm details
+    <>
       <div className="product-details__top">
         <h3 className="product-details__title">
           {data.product.productTitle}
@@ -117,6 +116,6 @@ export default function ProductNorm() {
       <Form method="post">
         <ProductNormsTable normRows={data.rows} isEditable={isEditable} />
       </Form>
-    </div>
+    </>
   );
 }
