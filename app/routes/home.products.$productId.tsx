@@ -1,23 +1,11 @@
-import { json } from "@remix-run/node";
-import {
-  Form,
-  useFetcher,
-  useLoaderData,
-  useRouteError,
-  isRouteErrorResponse,
-} from "@remix-run/react";
-import { useState, type FunctionComponent } from "react";
-import type { ContactRecord } from "../data";
-import { getContact, updateContact } from "../data";
+import { Form, useLoaderData, useParams } from "@remix-run/react";
+import { useEffect, useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
-import { getProductbyId, updateNormById } from "~/server/products.server";
-import { getChanges } from "~/server/getChanges.server";
-import { createChange } from "~/server/changes.server";
+import { getProductbyId } from "~/server/products.server";
 import { getUserId } from "~/server/auth.server";
-import { testNorms } from "~/test";
-import { ProductWithNorms } from "~/types";
 import ProductNormsTable from "~/components/ProductNormsTable";
+import NormsGenerator from "~/utils/normsGenerator";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.productId, "Missing contactId param");
@@ -65,50 +53,50 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   // fetch all detail information for norm
   invariant(params.productId, "Missing productId param");
-  const fail = "6819e53fbadb7f6cb3cccb31";
-  const detailedProduct = await getProductbyId(fail);
+  const detailedProduct = await getProductbyId(params.productId);
   if (!detailedProduct) {
     throw new Response(null, {
       status: 404,
       statusText: "Not Found",
     });
   }
-  // return json({ detailedNorm });
-  // invariant(params.contactId, "Missing contactId param");
-  // await GetNormByID
-  // const contact = await getContact(params.contactId);
-  // if (!contact) {
-  //     throw new Response("Not Found", { status: 404 });
-  //   }
-  return null;
+  const { code, createdAt, id, productTitle, updatedAt, norms } =
+    detailedProduct;
+  const rows = NormsGenerator.createRows(norms);
+  return Response.json(
+    { rows, product: { code, createdAt, id, productTitle, updatedAt } },
+    { status: 200 }
+  );
 };
+// todo - don't fetch for the same page !!
 
-export function ErrorBoundary() {
-  const error = useRouteError();
-  if (isRouteErrorResponse(error)) {
-    if (error.status === 404) {
-      return <p>Продукт не знайдено (404)</p>;
-    }
+// export function ErrorBoundary() {
+//   const error = useRouteError();
+//   if (isRouteErrorResponse(error)) {
+//     if (error.status === 404) {
+//       return <p>Продукт не знайдено (404)</p>;
+//     }
 
-    return (
-      <div>
-        <h1>Помилка: {error.status}</h1>
-        <p>{error.statusText}</p>
-      </div>
-    );
-  }
+//     return (
+//       <div>
+//         <h1>Помилка: {error.status}</h1>
+//         <p>{error.statusText}</p>
+//       </div>
+//     );
+//   }
 
-  return <p>Щось пішло не так</p>;
-}
+//   return <p>Щось пішло не так</p>;
+// }
 
 export default function ProductNorm() {
-  const productNorm = testNorms as unknown as ProductWithNorms;
+  const data = useLoaderData<typeof loader>();
+  const [isEditable, setIsEditable] = useState(false);
 
-  // const { detailedNorm } = useLoaderData<typeof loader>();
-  // console.log(111122, detailedNorm);
-  const [isEditable, setIsEditable] = useState(true);
-
+  useEffect(() => {
+    console.log("DATA", data);
+  }, [data]);
   //   const { contact } = useLoaderData<typeof loader>();
+
 
   // state to edit and save
   return (
@@ -123,43 +111,8 @@ export default function ProductNorm() {
         {isEditable ? "Cancel" : "Edit"}
       </button>
       <Form method="post">
-        <ProductNormsTable norms={productNorm} isEditable={isEditable} />
+        <ProductNormsTable normRows={data.rows} isEditable={isEditable} />
       </Form>
-      {/* <Form method="post">
-        <div>
-          <label htmlFor="productName">Product name</label>
-          <input
-            type="text"
-            id="productName"
-            name="productName"
-            disabled={!isEditable}
-            defaultValue={detailedNorm.productName}
-          />
-        </div>
-
-        <div>
-          <label htmlFor="norm1">Norm 1</label>
-          <input
-            type="number"
-            id="norm1"
-            name="norm1"
-            disabled={!isEditable}
-            defaultValue={detailedNorm.norm1}
-          />
-        </div>
-        <div>
-          <label htmlFor="norm2">Norm 2</label>
-          <input
-            type="number"
-            id="norm2"
-            name="norm2"
-            disabled={!isEditable}
-            defaultValue={detailedNorm.norm2}
-          />
-        </div>
-
-        <button disabled={!isEditable}>Submit</button>
-      </Form> */}
     </div>
   );
 }

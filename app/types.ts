@@ -31,7 +31,8 @@ export type ProductWithNorms = Pick<
   "id" | "productTitle" | "norms" | "updatedAt"
 >;
 export type ProductNormsTableProps = {
-  norms: ProductWithNorms['norms'],
+  normsRows: any;
+  // norms: ProductWithNorms['norms'],
   isEditable: boolean
 }
 

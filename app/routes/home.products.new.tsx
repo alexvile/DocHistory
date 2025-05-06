@@ -4,7 +4,7 @@ import {
   LoaderFunction,
   LoaderFunctionArgs,
 } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
+import { Form, useActionData, useParams } from "@remix-run/react";
 import { getUserId, requireUserRole } from "~/server/auth.server";
 import { createProduct } from "~/server/products.server";
 import ProductNormsTable from "~/components/ProductNormsTable";
@@ -93,6 +93,8 @@ export default function NewProduct() {
   const hasHydrated = useHasHydrated();
   const [id] = useState(() => shortId());
   // todo - when try to exit - show warning !!!
+  const params = useParams();
+  console.log("id", params.productId);
 
   const initialData = useMemo(() => {
     const data = [
@@ -133,7 +135,11 @@ export default function NewProduct() {
           </label>
         </div>
         <div className="products-new__main-form">
-          <ProductNormsTable norms={initialData} isEditable={true} />
+          <ProductNormsTable
+            key={params.productId}
+            norms={initialData}
+            isEditable={true}
+          />
           <button
             className="button button--primary"
             aria-label="Збрегети зміни"
