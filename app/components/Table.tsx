@@ -3,10 +3,11 @@ import React, { ReactNode, Children, isValidElement } from "react";
 type TableProps = {
   headings: string[];
   children: ReactNode;
+  layout?: boolean;
 };
 // todo - check this error
 
-function Table({ children, headings }: TableProps) {
+function Table({ children, headings, layout }: TableProps) {
   //   Children.forEach(children, (child) => {
   //     if (!isValidElement(child) || child.type !== TableRow) {
   //       throw new Error("Table accepts only Table.Row as children.");
@@ -19,6 +20,13 @@ function Table({ children, headings }: TableProps) {
         "No data"
       ) : (
         <table className="table">
+          {layout && (
+            <colgroup>
+              {headings.map((heading, index) => (
+                <col key={index}></col>
+              ))}
+            </colgroup>
+          )}
           {headings && (
             <thead className="table__head">
               <tr>

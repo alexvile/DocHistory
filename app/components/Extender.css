@@ -6,6 +6,11 @@
   display: flex;
   align-items: flex-end;
 }
+.extender.detail-extender {
+  position: absolute;
+  width: 100%;
+}
+
 .extender__line {
   position: relative;
   display: block;

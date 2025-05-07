@@ -100,10 +100,10 @@ export default function ProductNorm() {
   const [isEditable, setIsEditable] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const initialFormSnapshot = useFormSnapshotOnVisible(formRef, isEditable);
-  
+
   const onEditClick = () => {
     setIsEditable(true);
-  }; 
+  };
 
   const onCancelClick = () => {
     if (!formRef.current || !initialFormSnapshot) {
@@ -158,10 +158,11 @@ export default function ProductNorm() {
         <span className="bold">Код: </span>
         {data.product.code}
       </p>
-
-      <Form method="post" ref={formRef}>
-        <ProductNormsTable normRows={data.rows} isEditable={isEditable} />
-      </Form>
+      <div className="products-details__main-form">
+        <Form method="post" ref={formRef}>
+          <ProductNormsTable normRows={data.rows} isEditable={isEditable} />
+        </Form>
+      </div>
     </>
   );
 }

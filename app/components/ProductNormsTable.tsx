@@ -32,6 +32,7 @@ function ProductNormsTable({ normRows, isEditable }: ProductNormsTableProps) {
   // todo - option to remove row
   return (
     <Table
+      layout={true}
       headings={[
         "№",
         "G",
@@ -68,11 +69,12 @@ function ProductNormsTable({ normRows, isEditable }: ProductNormsTableProps) {
                 )}
               </>
             ) : (
-              <div className="element__title">
-                <div>
+              <div className="norms-table__td-title-wrapper">
+                <div className="norms-table__td-title-container">
                   <input
                     type="text"
                     required
+                    className="norms-table__input"
                     title={data.title}
                     name={
                       data?.type === "detail"
@@ -92,10 +94,11 @@ function ProductNormsTable({ normRows, isEditable }: ProductNormsTableProps) {
                       action={() => {
                         handleAddRow("detail", index + 1, data?.groupId);
                       }}
+                      customClass="detail-extender"
                     />
                   ) : null}
                 </div>
-                <div className="show-full-info">
+                <div className="norms-table__td-show-full show-full-info">
                   <Icon name="zoom" />
                   <span className="show-full-info__data">{data.title}</span>
                 </div>

@@ -104,7 +104,7 @@ footer {
   padding: 8px 6px;
 }
 .table__cell {
-  padding: 4px 6px;
+  padding: 6px 6px;
 }
 /* table base ends */
 
@@ -155,9 +155,6 @@ footer {
   }
 }
 
-.element__title {
-  display: flex;
-}
 
 /* new element */
 

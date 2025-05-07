@@ -1,11 +1,12 @@
 type ExtenderProps = {
   action: () => void;
   ariaLabel?: string;
+  customClass?: string;
 };
 
-export default function Extender({ action, ariaLabel }: ExtenderProps) {
+export default function Extender({ action, ariaLabel, customClass }: ExtenderProps) {
   return (
-    <div className="extender">
+    <div className={`extender${customClass ? ' ' + customClass: ''}`}>
       <span className="extender__line"></span>
       <button
         type="button"
