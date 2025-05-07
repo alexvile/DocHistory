@@ -1,4 +1,10 @@
-import { Form, isRouteErrorResponse, useLoaderData, useParams, useRouteError } from "@remix-run/react";
+import {
+  Form,
+  isRouteErrorResponse,
+  useLoaderData,
+  useParams,
+  useRouteError,
+} from "@remix-run/react";
 import { useEffect, useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
@@ -93,10 +99,24 @@ export function ErrorBoundary() {
 export default function ProductNorm() {
   const data = useLoaderData<typeof loader>();
   const [isEditable, setIsEditable] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
 
-  useEffect(() => {
-    console.log("DATA", data);
-  }, [data]);
+  const onEditClick = () => {
+    setIsEditable(true);
+  };
+  const onCancelClick = () => {
+    if (!isDirty) {
+      setIsEditable(false);
+      return;
+    }
+
+    const confirmed = window.confirm("Ви впевнені, що хочете скасувати зміни?");
+    if (confirmed) {
+      setIsEditable(false);
+      // нормRows автоматично повернуться через effect
+    }
+  };
+
   // state to edit and save
   return (
     <>
@@ -106,18 +126,34 @@ export default function ProductNorm() {
           {data.product.productTitle}
           <LastChanged date={data.product.updatedAt} />
         </h3>
+        <div className="edit-button__wrapper">
+          {/* todo - warning for discard if rows was added */}
+          {isEditable ? (
+            <button
+              type="button"
+              onClick={onCancelClick}
+              className="button button--secondary"
+            >
+              Відмінити
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={onEditClick}
+              className="button button--primary"
+            >
+              Змінити
+            </button>
+          )}
+        </div>
       </div>
-      <p className="product-details__code">{data.product.code}</p>
+      <p className="product-details__code">
+        <span className="bold">Код: </span>
+        {data.product.code}
+      </p>
 
-      <button
-        type="button"
-        onClick={() => setIsEditable((prev) => !prev)}
-        className="edit-button"
-      >
-        {isEditable ? "Cancel" : "Edit"}
-      </button>
       <Form method="post">
-        <ProductNormsTable normRows={data.rows} isEditable={isEditable} />
+        <ProductNormsTable normRows={data.rows} isEditable={isEditable} onDirtyChange={setIsDirty} />
       </Form>
     </>
   );

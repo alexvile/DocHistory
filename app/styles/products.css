@@ -1,0 +1,42 @@
+
+/* norms table */
+.norms-table__input.norms-table__input--small {
+  width: 80px;
+}
+.norms-table__input.norms-table__input--xsmall {
+  width: 60px;
+}
+/* products styles */
+.product-details__title, .products-new__title {
+  display: flex;
+  column-gap: 6px;
+  margin: 0;
+}
+
+.products-all__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.products-top-group {
+  display: flex;
+  align-items: center;
+  column-gap: 12px;
+  margin-bottom: 8px;
+}
+.product-details__code {
+  margin-top: 0;
+}
+
+
+.products-new__main-form .button[type="submit"] {
+  margin-top: 12px;
+}
+
+
+/* edit button group */
+.edit-button__wrapper {
+  margin-left: auto;
+}
+

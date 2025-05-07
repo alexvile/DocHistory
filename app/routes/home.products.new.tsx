@@ -126,7 +126,7 @@ export default function NewProduct() {
       <div className="products-top-group">
         <BackLink />
         <h3 className="products-new__title">
-          Створення нового продукту &nbsp;
+          Створення нового продукту
           <Icon name="pencil" />
         </h3>
       </div>

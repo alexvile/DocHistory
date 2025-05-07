@@ -1,17 +1,28 @@
 import { ProductNormsTableProps } from "~/types";
 import Table from "./Table";
-import NormsGenerator from "~/utils/normsGenerator";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Extender from "./Extender";
 import { Icon } from "./Icon";
 import { createRows } from "~/utils/rowHandlers";
+import { areRowsEqual } from "~/utils/areRowsEqual";
 
-function ProductNormsTable({ normRows, isEditable }: ProductNormsTableProps) {
+function ProductNormsTable({
+  normRows,
+  isEditable,
+  onDirtyChange,
+}: ProductNormsTableProps & { onDirtyChange?: (dirty: boolean) => void }) {
   const [rows, setRows] = useState(normRows);
   // const [rows, setRows] = useState(() => NormsGenerator.createRows(norms));
   useEffect(() => {
     setRows(normRows);
   }, [normRows]);
+
+  useEffect(() => {
+    if (!isEditable || !onDirtyChange) return;
+    const isDirty = !areRowsEqual(rows, normRows);
+    console.log("isDirty", isDirty);
+    onDirtyChange(isDirty);
+  }, [rows, normRows, isEditable]);
   // 2 options
   // I formData
   // II rows to JSON (control all inputs !)
