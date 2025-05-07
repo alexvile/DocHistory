@@ -35,7 +35,7 @@ function ProductNormsTable({ normRows, isEditable }: ProductNormsTableProps) {
       layout={true}
       headings={[
         "№",
-        "G",
+        "",
         "Назва",
         "Сортамент",
         "ДСТУ",

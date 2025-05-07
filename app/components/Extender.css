@@ -42,7 +42,7 @@
   transform: translate(-50%, -50%);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;;
   cursor: pointer;
   border: 1px solid #005bd3;
   width: 22px;
@@ -50,6 +50,7 @@
 }
 .extender__button:hover {
   transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 0 3px 2px rgb(20 54 91 / 60%);
 }
 
 .extender:hover {
