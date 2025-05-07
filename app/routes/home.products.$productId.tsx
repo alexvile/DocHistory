@@ -2,10 +2,9 @@ import {
   Form,
   isRouteErrorResponse,
   useLoaderData,
-  useParams,
   useRouteError,
 } from "@remix-run/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import { getProductbyId } from "~/server/products.server";
@@ -14,6 +13,8 @@ import ProductNormsTable from "~/components/ProductNormsTable";
 import NormsGenerator from "~/utils/normsGenerator";
 import { LastChanged } from "~/components/LastChangedTooltip";
 import BackLink from "~/components/BackLink";
+import { areFormDataEqual } from "~/utils/areFormDataEqual";
+import { useFormSnapshotOnVisible } from "~/utils/hooks";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.productId, "Missing contactId param");
@@ -58,8 +59,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   return null;
 };
 
-export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  // fetch all detail information for norm
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.productId, "Missing productId param");
   const detailedProduct = await getProductbyId(params.productId);
   if (!detailedProduct) {
@@ -76,7 +76,6 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     { status: 200 }
   );
 };
-// todo - don't fetch for the same page !!
 
 export function ErrorBoundary() {
   const error = useRouteError();
@@ -99,13 +98,23 @@ export function ErrorBoundary() {
 export default function ProductNorm() {
   const data = useLoaderData<typeof loader>();
   const [isEditable, setIsEditable] = useState(false);
-  const [isDirty, setIsDirty] = useState(false);
-
+  const formRef = useRef<HTMLFormElement>(null);
+  const initialFormSnapshot = useFormSnapshotOnVisible(formRef, isEditable);
+  
   const onEditClick = () => {
     setIsEditable(true);
-  };
+  }; 
+
   const onCancelClick = () => {
-    if (!isDirty) {
+    if (!formRef.current || !initialFormSnapshot) {
+      setIsEditable(false);
+      return;
+    }
+
+    const current = new FormData(formRef.current);
+    const hasChanged = !areFormDataEqual(current, initialFormSnapshot);
+
+    if (!hasChanged) {
       setIsEditable(false);
       return;
     }
@@ -113,11 +122,10 @@ export default function ProductNorm() {
     const confirmed = window.confirm("Ви впевнені, що хочете скасувати зміни?");
     if (confirmed) {
       setIsEditable(false);
-      // нормRows автоматично повернуться через effect
+      formRef.current.reset();
     }
   };
 
-  // state to edit and save
   return (
     <>
       <div className="products-top-group">
@@ -127,7 +135,6 @@ export default function ProductNorm() {
           <LastChanged date={data.product.updatedAt} />
         </h3>
         <div className="edit-button__wrapper">
-          {/* todo - warning for discard if rows was added */}
           {isEditable ? (
             <button
               type="button"
@@ -152,8 +159,8 @@ export default function ProductNorm() {
         {data.product.code}
       </p>
 
-      <Form method="post">
-        <ProductNormsTable normRows={data.rows} isEditable={isEditable} onDirtyChange={setIsDirty} />
+      <Form method="post" ref={formRef}>
+        <ProductNormsTable normRows={data.rows} isEditable={isEditable} />
       </Form>
     </>
   );

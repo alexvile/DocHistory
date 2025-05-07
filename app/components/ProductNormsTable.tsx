@@ -1,31 +1,15 @@
 import { ProductNormsTableProps } from "~/types";
 import Table from "./Table";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Extender from "./Extender";
 import { Icon } from "./Icon";
 import { createRows } from "~/utils/rowHandlers";
-import { areRowsEqual } from "~/utils/areRowsEqual";
 
-function ProductNormsTable({
-  normRows,
-  isEditable,
-  onDirtyChange,
-}: ProductNormsTableProps & { onDirtyChange?: (dirty: boolean) => void }) {
+function ProductNormsTable({ normRows, isEditable }: ProductNormsTableProps) {
   const [rows, setRows] = useState(normRows);
-  // const [rows, setRows] = useState(() => NormsGenerator.createRows(norms));
   useEffect(() => {
     setRows(normRows);
   }, [normRows]);
-
-  useEffect(() => {
-    if (!isEditable || !onDirtyChange) return;
-    const isDirty = !areRowsEqual(rows, normRows);
-    console.log("isDirty", isDirty);
-    onDirtyChange(isDirty);
-  }, [rows, normRows, isEditable]);
-  // 2 options
-  // I formData
-  // II rows to JSON (control all inputs !)
 
   const handleAddRow = useCallback(
     (
@@ -52,7 +36,6 @@ function ProductNormsTable({
 
   // todo - option to remove row
   // todo - tree structure instead of colors
-  // console.log("rows111", rows);
   return (
     <Table
       headings={[
@@ -205,9 +188,5 @@ function ProductNormsTable({
     </Table>
   );
 }
-
-// , (prevProps, nextProps) => {
-//   return prevProps.norms === nextProps.norms; // Порівнюємо тільки norms
-// });
 
 export default ProductNormsTable;
