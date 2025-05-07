@@ -12,15 +12,10 @@ function ProductNormsTable({ normRows, isEditable }: ProductNormsTableProps) {
   }, [normRows]);
 
   const handleAddRow = useCallback(
-    (
-      type: "group" | "detail",
-      insertIndex: number,
-      parentId?: string,
-      groupColor?: string
-    ) => {
+    (type: "group" | "detail", insertIndex: number, parentId?: string) => {
       console.log("parentId", parentId);
       // todo - use settimeout + block to prevent throttle
-      const rowsToAdd = createRows({ type, groupColor, groupId: parentId });
+      const rowsToAdd = createRows({ type, groupId: parentId });
       setRows((prevRows) => {
         const updatedRows = [
           ...prevRows.slice(0, insertIndex),
@@ -35,7 +30,6 @@ function ProductNormsTable({ normRows, isEditable }: ProductNormsTableProps) {
   );
 
   // todo - option to remove row
-  // todo - tree structure instead of colors
   return (
     <Table
       headings={[
@@ -58,23 +52,21 @@ function ProductNormsTable({ normRows, isEditable }: ProductNormsTableProps) {
           <Table.Cell>{index + 1}</Table.Cell>
           <Table.Cell>
             {data.type !== "spacing" && (
-              <div
-                className="group-circle"
-                style={{
-                  backgroundColor: data.groupColor ? data.groupColor : "#fff",
-                }}
-              ></div>
+              <>{data.type === "group" ? "+" : "-"}</>
             )}
           </Table.Cell>
           <Table.Cell>
-            {/* todo - refactor */}
             {data.type === "spacing" ? (
-              <Extender
-                ariaLabel="Додати групу"
-                action={() => {
-                  handleAddRow("group", index + 1);
-                }}
-              />
+              <>
+                {isEditable && (
+                  <Extender
+                    ariaLabel="Додати групу"
+                    action={() => {
+                      handleAddRow("group", index + 1);
+                    }}
+                  />
+                )}
+              </>
             ) : (
               <div className="element__title">
                 <div>
@@ -98,12 +90,7 @@ function ProductNormsTable({ normRows, isEditable }: ProductNormsTableProps) {
                     <Extender
                       ariaLabel="Додати деталь до групи"
                       action={() => {
-                        handleAddRow(
-                          "detail",
-                          index + 1,
-                          data?.groupId,
-                          data.groupColor
-                        );
+                        handleAddRow("detail", index + 1, data?.groupId);
                       }}
                     />
                   ) : null}
@@ -114,8 +101,6 @@ function ProductNormsTable({ normRows, isEditable }: ProductNormsTableProps) {
                 </div>
               </div>
             )}
-
-            {/* todo - refactor */}
           </Table.Cell>
           <Table.Cell>
             {data.type === "detail" ? (

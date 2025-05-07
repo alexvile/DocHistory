@@ -88,6 +88,7 @@ export const loader: LoaderFunction = async ({
 // todo - create can commiter or ADMIN
 // todo - show all norms
 // todo - show errors in the frontend ?
+// todo - show warning if try to quit
 export default function NewProduct() {
   const data = useActionData();
   console.log("actionData", data);
@@ -106,7 +107,6 @@ export default function NewProduct() {
         order: 0,
         title: "Основна група",
         type: "group",
-        groupColor: "#FF6347",
       },
       {
         id: `s__${id}`,

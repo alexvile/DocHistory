@@ -1,7 +1,7 @@
 import { shortId } from "./main";
 
-export const createRows = ({ type, groupColor, groupId }) => {
-  const newRow = createNewRow(type, groupId, groupColor);
+export const createRows = ({ type, groupId }) => {
+  const newRow = createNewRow(type, groupId);
   console.log(9944, newRow);
   const rowsToAdd =
     type === "group"
@@ -21,17 +21,13 @@ export const createRows = ({ type, groupColor, groupId }) => {
 };
 // ! todo - refactor
 
-const createNewRow = (type: string, groupId?: string, groupColor?: string) => {
+const createNewRow = (type: string, groupId?: string) => {
   const newId = shortId();
   return {
     id: newId,
     type,
     groupId: groupId || newId,
     title: type === "group" ? "Нова група" : "Нова деталь",
-    groupColor:
-      type === "group"
-        ? `#${Math.floor(Math.random() * 16777215).toString(16)}`
-        : groupColor,
     ...(type !== "group" && { groupId: groupId }),
   };
 };
