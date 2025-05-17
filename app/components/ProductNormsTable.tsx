@@ -148,7 +148,9 @@ function ProductNormsTable({ normRows, isEditable }: ProductNormsTableProps) {
             {data.type === "detail" ? (
               <input
                 className="norms-table__input norms-table__input--small"
-                type="text"
+                type="number"
+                step="0.00001"
+                placeholder="0.0410"
                 name={`cr__${data.groupId}__${data.id}`}
                 id={"consuption_rate_" + data?.id}
                 defaultValue={data.consuption_rate}
@@ -159,8 +161,10 @@ function ProductNormsTable({ normRows, isEditable }: ProductNormsTableProps) {
           <Table.Cell>
             {data.type === "detail" ? (
               <input
-                type="text"
                 className="norms-table__input norms-table__input--small"
+                type="number"
+                step="0.00001"
+                placeholder="0.0410"
                 name={`cr_pi__${data.groupId}__${data.id}`}
                 id={"consuption_rate_per_item_" + data?.id}
                 defaultValue={data.consuption_rate_per_item}
