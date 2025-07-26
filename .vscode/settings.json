@@ -1,0 +1,11 @@
+{
+  "emmet.includeLanguages": {
+    "html": "html",
+    "javascript": "javascriptreact",
+    "vue-html": "html",
+    "liquid": "html"
+  },
+  "prettier.printWidth": 200,
+  "prettier.singleQuote": false,
+  "editor.indentSize": 2
+}

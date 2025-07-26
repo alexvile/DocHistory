@@ -1,9 +1,4 @@
-import {
-  Form,
-  isRouteErrorResponse,
-  useLoaderData,
-  useRouteError,
-} from "@remix-run/react";
+import { Form, isRouteErrorResponse, useLoaderData, useRouteError } from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
@@ -68,13 +63,9 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       statusText: "Not Found",
     });
   }
-  const { code, createdAt, id, productTitle, updatedAt, norms } =
-    detailedProduct;
+  const { code, createdAt, id, productTitle, updatedAt, norms } = detailedProduct;
   const rows = NormsGenerator.createRows(norms);
-  return Response.json(
-    { rows, product: { code, createdAt, id, productTitle, updatedAt } },
-    { status: 200 }
-  );
+  return Response.json({ rows, product: { code, createdAt, id, productTitle, updatedAt } }, { status: 200 });
 };
 
 export function ErrorBoundary() {
@@ -105,7 +96,9 @@ export default function ProductNorm() {
     setIsEditable(true);
   };
 
-  const onCancelClick = () => {
+  const onSaveClick = () => {
+    console.log("on save");
+    // todo - prevent code duplicate
     if (!formRef.current || !initialFormSnapshot) {
       setIsEditable(false);
       return;
@@ -118,6 +111,28 @@ export default function ProductNorm() {
       setIsEditable(false);
       return;
     }
+    // todo - prevent code duplicate
+
+    // save new file
+    // save change instance
+  };
+
+  const onCancelClick = () => {
+    // todo - prevent code duplicate
+
+    if (!formRef.current || !initialFormSnapshot) {
+      setIsEditable(false);
+      return;
+    }
+
+    const current = new FormData(formRef.current);
+    const hasChanged = !areFormDataEqual(current, initialFormSnapshot);
+
+    if (!hasChanged) {
+      setIsEditable(false);
+      return;
+    }
+    // todo - prevent code duplicate
 
     const confirmed = window.confirm("Ви впевнені, що хочете скасувати зміни?");
     if (confirmed) {
@@ -136,19 +151,16 @@ export default function ProductNorm() {
         </h3>
         <div className="edit-button__wrapper">
           {isEditable ? (
-            <button
-              type="button"
-              onClick={onCancelClick}
-              className="button button--secondary"
-            >
-              Відмінити
-            </button>
+            <div className="edit-button__edit-container">
+              <button type="button" onClick={onSaveClick} className="button button--primary">
+                Зберегти
+              </button>
+              <button type="button" onClick={onCancelClick} className="button button--secondary">
+                Відмінити
+              </button>
+            </div>
           ) : (
-            <button
-              type="button"
-              onClick={onEditClick}
-              className="button button--primary"
-            >
+            <button type="button" onClick={onEditClick} className="button button--primary">
               Змінити
             </button>
           )}

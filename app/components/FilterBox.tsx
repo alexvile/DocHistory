@@ -26,7 +26,7 @@ export function FilterBox({
 
     return () => clearTimeout(timeout);
   }, [inputValue]);
-
+// todo - fix error when using "(" in query
   return (
     <input
       type="text"

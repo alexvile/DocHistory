@@ -58,3 +58,6 @@
 .edit-button__wrapper {
   margin-left: auto;
 }
+.edit-button__edit-container .button:first-of-type{
+ margin-right: 6px;
+}

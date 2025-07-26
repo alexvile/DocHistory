@@ -47,12 +47,12 @@ model Product {
 
 model Change {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String   @db.ObjectId
-  objectId  String   @db.ObjectId
   createdAt DateTime @default(now())
+  creator   User     @relation("UserChanges", fields: [creatorId], references: [id])
+  creatorId String   @db.ObjectId
+  product   Product  @relation("ProductChanges", fields: [productId], references: [id])
+  productId String   @db.ObjectId
   changes   Json
-  user      User     @relation("UserChanges", fields: [userId], references: [id])
-  product   Product  @relation("ProductChanges", fields: [objectId], references: [id])
 }
-
 // JSON з інформацією про зміни: { field: "value_before", newValue: "value_after" }
+
