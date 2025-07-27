@@ -8,7 +8,9 @@ import { TbExchange } from "react-icons/tb";
 import { MdManageAccounts, MdLogout, MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { CgSmartHomeBoiler } from "react-icons/cg";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { IoIosHelpCircleOutline } from "react-icons/io";
 
+// todo - copy svg to save memory
 export function Svg({ name }: { name: string }) {
   switch (name) {
     case "zoom":
@@ -34,9 +36,11 @@ export function Svg({ name }: { name: string }) {
     case "clock":
       return <FaRegClock />;
     case "back":
-      return <MdKeyboardArrowLeft />
-      case "next":
-        return <MdKeyboardArrowRight />
+      return <MdKeyboardArrowLeft />;
+    case "next":
+      return <MdKeyboardArrowRight />;
+    case "help":
+      return <IoIosHelpCircleOutline />;
     default:
       return <AiOutlineStop />;
   }

@@ -51,6 +51,16 @@ export default function SideMenu({ role }: SideMenuProps) {
               <Icon name="changes" /> Зміни
             </NavLink>
           </li>
+             <li className="side-menu__item">
+            <NavLink
+              className={({ isActive, isPending }) =>
+                isActive ? "active" : isPending ? "pending" : ""
+              }
+              to={"/home/help"}
+            >
+              <Icon name="help" />Допомога
+            </NavLink>
+          </li>
         </ul>
       </nav>
     </aside>

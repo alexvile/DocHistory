@@ -1,47 +1,53 @@
-// await prisma.change.create({
-//   data: {
-//     user: {
-//       connect: {
-//         id: userId,
-//       },
-//     },
-//     norm: {
-//       connect: {
-//         id: objectId,
-//       },
-//     },
-//     changes,
-//   },
-// });
-
-// todo - do we need to connect creator of norm ???
 import { prisma } from "./prisma.server";
-import { Norm, Prisma } from "@prisma/client";
+import { Change, Prisma } from "@prisma/client";
 
-export const createChange = async ({ userId, normId, changes }: any) => {
-  console.log(111, userId, normId, changes)
-  await prisma.change.create({
-    data: {
-      user: {
-        connect: {
-          id: userId,
+export const getTotalChangesCount = async (whereFilter: Prisma.ChangeWhereInput) => {
+  return await prisma.change.count({ where: whereFilter });
+};
+
+export const getFilteredChanges = async (
+  sortFilter: Prisma.ChangeOrderByWithRelationInput,
+  whereFilter: Prisma.ChangeWhereInput,
+  skip: number,
+  take: number
+) => {
+  return await prisma.change.findMany({
+    orderBy: {
+      ...sortFilter,
+    },
+    where: {
+      // ownerId: userId,
+      ...whereFilter,
+    },
+    skip,
+    take,
+    select: {
+      id: true,
+      createdAt: true,
+      creator: {
+        select: {
+          firstName: true,
+          lastName: true,
         },
       },
-      norm: {
-        connect: {
-          id: normId,
+      product: {
+        select: {
+          productTitle: true,
         },
       },
-      changes,
     },
   });
 };
-
-export const getAllChanges = async () => {
-  return await prisma.change.findMany({
-   include: {
-    user: true,
-    norm: true
-   }
+export const getChangebyId = async (id: string) => {
+  return await prisma.change.findUnique({
+    where: {
+      id: id,
+    },
+    select: {
+      id: true,
+      createdAt: true,
+      diff: true,
+    },
   });
 };
+// todo - get the snapshot

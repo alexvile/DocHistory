@@ -1,4 +1,4 @@
-import type { User, Product } from "@prisma/client";
+import type { User, Product, Change, Prisma } from "@prisma/client";
 
 export type SideMenuProps = {
   role: User["role"];
@@ -15,6 +15,29 @@ export type FilteredProduct = Pick<Product, "id" | "productTitle" | "updatedAt">
 
 export type ProductsListProps = {
   products: FilteredProduct[];
+};
+
+// export type FilteredChanges = Pick<Change, "id"  | "createdAt">;
+
+type FilteredChangeWithRelations = Prisma.ChangeGetPayload<{
+  select: {
+    id: true;
+    createdAt: true;
+    creator: {
+      select: {
+        firstName: true;
+        lastName: true;
+      };
+    };
+    product: {
+      select: {
+        productTitle: true;
+      };
+    };
+  };
+}>;
+export type ChangesListProps = {
+  changes: FilteredChangeWithRelations[];
 };
 
 export type ProductWithNorms = Pick<Product, "id" | "productTitle" | "norms" | "updatedAt">;
