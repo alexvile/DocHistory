@@ -1,0 +1,28 @@
+.changelist__container {
+  /* background-color: #e5e5e5; */
+}
+
+/* items */
+.changeslist__item:not(:last-child) {
+  margin-bottom: 18px;
+}
+
+.change-item__title {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+/* change in item */
+.field-change__old {
+  color: #cb2431;
+}
+.field-change__new {
+  color: #2ea44f;
+}
+.field-change__old,
+.field-change__new {
+  margin: 0;
+}

@@ -8,9 +8,8 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -148,12 +147,12 @@ footer {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  color: var(--icon-color, currentColor);
   svg {
     width: 100%;
     height: 100%;
   }
 }
-
 
 /* new element */
 
@@ -186,16 +185,14 @@ footer {
 .button.button--secondary {
   color: #303030;
   background-color: #fff;
-  box-shadow: 0rem -0.0625rem 0rem 0rem #b5b5b5 inset,
-    0rem 0rem 0rem 0.0625rem rgba(0, 0, 0, 0.1) inset,
+  box-shadow: 0rem -0.0625rem 0rem 0rem #b5b5b5 inset, 0rem 0rem 0rem 0.0625rem rgba(0, 0, 0, 0.1) inset,
     0rem 0.03125rem 0rem 0.09375rem #fff inset;
 }
 .button.button--secondary:hover {
   background-color: #fafafa;
 }
 .button.button--secondary:active {
-  box-shadow: -0.0625rem 0rem 0.0625rem 0rem rgba(26, 26, 26, 0.122) inset,
-    0.0625rem 0rem 0.0625rem 0rem rgba(26, 26, 26, 0.122) inset,
+  box-shadow: -0.0625rem 0rem 0.0625rem 0rem rgba(26, 26, 26, 0.122) inset, 0.0625rem 0rem 0.0625rem 0rem rgba(26, 26, 26, 0.122) inset,
     0rem 0.125rem 0.0625rem 0rem rgba(26, 26, 26, 0.2) inset;
 }
 .button.button--primary {

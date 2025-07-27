@@ -1,10 +1,9 @@
-import { Form, isRouteErrorResponse, useActionData, useLoaderData, useRouteError, useSubmit } from "@remix-run/react";
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { isRouteErrorResponse, useLoaderData, useRouteError } from "@remix-run/react";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
-import NormsGenerator from "~/utils/normsGenerator";
-import { LastChanged } from "~/components/LastChangedTooltip";
 import BackLink from "~/components/BackLink";
 import { getChangebyId } from "~/server/changes.server";
+import ChangeList from "~/components/ChangeList";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.changeId, "Missing productId param");
@@ -44,8 +43,13 @@ export default function ChangeItem() {
       <div className="products-top-group">
         <BackLink />
         <h3 className="product-details__title">
-          назва
+          назва продкута
+          - коли зміни
+          - хто вніс
         </h3>
+      </div>
+      <div>
+        <ChangeList diff={data?.diff}/>
       </div>
     </>
   );

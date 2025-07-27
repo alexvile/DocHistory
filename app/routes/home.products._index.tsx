@@ -23,6 +23,7 @@ export const loader: LoaderFunction = async ({
   const take = Math.max(1, parseInt(limitParam));
   const skip = (page - 1) * take;
 
+  //  sort be update by default
   const sort = url.searchParams.get("sort") ?? "name";
   const dir = url.searchParams.get("dir") ?? "asc";
   const filter = url.searchParams.get("q") ?? "";
