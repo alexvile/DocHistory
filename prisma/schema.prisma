@@ -40,7 +40,7 @@ model Product {
   productTitle String   @unique
   code         String?
   norms        Json
-  creator      User     @relation(references: [id], fields: [creatorId], "UserProducts")
+  creator      User     @relation("UserProducts", fields: [creatorId], references: [id])
   creatorId    String   @db.ObjectId
   changes      Change[] @relation("ProductChanges")
 }
@@ -53,6 +53,10 @@ model Change {
   product   Product  @relation("ProductChanges", fields: [productId], references: [id])
   productId String   @db.ObjectId
   changes   Json
+
+  @@index([productId])
+  @@index([creatorId])
+  @@index([createdAt])
 }
 // JSON з інформацією про зміни: { field: "value_before", newValue: "value_after" }
 
