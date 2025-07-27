@@ -5,7 +5,7 @@
     "vue-html": "html",
     "liquid": "html"
   },
-  "prettier.printWidth": 200,
+  "prettier.printWidth": 140,
   "prettier.singleQuote": false,
   "editor.indentSize": 2
 }

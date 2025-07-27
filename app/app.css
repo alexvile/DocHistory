@@ -48,7 +48,6 @@ main {
 footer {
   grid-area: footer;
   background-color: #f4f4f4;
-  padding: 1rem;
   text-align: center;
 }
 
