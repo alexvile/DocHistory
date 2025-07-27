@@ -13,6 +13,7 @@ import { useFormSnapshotOnVisible } from "~/utils/hooks";
 import { diffNorms, filterStringEntries } from "~/utils/main";
 import { buildDynamicTitleValidators, validateFields } from "~/utils/validation";
 import { parseFormData } from "~/utils/rowHandlers";
+import { updateProductAndCreateChange } from "~/server/atomic.server";
 
 type ActionResponse = {
   success: boolean;
@@ -27,13 +28,13 @@ type ActionResponse = {
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   // invariant(params.productId, "Missing contactId param");
   // const userIdFromSession = await getUserId(request);
-  // ! tmp solution
- invariant(params.productId, "Missing productId param");
+  // ! tmp solution starts
+  invariant(params.productId, "Missing productId param");
   const detailedProduct = await getProductbyId(params.productId);
-  const { code, createdAt, id, productTitle, updatedAt, norms } = detailedProduct;
+  const { code, createdAt, id, productTitle, updatedAt, norms: oldNorms } = detailedProduct;
+  // ! tmp solution ends
 
-
-  // todo - use in future data from frontend to prevent ettra fetch
+  // todo - use in future data from frontend to prevent extra fetch
   // todo -PREVENT code duplicate !!
   const userId = await getUserId(request);
   if (!userId) {
@@ -65,16 +66,24 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     ...dynamicTitleFields,
   });
 
+  // todo - update validation
   // if (Object.keys(fieldErrors).length > 0) {
   //   const res: ActionResponse = { success: false, errors: fieldErrors };
   //   console.log(222, res);
   //   return Response.json(res, { status: 400 });
   // }
 
-  const jsonNorms = parseFormData(rest);
-  console.log(111, main__title, main__code, jsonNorms);
-  const diff = diffNorms(norms, jsonNorms as any);
-  return Response.json(diff, { status: 200 });
+  const newNorms = parseFormData(rest);
+  // console.log(111, main__title, main__code, newNorms);
+  const diff = diffNorms(oldNorms, newNorms);
+  // extra checking
+  if (diff.length === 0) {
+    return { updated: false, message: "No changes detected" };
+  }
+
+  const response = await updateProductAndCreateChange({ creatorId: userId, productId: params.productId, diff, newNorms });
+  const res = { success: true, errors: {}, data: response};
+  return Response.json(res, { status: 200 });
 };
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
