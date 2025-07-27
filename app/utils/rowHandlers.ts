@@ -1,8 +1,10 @@
+import { Group } from "~/types";
 import { shortId } from "./main";
 
+// todo - add types
 export const createRows = ({ type, groupId }) => {
   const newRow = createNewRow(type, groupId);
-  console.log(9944, newRow);
+  // console.log(9944, newRow);
   const rowsToAdd =
     type === "group"
       ? [
@@ -32,42 +34,7 @@ const createNewRow = (type: string, groupId?: string) => {
   };
 };
 
-
-
-
-
-
-
-
-
-
-type Detail = {
-  id: string;
-  type: "detail";
-  order: number;
-  title?: string;
-  assortment?: string;
-  standard?: string;
-  unit?: string;
-  consuption_rate?: number | string;
-  consuption_rate_per_item?: number | string;
-  price?: number | string;
-  sum?: number | string;
-  notes?: string;
-};
-
-type Group = {
-  id: string;
-  type: "group";
-  order: number;
-  title: string;
-  code?: string;
-  unit?: string;
-  quantity?: number | string;
-  details: Detail[];
-};
-
-// мапа коротких полів з форми → стандартні ключі
+// todo - move in separate function
 const fieldNameMap: Record<string, string> = {
   cr: "consuption_rate",
   cr_pi: "consuption_rate_per_item",
@@ -82,18 +49,11 @@ const fieldNameMap: Record<string, string> = {
   code: "code",
 };
 
-// нормалізує значення
 function normalizeValue(key: string, value: string): string | number {
   const trimmed = value.trim();
   if (trimmed === "") return "";
 
-  const numericFields = [
-    "consuption_rate",
-    "consuption_rate_per_item",
-    "price",
-    "sum",
-    "quantity",
-  ];
+  const numericFields = ["consuption_rate", "consuption_rate_per_item", "price", "sum", "quantity"];
 
   if (numericFields.includes(key)) {
     const num = parseFloat(trimmed);
@@ -103,7 +63,6 @@ function normalizeValue(key: string, value: string): string | number {
   return trimmed;
 }
 
-// основна функція
 export function parseFormData(formData: Record<string, string>): Group[] {
   const groups: Record<string, Group> = {};
   const detailOrderMap: Record<string, number> = {};
@@ -163,7 +122,6 @@ export function parseFormData(formData: Record<string, string>): Group[] {
     }
   }
 
-  // сортуємо групи та їхні деталі
   const sortedGroups = Object.values(groups).sort((a, b) => a.order - b.order);
   for (const group of sortedGroups) {
     group.details.sort((a, b) => a.order - b.order);

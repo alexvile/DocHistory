@@ -92,7 +92,7 @@ class NormsGenerator {
   }
 
   private static createGroup(group: GroupProps) {
-    console.log("GroupProps", group);
+    // console.log("GroupProps", group);
     const row: RowGroup = {
       id: group.id,
       groupId: group.id,

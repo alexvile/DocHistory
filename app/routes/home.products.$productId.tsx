@@ -1,4 +1,4 @@
-import { Form, isRouteErrorResponse, useLoaderData, useRouteError } from "@remix-run/react";
+import { Form, isRouteErrorResponse, useActionData, useLoaderData, useRouteError, useSubmit } from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
@@ -10,48 +10,71 @@ import { LastChanged } from "~/components/LastChangedTooltip";
 import BackLink from "~/components/BackLink";
 import { areFormDataEqual } from "~/utils/areFormDataEqual";
 import { useFormSnapshotOnVisible } from "~/utils/hooks";
+import { diffNorms, filterStringEntries } from "~/utils/main";
+import { buildDynamicTitleValidators, validateFields } from "~/utils/validation";
+import { parseFormData } from "~/utils/rowHandlers";
+
+type ActionResponse = {
+  success: boolean;
+  errors: Record<string, string>;
+};
+
+// todo - to prevent extra request
+// 1) do diffCHange at frontend
+// 2) save frontentd in json and then send it to backend
+// 3) make extra request
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
-  invariant(params.productId, "Missing contactId param");
-  const userIdFromSession = await getUserId(request);
+  // invariant(params.productId, "Missing contactId param");
+  // const userIdFromSession = await getUserId(request);
+  // ! tmp solution
+ invariant(params.productId, "Missing productId param");
+  const detailedProduct = await getProductbyId(params.productId);
+  const { code, createdAt, id, productTitle, updatedAt, norms } = detailedProduct;
+
 
   // todo - use in future data from frontend to prevent ettra fetch
+  // todo -PREVENT code duplicate !!
+  const userId = await getUserId(request);
+  if (!userId) {
+    const res: ActionResponse = {
+      success: false,
+      errors: { global: "Unauthorized" },
+    };
+    return Response.json(res, { status: 401 });
+  }
+  // todo - check role !!
+  const formData = await request.formData();
+  const raw = Object.fromEntries(formData);
+  const strings = filterStringEntries(raw);
+  const { main__title, main__code, ...rest } = strings;
 
-  //   const detailedNorm = await getNormById(params.productId);
-  //   if (!detailedNorm) {
-  //     throw new Response("Not Found", { status: 404 });
-  //   }
-  //   // console.log(2342, detailedNorm);
-  //   const currentObject = {
-  //     productName: detailedNorm.productName,
-  //     norm1: detailedNorm.norm1,
-  //     norm2: detailedNorm.norm2,
-  //   };
+  const dynamicTitleFields = buildDynamicTitleValidators(rest);
+  const fieldErrors = validateFields({
+    title: {
+      value: main__title,
+      type: "string",
+      required: true,
+      minLength: 4,
+    },
+    code: {
+      value: main__code,
+      type: "string",
+      optional: true,
+    },
+    ...dynamicTitleFields,
+  });
 
-  //   const formData = await request.formData();
-  //   // const firstName = formData.get("first");
-  //   // const lastName = formData.get("last");
-  //   const updates = Object.fromEntries(formData);
-  //   const updates2 = {
-  //     productName: updates.productName,
-  //     norm1: Number(updates.norm1),
-  //     norm2: Number(updates.norm2),
-  //   }
+  // if (Object.keys(fieldErrors).length > 0) {
+  //   const res: ActionResponse = { success: false, errors: fieldErrors };
+  //   console.log(222, res);
+  //   return Response.json(res, { status: 400 });
+  // }
 
-  //   // console.log(1111, updates, params.normId);
-  //   // todo check if there are changes !!!!!
-  //   const changes = getChanges(currentObject, updates2)
-  //   console.log(111122, changes)
-  //   if(!changes) return null
-  //   const id = params.normId
-  //   const res = await updateNormById({id, ...updates2})
-  //   // if response ok, then create change
-  // const m = await createChange({userId: userIdFromSession, normId: id, changes})
-  // // if response ok
-  // // error handling
-  //   // todo - do we need JSON or fixed struture for changes instance
-
-  return null;
+  const jsonNorms = parseFormData(rest);
+  console.log(111, main__title, main__code, jsonNorms);
+  const diff = diffNorms(norms, jsonNorms as any);
+  return Response.json(diff, { status: 200 });
 };
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -87,7 +110,11 @@ export function ErrorBoundary() {
 }
 
 export default function ProductNorm() {
+  const submit = useSubmit();
   const data = useLoaderData<typeof loader>();
+  const actData = useActionData();
+  console.log("actionData", actData);
+
   const [isEditable, setIsEditable] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const initialFormSnapshot = useFormSnapshotOnVisible(formRef, isEditable);
@@ -115,6 +142,10 @@ export default function ProductNorm() {
 
     // save new file
     // save change instance
+    if (formRef.current) {
+      console.log("sumbit !!!");
+      submit(formRef.current);
+    }
   };
 
   const onCancelClick = () => {
