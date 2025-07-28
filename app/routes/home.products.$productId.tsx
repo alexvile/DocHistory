@@ -183,7 +183,7 @@ export default function ProductNorm() {
 
   return (
     <>
-      <div className="products-top-group">
+      <div className="dashboard-topbar">
         <BackLink />
         <h3 className="product-details__title">
           {data.product.productTitle}
@@ -192,11 +192,11 @@ export default function ProductNorm() {
         <div className="edit-button__wrapper">
           {isEditable ? (
             <div className="edit-button__edit-container">
-              <button type="button" onClick={onSaveClick} className="button button--primary">
-                Зберегти
-              </button>
               <button type="button" onClick={onCancelClick} className="button button--secondary">
                 Відмінити
+              </button>
+                 <button type="button" onClick={onSaveClick} className="button button--primary">
+                Зберегти
               </button>
             </div>
           ) : (

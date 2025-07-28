@@ -47,6 +47,17 @@ export const getChangebyId = async (id: string) => {
       id: true,
       createdAt: true,
       diff: true,
+      creator: {
+        select: {
+          firstName: true,
+          lastName: true,
+        },
+      },
+      product: {
+        select: {
+          productTitle: true,
+        },
+      },
     },
   });
 };

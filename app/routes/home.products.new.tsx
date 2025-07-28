@@ -123,7 +123,7 @@ export default function NewProduct() {
   }
   return (
     <>
-      <div className="products-top-group">
+      <div className="dashboard-topbar">
         <BackLink />
         <h3 className="products-new__title">
           Створення нового продукту

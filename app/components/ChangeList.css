@@ -4,6 +4,7 @@
 
 .changelist__list {
   list-style-type: none;
+  padding: 0;
 }
 /* items */
 .changeslist__item:not(:last-child) {

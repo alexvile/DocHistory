@@ -5,11 +5,17 @@
   align-items: center;
 }
 
+.limit-select,
 .sort-box,
 .filter-box {
+  cursor: pointer;
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 6px;
+}
+.limit-select,
+.sort-box {
+  padding-inline-end: 1rem;
 }
 
 .clear-btn {
@@ -24,8 +30,4 @@
 .clear-btn:hover {
   background-color: #eee;
 }
-.limit-select {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
+

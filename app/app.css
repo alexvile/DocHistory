@@ -224,3 +224,11 @@ footer {
 }
 
 /* links ends */
+
+/* top bar in dashboard */
+.dashboard-topbar {
+  display: flex;
+  align-items: center;
+  column-gap: 12px;
+  margin-bottom: 8px;
+}

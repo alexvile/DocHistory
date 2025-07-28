@@ -40,12 +40,6 @@
   justify-content: space-between;
 }
 
-.products-top-group {
-  display: flex;
-  align-items: center;
-  column-gap: 12px;
-  margin-bottom: 8px;
-}
 .product-details__code {
   margin-top: 0;
 }

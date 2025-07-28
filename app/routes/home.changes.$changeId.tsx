@@ -4,6 +4,7 @@ import invariant from "tiny-invariant";
 import BackLink from "~/components/BackLink";
 import { getChangebyId } from "~/server/changes.server";
 import ChangeList from "~/components/ChangeList";
+import { formatDateForUA } from "~/utils/formatDateUA";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.changeId, "Missing productId param");
@@ -36,22 +37,23 @@ export function ErrorBoundary() {
 }
 
 export default function ChangeItem() {
-  const data = useLoaderData<typeof loader>();
-  console.log(11, data);
+  const change = useLoaderData<typeof loader>();
   return (
     <>
-      <div className="products-top-group">
+      <div className="dashboard-topbar">
         <BackLink />
-        <h3 className="product-details__title">
-          назва продкута
-          - коли зміни
-          - хто вніс
-
-          (передати пропсами)
-        </h3>
+        <h3 className="change__page-title">Продукт: {change?.product?.productTitle}</h3>
       </div>
+      <p className="change__meta change-meta">
+        Змінено: <time dateTime={change?.createdAt}>{formatDateForUA(change?.createdAt)}</time>
+        <span aria-hidden="true" className="change-meta__divider">|</span>
+        Виконавець:{" "}
+        <span className="author">
+          {change?.creator?.firstName} {change?.creator?.lastName}
+        </span>
+      </p>
       <div>
-        <ChangeList diff={data?.diff}/>
+        <ChangeList diff={change?.diff} />
       </div>
     </>
   );
