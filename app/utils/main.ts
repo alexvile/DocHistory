@@ -16,13 +16,17 @@ export function filterStringEntries(obj: Record<string, unknown>): Record<string
   }
   return out;
 }
+// todo - planned changes that will start in some period
+// todo - yellow color for some norms
 
 // MOVE THIS FUNCTION
+
 // todo - move in separate function
 const DETAIL_FIELDS = ["title", "assortment", "standard", "unit", "order", "consuption_rate", "consuption_rate_per_item"] as const;
 
 export function diffNorms(oldNorms: Norm[], newNorms: Norm[]): NormChange[] {
   const changes: NormChange[] = [];
+  const GROUP_FIELDS = ["title"] as const;
 
   const oldGroupMap = new Map(oldNorms.map((g) => [g.id, g]));
   const newGroupMap = new Map(newNorms.map((g) => [g.id, g]));
@@ -38,28 +42,27 @@ export function diffNorms(oldNorms: Norm[], newNorms: Norm[]): NormChange[] {
   for (const [id, oldGroup] of oldGroupMap) {
     if (!newGroupMap.has(id)) {
       changes.push({ type: "group-removed", group: oldGroup });
-      for (const detail of oldGroup.details) {
-        changes.push({
-          type: "detail-removed",
-          groupId: oldGroup.id,
-          groupTitle: oldGroup.title,
-          detail,
-        });
-      }
     }
   }
-
   // --- Changed groups ---
   for (const [id, newGroup] of newGroupMap) {
     const oldGroup = oldGroupMap.get(id);
     if (!oldGroup) continue;
 
-    // only changed titles in groups
-    if (newGroup.title !== oldGroup.title) {
+    const groupFieldChanges: { field: string; old: any; new: any }[] = [];
+
+    for (const key of GROUP_FIELDS) {
+      if (newGroup[key] !== oldGroup[key]) {
+        groupFieldChanges.push({ field: key, old: oldGroup[key], new: newGroup[key] });
+      }
+    }
+
+    if (groupFieldChanges.length > 0) {
       changes.push({
         type: "group-updated",
-        id,
-        changes: [{ field: "title", old: oldGroup.title, new: newGroup.title }],
+        groupId: id,
+        oldGroupTitle: oldGroup.title, 
+        changes: groupFieldChanges
       });
     }
 
@@ -108,6 +111,7 @@ export function diffNorms(oldNorms: Norm[], newNorms: Norm[]): NormChange[] {
           groupId: id,
           groupTitle: newGroup.title,
           detailId: dId,
+          detailTitle: oldDetail?.title ?? "", 
           changes: detailChanges,
         });
       }

@@ -88,7 +88,8 @@ export type GroupAdded = { type: "group-added"; group: Group };
 export type GroupRemoved = { type: "group-removed"; group: Group };
 export type GroupUpdated = {
   type: "group-updated";
-  id: string;
+  groupId: string;
+  oldGroupTitle: string;
   changes: { field: string; old: any; new: any }[];
 };
 export type DetailAdded = {
@@ -108,6 +109,7 @@ export type DetailUpdated = {
   groupId: string;
   groupTitle: string;
   detailId: string;
+  detailTitle: string;
   changes: { field: string; old: any; new: any }[];
 };
 
