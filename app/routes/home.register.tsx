@@ -4,6 +4,7 @@ import { RegisterForm } from "~/server/types.server";
 import { validateEmail, validateName, validatePassword } from "~/server/validators.server";
 import { Role } from "@prisma/client";
 import translate from "~/utils/translate";
+import { Form } from "@remix-run/react";
 
 export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
   const role = await requireUserRole(request);
@@ -51,34 +52,30 @@ export default function Register() {
 
   return (
     <>
-      <button className="link-unstyled button button--primary">Add new+</button>
-      <br />
-      <br />
-      <button className="button button--secondary">Add new+</button>
-      +++
       <h2>Register (only for admin)</h2>
-      <form method="post" className="form form--register">
+
+      <Form method="post" className="form form--register">
         <div className="form__field">
-          <label htmlFor="firstName">First name</label>
-          <input type="text" id="firstName" name="firstName" />
+          <label htmlFor="firstName">Ім'я</label>
+          <input className="input" type="text" id="firstName" name="firstName" />
         </div>
 
         <div className="form__field">
-          <label htmlFor="lastName">Last name</label>
-          <input type="text" id="lastName" name="lastName" />
+          <label htmlFor="lastName">Прізвище</label>
+          <input className="input" type="text" id="lastName" name="lastName" />
         </div>
         <div className="form__field">
-          <label htmlFor="email-1">Email</label>
-          <input type="text" id="email" name="email" autoComplete="off" />
+          <label htmlFor="email">Email</label>
+          <input className="input" type="text" id="email" name="email" autoComplete="off" />
         </div>
         <div className="form__field">
-          <label htmlFor="password">Password</label>
-          <input type="password" id="password" name="password" autoComplete="off" />
+          <label htmlFor="password">Пароль</label>
+          <input className="input" type="password" id="password" name="password" autoComplete="off" />
         </div>
         <div className="form__field">
           {/* todo - only superadmin can create ADMIN */}
-          <label htmlFor="role">Role</label>
-          <select name="role" id="role">
+          <label htmlFor="role">Роль</label>
+          <select className="select" name="role" id="role">
             {Object.values(Role).map((role) => (
               <option key={role} value={role}>
                 {translate("ROLES", role)}
@@ -86,8 +83,8 @@ export default function Register() {
             ))}
           </select>
         </div>
-        <button>Submit</button>
-      </form>
+        <button className="button button--primary">Submit</button>
+      </Form>
     </>
   );
 }

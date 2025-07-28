@@ -71,10 +71,20 @@ footer {
   display: block;
 }
 .form {
-  border: 1px solid #000;
-  padding: 8px;
   width: fit-content;
+  min-width: 340px;
 }
+
+/* base elements starts */
+.input,
+.select {
+  padding: 6px 8px 6px 12px;
+  width: 100%;
+}
+.select {
+  border-radius: 6px;
+}
+/* base elements ends */
 
 /* table base */
 .table__wrapper {

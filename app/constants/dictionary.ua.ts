@@ -7,3 +7,4 @@ export const DICTIONARY_UA = {
     VIEWER: "Переглядач",
   } satisfies Record<Role, string>, 
 };
+// todo - add details properties
