@@ -1,20 +1,11 @@
-import {
-  ActionFunctionArgs,
-  json,
-  LoaderFunction,
-  LoaderFunctionArgs,
-} from "@remix-run/node";
+import { ActionFunctionArgs, json, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { register, requireUserRole } from "~/server/auth.server";
 import { RegisterForm } from "~/server/types.server";
-import {
-  validateEmail,
-  validateName,
-  validatePassword,
-} from "~/server/validators.server";
+import { validateEmail, validateName, validatePassword } from "~/server/validators.server";
+import { Role } from "@prisma/client";
+import translate from "~/utils/translate";
 
-export const loader: LoaderFunction = async ({
-  request,
-}: LoaderFunctionArgs) => {
+export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
   const role = await requireUserRole(request);
   if (role !== "ADMIN") {
     throw new Response("Forbidden: Access denied", { status: 403 });
@@ -57,11 +48,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Register() {
+
   return (
     <>
-       <button  className="link-unstyled button button--primary">
-        Add new+
-      </button>
+      <button className="link-unstyled button button--primary">Add new+</button>
       <br />
       <br />
       <button className="button button--secondary">Add new+</button>
@@ -83,20 +73,17 @@ export default function Register() {
         </div>
         <div className="form__field">
           <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            autoComplete="off"
-          />
+          <input type="password" id="password" name="password" autoComplete="off" />
         </div>
         <div className="form__field">
           {/* todo - only superadmin can create ADMIN */}
           <label htmlFor="role">Role</label>
           <select name="role" id="role">
-            <option value="ADMIN">Admin</option>
-            <option value="COMMITER">Commiter</option>
-            <option value="VIEWER">Viewer</option>
+            {Object.values(Role).map((role) => (
+              <option key={role} value={role}>
+                {translate("ROLES", role)}
+              </option>
+            ))}
           </select>
         </div>
         <button>Submit</button>
