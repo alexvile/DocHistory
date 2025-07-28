@@ -46,6 +46,8 @@ export default function ChangeItem() {
           назва продкута
           - коли зміни
           - хто вніс
+
+          (передати пропсами)
         </h3>
       </div>
       <div>

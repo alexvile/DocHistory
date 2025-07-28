@@ -3,7 +3,7 @@ import { HiMagnifyingGlassCircle } from "react-icons/hi2";
 import { VscIndent } from "react-icons/vsc";
 import { GoHeading } from "react-icons/go";
 import { FaLayerGroup, FaUsers, FaRegClock, FaPlus, FaMinus, FaPlusSquare, FaMinusSquare } from "react-icons/fa";
-import { FaPencil } from "react-icons/fa6";
+import { FaCircleMinus, FaCirclePlus, FaPencil } from "react-icons/fa6";
 import { TbExchange } from "react-icons/tb";
 import { MdManageAccounts, MdLogout, MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { CgSmartHomeBoiler } from "react-icons/cg";
@@ -43,12 +43,15 @@ export function Svg({ name }: { name: string }) {
     case "help":
       return <IoIosHelpCircleOutline />;
     case "change-added":
-      return <FaPlusSquare />;
+      return <FaCirclePlus />;
     case "change-removed":
-      return <FaMinusSquare />;
+      return <FaCircleMinus />;
     case "change-updated":
-      return <RxUpdate />;
-
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="200px" height="200px" viewBox="2 2 20 20">
+          <path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2ZM10,16,7,17l1-3,7-7,2,2Z" />
+        </svg>
+      );
     default:
       return <AiOutlineStop />;
   }
