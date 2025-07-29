@@ -13,6 +13,7 @@ export const links: LinksFunction = () => [
 ];
 
 export default function App() {
+  console.log('vercel test');
   return (
     <html lang="en">
       <head>
