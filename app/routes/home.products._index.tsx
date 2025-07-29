@@ -53,11 +53,9 @@ export const loader: LoaderFunction = async ({
     skip,
     take
   );
-  return Response.json(
-    { products, page, totalPages, totalCount, fromPagination, toPagination },
-    { status: 200 }
-  );
+  return { products, page, totalPages, totalCount, fromPagination, toPagination };
 };
+// todo - rewrite all to future responses
 
 // todo - create can commiter or ADMIN
 // todo - show all norms
