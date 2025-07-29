@@ -5,8 +5,8 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [
-    vercelPreset(),
     remix({
+      presets: [vercelPreset()],
       ignoredRouteFiles: ["**/*.css"],
     }),
     tsconfigPaths(),
