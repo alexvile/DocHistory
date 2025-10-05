@@ -41,7 +41,7 @@ export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) =>
   const toPagination = Math.min(skip + take, totalCount);
 
   const changes = await getFilteredChanges(sortOptions, whereFilter, skip, take);
-  return Response.json({ changes, page, totalPages, totalCount, fromPagination, toPagination }, { status: 200 });
+  return { changes, page, totalPages, totalCount, fromPagination, toPagination };
 };
 
 export default function Changes() {

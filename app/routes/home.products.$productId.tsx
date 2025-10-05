@@ -82,7 +82,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   }
 
   const response = await updateProductAndCreateChange({ creatorId: userId, productId: params.productId, diff, newNorms });
-  const res = { success: true, errors: {}, data: response};
+  const res = { success: true, errors: {}, data: response };
   return Response.json(res, { status: 200 });
 };
 
@@ -97,7 +97,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   }
   const { code, createdAt, id, productTitle, updatedAt, norms } = detailedProduct;
   const rows = NormsGenerator.createRows(norms);
-  return Response.json({ rows, product: { code, createdAt, id, productTitle, updatedAt } }, { status: 200 });
+  return { rows, product: { code, createdAt, id, productTitle, updatedAt } };
 };
 
 export function ErrorBoundary() {
@@ -195,7 +195,7 @@ export default function ProductNorm() {
               <button type="button" onClick={onCancelClick} className="button button--secondary">
                 Відмінити
               </button>
-                 <button type="button" onClick={onSaveClick} className="button button--primary">
+              <button type="button" onClick={onSaveClick} className="button button--primary">
                 Зберегти
               </button>
             </div>

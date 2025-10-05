@@ -15,7 +15,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       statusText: "Not Found",
     });
   }
-  return Response.json(change, { status: 200 });
+  return change;
 };
 
 export function ErrorBoundary() {
