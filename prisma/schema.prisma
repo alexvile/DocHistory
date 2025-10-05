@@ -46,61 +46,61 @@ model User {
 }
 
 model Product {
-  id           String          @id @default(auto()) @map("_id") @db.ObjectId
-  productTitle String          @unique
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  productTitle String   @unique
   code         String?
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  creator      User            @relation("UserProducts", fields: [creatorId], references: [id])
-  creatorId    String          @db.ObjectId
+  creator   User   @relation("UserProducts", fields: [creatorId], references: [id])
+  creatorId String @db.ObjectId
 
-  snapshots    NormSnapshot[]  @relation("ProductSnapshots")
+  snapshots NormSnapshot[] @relation("ProductSnapshots")
 }
 
 model NormSnapshot {
-  id             String          @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt      DateTime        @default(now())
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt      DateTime       @default(now())
   label          String?
   sourceFilePath String?
   parsedHash     String
-  status         SnapshotStatus  @default(DRAFT)
+  status         SnapshotStatus @default(DRAFT)
 
-  productId      String          @db.ObjectId
-  product        Product         @relation("ProductSnapshots", fields: [productId], references: [id])
+  productId String  @db.ObjectId
+  product   Product @relation("ProductSnapshots", fields: [productId], references: [id])
 
-  createdById    String          @db.ObjectId
-  createdBy      User            @relation("UserSnapshots", fields: [createdById], references: [id])
+  createdById String @db.ObjectId
+  createdBy   User   @relation("UserSnapshots", fields: [createdById], references: [id])
 
   // весь нормалізований Excel одним масивом
-  rows           Json
+  rows Json
 
   // зворотні сторони двох різних реляцій із ChangeSet
-  prevForChangeSets ChangeSet[]  @relation("ChangeSetPrev")
-  nextForChangeSets ChangeSet[]  @relation("ChangeSetNext")
+  prevForChangeSets ChangeSet[] @relation("ChangeSetPrev")
+  nextForChangeSets ChangeSet[] @relation("ChangeSetNext")
 
   @@index([productId])
 }
 
 model ChangeSet {
-  id             String           @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt      DateTime         @default(now())
-  status         ChangeSetStatus  @default(DRAFT)
+  id        String          @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime        @default(now())
+  status    ChangeSetStatus @default(DRAFT)
 
   // хто ініціював
-  creatorId      String           @db.ObjectId
-  creator        User             @relation("UserChangeSets", fields: [creatorId], references: [id])
+  creatorId String @db.ObjectId
+  creator   User   @relation("UserChangeSets", fields: [creatorId], references: [id])
 
   // щоб легко фільтрувати історію по продукту — просто scalar (без @relation)
-  productId      String           @db.ObjectId
+  productId String @db.ObjectId
 
   // що порівнювали
-  prevSnapshotId String           @db.ObjectId
-  prevSnapshot   NormSnapshot     @relation("ChangeSetPrev", fields: [prevSnapshotId], references: [id])
+  prevSnapshotId String       @db.ObjectId
+  prevSnapshot   NormSnapshot @relation("ChangeSetPrev", fields: [prevSnapshotId], references: [id])
 
-  nextSnapshotId String           @db.ObjectId
-  nextSnapshot   NormSnapshot     @relation("ChangeSetNext", fields: [nextSnapshotId], references: [id])
+  nextSnapshotId String       @db.ObjectId
+  nextSnapshot   NormSnapshot @relation("ChangeSetNext", fields: [nextSnapshotId], references: [id])
 
   // результат
-  diff           Json
+  diff Json
 }
