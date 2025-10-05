@@ -6,13 +6,11 @@ export const createProduct = async ({
   creatorId,
   productTitle,
   code,
-  norms,
-}: Pick<Product, "productTitle" | "code" | "norms" | "creatorId">) => {
+}: Pick<Product, "productTitle" | "code" | "creatorId">) => {
   await prisma.product.create({
     data: {
       productTitle,
       code,
-      norms: norms as unknown as Prisma.InputJsonValue,
       creator: {
         connect: {
           id: creatorId,
@@ -79,7 +77,6 @@ export const getProductbyId = async (id: string) => {
       id: true,
       productTitle: true,
       code: true,
-      norms: true,
       createdAt: true,
       updatedAt: true,
     },

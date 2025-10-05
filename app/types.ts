@@ -40,7 +40,7 @@ export type ChangesListProps = {
   changes: FilteredChangeWithRelations[];
 };
 
-export type ProductWithNorms = Pick<Product, "id" | "productTitle" | "norms" | "updatedAt">;
+export type ProductWithNorms = Pick<Product, "id" | "productTitle" | "updatedAt">;
 export type ProductNormsTableProps = {
   normsRows: any;
   // norms: ProductWithNorms['norms'],

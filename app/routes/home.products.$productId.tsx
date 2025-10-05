@@ -95,9 +95,9 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       statusText: "Not Found",
     });
   }
-  const { code, createdAt, id, productTitle, updatedAt, norms } = detailedProduct;
-  const rows = NormsGenerator.createRows(norms);
-  return { rows, product: { code, createdAt, id, productTitle, updatedAt } };
+  const { code, createdAt, id, productTitle, updatedAt } = detailedProduct;
+  // const rows = NormsGenerator.createRows(norms);
+  return { rows: [], product: { code, createdAt, id, productTitle, updatedAt } };
 };
 
 export function ErrorBoundary() {
