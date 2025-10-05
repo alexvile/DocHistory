@@ -12,7 +12,7 @@ export default defineConfig({
       future: {
         v3_singleFetch: true,
       },
-      presets: [vercelPreset()],
+      // presets: [vercelPreset()],
       ignoredRouteFiles: ["**/*.css"],
     }),
     tsconfigPaths(),

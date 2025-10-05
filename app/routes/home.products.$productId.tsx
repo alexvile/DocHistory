@@ -1,4 +1,4 @@
-import { Form, isRouteErrorResponse, useActionData, useLoaderData, useRouteError, useSubmit } from "@remix-run/react";
+import { Form, isRouteErrorResponse, Outlet, useActionData, useLoaderData, useRouteError, useSubmit } from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
@@ -83,7 +83,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
   const response = await updateProductAndCreateChange({ creatorId: userId, productId: params.productId, diff, newNorms });
   const res = { success: true, errors: {}, data: response };
-  return Response.json(res, { status: 200 });
+  return res;
 };
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -215,6 +215,7 @@ export default function ProductNorm() {
           <ProductNormsTable normRows={data.rows} isEditable={isEditable} />
         </Form>
       </div>
+      <Outlet/>
     </>
   );
 }
