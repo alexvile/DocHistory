@@ -3,7 +3,6 @@
 
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,22 +14,35 @@ datasource db {
 
 enum Role {
   ADMIN
-  COMMITTER
-  VIEWER
+  COMMITTER // нормувальник
+  VIEWER // бухгалтер
+}
+
+enum SnapshotStatus {
+  DRAFT
+  BASELINE
+  ARCHIVED
+}
+
+enum ChangeSetStatus {
+  DRAFT
+  PUBLISHED
+  VIEWED
 }
 
 model User {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   role      Role
-  email     String    @unique
+  email     String   @unique
   password  String
   firstName String
   lastName  String
-  products  Product[] @relation("UserProducts")
-  // todo - if we remove customer - we leave his norms and changes
-  changes   Change[]  @relation("UserChanges")
+
+  products   Product[]      @relation("UserProducts")
+  changeSets ChangeSet[]    @relation("UserChangeSets")
+  snapshots  NormSnapshot[] @relation("UserSnapshots")
 }
 
 model Product {
@@ -39,25 +51,69 @@ model Product {
   updatedAt    DateTime @updatedAt
   productTitle String   @unique
   code         String?
-  norms        Json
-  creator      User     @relation("UserProducts", fields: [creatorId], references: [id])
-  creatorId    String   @db.ObjectId
-  changes      Change[] @relation("ProductChanges")
+
+  creator   User   @relation("UserProducts", fields: [creatorId], references: [id])
+  creatorId String @db.ObjectId
+
+  // changeSets   ChangeSet[]     @relation("ProductChangeSets")
+  snapshots NormSnapshot[] @relation("ProductSnapshots")
+
+  @@index([creatorId])
 }
 
-model Change {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  creator   User     @relation("UserChanges", fields: [creatorId], references: [id])
-  creatorId String   @db.ObjectId
-  product   Product  @relation("ProductChanges", fields: [productId], references: [id])
-  productId String   @db.ObjectId
-  diff      Json
-  snapshot  Json
+model NormSnapshot {
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt      DateTime       @default(now())
+  label          String?
+  sourceFilePath String?
+  parsedHash     String
+  status         SnapshotStatus @default(DRAFT)
+
+  productId String  @db.ObjectId
+  product   Product @relation("ProductSnapshots", fields: [productId], references: [id])
+
+  createdById       String      @db.ObjectId
+  createdBy         User        @relation("UserSnapshots", fields: [createdById], references: [id])
+  rows              NormRow[]
+  
+  prevForChangeSets ChangeSet[] @relation("ChangeSetPrev")
+  nextForChangeSets ChangeSet[] @relation("ChangeSetNext")
 
   @@index([productId])
-  @@index([creatorId])
-  @@index([createdAt])
 }
-// JSON з інформацією про зміни: { field: "value_before", newValue: "value_after" }
 
+model NormRow {
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  snapshotId String       @db.ObjectId
+  snapshot   NormSnapshot @relation(fields: [snapshotId], references: [id])
+
+  businessKey String
+  data        Json
+  dataHash    String
+
+  @@index([snapshotId])
+  @@index([businessKey])
+}
+
+model ChangeSet {
+  id        String          @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime        @default(now())
+  status    ChangeSetStatus @default(DRAFT)
+
+  creatorId String @db.ObjectId
+  creator   User   @relation("UserChangeSets", fields: [creatorId], references: [id])
+
+  // productId      String           @db.ObjectId
+  // product        Product          @relation("ProductChangeSets", fields: [productId], references: [id])
+
+  prevSnapshotId String       @db.ObjectId
+  prevSnapshot   NormSnapshot @relation("ChangeSetPrev", fields: [prevSnapshotId], references: [id])
+
+  nextSnapshotId String       @db.ObjectId
+  nextSnapshot   NormSnapshot @relation("ChangeSetNext", fields: [nextSnapshotId], references: [id])
+
+  // сам diff — достатньо JSON на старт
+  diff Json
+
+  // @@index([productId])
+}
