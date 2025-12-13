@@ -1,5 +1,6 @@
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
+import styles from "./ExcelUploadForm.module.css";
 
 type ExcelUploadFormProps<T = unknown> = {
   onParsed: (rows: T[]) => void;
@@ -31,22 +32,30 @@ export function ExcelUploadForm({ onParsed, onClear }: ExcelUploadFormProps) {
   }
 
   return (
-    <fetcher.Form method="post" action="/parse-excel" encType="multipart/form-data" onSubmit={handleSubmit}>
-      <input
-        ref={fileInputRef}
-        type="file"
-        name="file"
-        accept=".xlsx"
-        onChange={(e) => setHasFile(!!e.currentTarget.files?.length)}
-        required
-      />
-
-      {hasFile && <button type="submit">Завантажити</button>}
-      {hasFile && (
-        <button type="button" onClick={handleClear}>
-          Очистити
-        </button>
-      )}
+    <fetcher.Form method="post" action="/parse-excel" encType="multipart/form-data" onSubmit={handleSubmit} className={styles.form}>
+      <div className={styles.fileUploadGroup}>
+        <div className={styles.fileUploadContainer}>
+          <input
+            ref={fileInputRef}
+            type="file"
+            name="file"
+            accept=".xlsx"
+            className={styles.fileUploadInput}
+            onChange={(e) => setHasFile(!!e.currentTarget.files?.length)}
+            required
+          />
+        </div>
+        {hasFile && (
+          <div className={styles.fileUploadButtons}>
+            <button type="submit" className="button button--primary">
+              Завантажити
+            </button>
+            <button type="button" onClick={handleClear} className="button button--secondary">
+              Очистити
+            </button>
+          </div>
+        )}
+      </div>
     </fetcher.Form>
   );
 }

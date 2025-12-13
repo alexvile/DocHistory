@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ExcelUploadForm } from "./ExcelUploadForm";
 
 export function ExcelUploadWithPreview({ onChange }: { onChange?: (rows: any[]) => void }) {

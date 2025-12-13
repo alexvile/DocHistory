@@ -1,0 +1,28 @@
+.form {
+  margin-bottom: 16px;
+}
+
+.fileUploadGroup {
+  display: flex;
+  column-gap: 12px;
+}
+
+.fileUploadContainer {
+  padding: 12px;
+  border: 1px dashed #303030;
+  border-radius: 10px;
+  width: fit-content;
+  background-color: #f9fbfc;
+  display: flex;
+  align-items: center;
+}
+
+.fileUploadInput {
+  font-size: 14px;
+}
+
+.fileUploadButtons {
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+}
