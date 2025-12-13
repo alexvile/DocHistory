@@ -212,6 +212,12 @@ footer {
 .button.button--primary:hover {
   background-color: rgba(26, 26, 26, 1);
 }
+.button.button--primary:disabled,
+.button.button--secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* buttons ends */
 /* links starts */
 .link {

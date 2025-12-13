@@ -1,9 +1,4 @@
-import {
-  ActionFunction,
-  ActionFunctionArgs,
-  LoaderFunction,
-  LoaderFunctionArgs,
-} from "@remix-run/node";
+import { ActionFunction, ActionFunctionArgs, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, Link, useActionData, useParams } from "@remix-run/react";
 import { getUserId, requireUserRole } from "~/server/auth.server";
 import { createProduct } from "~/server/products.server";
@@ -13,11 +8,10 @@ import { filterStringEntries, shortId } from "~/utils/main";
 import { useHasHydrated } from "~/utils/hooks";
 import { parseFormData } from "~/utils/rowHandlers";
 import { Icon } from "~/components/Icon";
-import {
-  buildDynamicTitleValidators,
-  validateFields,
-} from "~/utils/validation";
+import { buildDynamicTitleValidators, validateFields } from "~/utils/validation";
 import BackLink from "~/components/BackLink";
+import { ExcelUploadForm } from "~/components/ExcelUploadForm";
+import { ExcelUploadWithPreview } from "~/components/ExcelUploadWithPreview";
 
 type ActionResponse = {
   success: boolean;
@@ -25,9 +19,7 @@ type ActionResponse = {
 };
 
 // todo use _new !!!!
-export const action: ActionFunction = async ({
-  request,
-}: ActionFunctionArgs) => {
+export const action: ActionFunction = async ({ request }: ActionFunctionArgs) => {
   const userId = await getUserId(request);
   if (!userId) {
     const res: ActionResponse = {
@@ -75,9 +67,7 @@ export const action: ActionFunction = async ({
   return Response.json(res, { status: 201 });
 };
 
-export const loader: LoaderFunction = async ({
-  request,
-}: LoaderFunctionArgs) => {
+export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
   const role = await requireUserRole(request);
   console.log(1212, role);
   // return null;
@@ -93,34 +83,12 @@ export default function NewProduct() {
   const data = useActionData();
   console.log("actionData", data);
 
-  const hasHydrated = useHasHydrated();
   const [id] = useState(() => shortId());
   // todo - when try to exit - show warning !!!
   const params = useParams();
   console.log("id", params.productId);
+  const [rows, setRows] = useState<any[] | null>(null);
 
-  const initialData = useMemo(() => {
-    const data = [
-      {
-        id: id,
-        groupId: id,
-        order: 0,
-        title: "Основна група",
-        type: "group",
-      },
-      {
-        id: `s__${id}`,
-        title: "",
-        type: "spacing",
-        groupId: id,
-      },
-    ];
-    return data;
-  }, [id]);
-
-  if (!hasHydrated) {
-    return <div>hydrating..</div>; // або скелетон / loader
-  }
   return (
     <>
       <div className="dashboard-topbar">
@@ -131,30 +99,24 @@ export default function NewProduct() {
         </h3>
       </div>
 
+      <ExcelUploadWithPreview onChange={setRows} />
       <Form method="post">
         <div className="products-new__top-form">
           <label>
             Назва:
-            <input
-              type="text"
-              name="main__title"
-              placeholder="КС-Г(В)-010 СН"
-              minLength={4}
-              required
-            />
-          </label>
+            <input type="text" name="main__title" placeholder="КС-Г(В)-010 СН" minLength={4} required />
+          </label>{" "}
           <label>
             Код:
             <input type="text" name="main__code" placeholder="070.00.00.000" />
           </label>
         </div>
         <div className="products-new__main-form">
-          <ProductNormsTable normRows={initialData} isEditable={true} />
-          <button
-            className="button button--primary"
-            aria-label="Збрегети зміни"
-            type="submit"
-          >
+          {/* <ProductNormsTable normRows={initialData} isEditable={true} /> */}
+
+          {/* aaa */}
+
+          <button className="button button--primary" aria-label="Збрегети зміни" type="submit" disabled>
             Зберегти
           </button>
         </div>
