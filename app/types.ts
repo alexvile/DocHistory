@@ -114,3 +114,19 @@ export type DetailUpdated = {
 };
 
 export type NormChange = GroupAdded | GroupRemoved | GroupUpdated | DetailAdded | DetailRemoved | DetailUpdated;
+
+// Канонічний рядок під твої колонки
+export type CanonicalRow = {
+  businessKey: string; // NAME+ASSORTMENT+DSTU+UNIT (нормалізовані)
+  name?: string; // Назва
+  assortment?: string; // Сортамент
+  dstu?: string; // ДСТУ
+  unit?: string; // Од. виміру
+  consumption?: number; // Норма розходу
+  consumptionPerUnit?: number; // Норма розходу на одиницю
+  notes?: string; // Нотатки / Примітки
+};
+
+export type NormsTableProps = {
+  normsJson: CanonicalRow[];
+};

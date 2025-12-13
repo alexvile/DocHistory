@@ -81,12 +81,12 @@ export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) =>
 // todo - show warning if try to quit
 export default function NewProduct() {
   const data = useActionData();
-  console.log("actionData", data);
+  // console.log("actionData", data);
 
   const [id] = useState(() => shortId());
   // todo - when try to exit - show warning !!!
   const params = useParams();
-  console.log("id", params.productId);
+  // console.log("id", params.productId);
   const [rows, setRows] = useState<any[] | null>(null);
 
   return (
@@ -113,9 +113,6 @@ export default function NewProduct() {
         </div>
         <div className="products-new__main-form">
           {/* <ProductNormsTable normRows={initialData} isEditable={true} /> */}
-
-          {/* aaa */}
-
           <button className="button button--primary" aria-label="Збрегети зміни" type="submit" disabled>
             Зберегти
           </button>

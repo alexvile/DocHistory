@@ -7,9 +7,9 @@ import { FaCircleMinus, FaCirclePlus, FaPencil } from "react-icons/fa6";
 import { TbExchange } from "react-icons/tb";
 import { MdManageAccounts, MdLogout, MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { CgSmartHomeBoiler } from "react-icons/cg";
-import { IoMdArrowRoundBack } from "react-icons/io";
-import { IoIosHelpCircleOutline } from "react-icons/io";
+import { IoIosCheckmark, IoIosHelpCircleOutline } from "react-icons/io";
 import { RxUpdate } from "react-icons/rx";
+import { IoCheckmarkOutline } from "react-icons/io5";
 
 // todo - copy svg to save memory
 export function Svg({ name }: { name: string }) {
@@ -52,6 +52,8 @@ export function Svg({ name }: { name: string }) {
           <path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2ZM10,16,7,17l1-3,7-7,2,2Z" />
         </svg>
       );
+    case "checkmark":
+      return <IoCheckmarkOutline />;
     default:
       return <AiOutlineStop />;
   }
