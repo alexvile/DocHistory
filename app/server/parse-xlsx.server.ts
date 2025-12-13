@@ -1,16 +1,17 @@
 import * as XLSX from "xlsx";
+import { CanonicalRow } from "~/types";
 
-// Канонічний рядок під твої колонки
-export type CanonicalRow = {
-  businessKey: string;          // NAME+ASSORTMENT+DSTU+UNIT (нормалізовані)
-  name?: string;                // Назва
-  assortment?: string;          // Сортамент
-  dstu?: string;                // ДСТУ
-  unit?: string;                // Од. виміру
-  consumption?: number;         // Норма розходу
-  consumptionPerUnit?: number;  // Норма розходу на одиницю
-  notes?: string;               // Нотатки / Примітки
-};
+// // Канонічний рядок під твої колонки
+// export type CanonicalRow = {
+//   businessKey: string;          // NAME+ASSORTMENT+DSTU+UNIT (нормалізовані)
+//   name?: string;                // Назва
+//   assortment?: string;          // Сортамент
+//   dstu?: string;                // ДСТУ
+//   unit?: string;                // Од. виміру
+//   consumption?: number;         // Норма розходу
+//   consumptionPerUnit?: number;  // Норма розходу на одиницю
+//   notes?: string;               // Нотатки / Примітки
+// };
 
 // Нормалізація заголовків: нижній регістр, без крапок і зайвих пробілів
 function normHeader(h: string) {
@@ -19,15 +20,16 @@ function normHeader(h: string) {
 
 // Допустимі назви колонок → канонічні поля
 const HEADER_MAP: Record<string, keyof CanonicalRow | "SKIP"> = {
-  "назва": "name",
-  "сортамент": "assortment",
-  "дсту": "dstu",
-  "од виміру": "unit",
+  назва: "name",
+  сортамент: "assortment",
+  дсту: "dstu",
+  "од. виміру": "unit",
   "одиниця виміру": "unit",
   "норма розходу": "consumption",
   "норма розходу на одиницю": "consumptionPerUnit",
-  "нотатки": "notes",
-  "примітки": "notes",
+  "норма розходу на од.": "consumptionPerUnit",
+  нотатки: "notes",
+  примітки: "notes",
 };
 
 // Парсери значень
@@ -78,6 +80,15 @@ function detectHeaderRow(ws: XLSX.WorkSheet, maxScan = 10) {
   return bestScore >= 3 ? bestIdx : 0;
 }
 
+function normalizeHeader(s: string) {
+  return s
+    .toLowerCase()
+    .trim()
+    .replace(/\u00A0/g, " ") // NBSP
+    .replace(/\s+/g, " ")
+    .replace(/[.,]/g, ""); // крапки і коми → геть
+}
+
 // Основний парсер
 export function parseXlsxToRows(buf: Buffer) {
   const wb = XLSX.read(buf, { type: "buffer" });
@@ -109,9 +120,13 @@ export function parseXlsxToRows(buf: Buffer) {
     const c: any = {};
 
     // витягуємо потрібні колонки
-    for (const [normKey, target] of Object.entries(HEADER_MAP)) {
+    for (const [rawKey, target] of Object.entries(HEADER_MAP)) {
       if (target === "SKIP") continue;
+
+      const normKey = normalizeHeader(rawKey);
       const originalHeader = normToOriginal.get(normKey);
+
+      // const originalHeader = normToOriginal.get(normKey);
       if (!originalHeader) continue;
       const v = row[originalHeader];
 
@@ -129,11 +144,8 @@ export function parseXlsxToRows(buf: Buffer) {
           break;
       }
     }
-
     // пропускаємо "сміттєві" рядки (усе порожнє)
-    const allEmpty =
-      !c.name && !c.assortment && !c.dstu && !c.unit &&
-      c.consumption == null && c.consumptionPerUnit == null && !c.notes;
+    const allEmpty = !c.name && !c.assortment && !c.dstu && !c.unit && c.consumption == null && c.consumptionPerUnit == null && !c.notes;
     if (allEmpty) continue;
 
     const businessKey = makeBusinessKey(c);
