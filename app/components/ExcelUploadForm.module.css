@@ -1,6 +1,15 @@
 .form {
   margin-bottom: 16px;
 }
+.heading {
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  column-gap: 4px;
+}
+.label {
+  font-size: 14px;
+}
 
 .fileUploadGroup {
   display: flex;

@@ -1,17 +1,20 @@
 import { useFetcher } from "@remix-run/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import styles from "./ExcelUploadForm.module.css";
+import { Icon } from "./Icon";
 
 type ExcelUploadFormProps<T = unknown> = {
   onParsed: (rows: T[]) => void;
   onClear: () => void;
+  isParsed: boolean;
 };
 
-export function ExcelUploadForm({ onParsed, onClear }: ExcelUploadFormProps) {
+export function ExcelUploadForm({ onParsed, onClear, isParsed }: ExcelUploadFormProps) {
   const fetcher = useFetcher<{ rows: any[] }>();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handledRef = useRef(false);
   const [hasFile, setHasFile] = useState(false);
+  const id = useId();
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data?.rows && !handledRef.current) {
@@ -33,9 +36,17 @@ export function ExcelUploadForm({ onParsed, onClear }: ExcelUploadFormProps) {
 
   return (
     <fetcher.Form method="post" action="/parse-excel" encType="multipart/form-data" onSubmit={handleSubmit} className={styles.form}>
+      <div className={styles.heading}>
+        <label htmlFor={id} className={styles.label}>
+          Завантажте Excel-файл з нормами
+        </label>
+        {isParsed && <Icon name={"checkmark"} color="#0b6623" />}
+      </div>
+
       <div className={styles.fileUploadGroup}>
         <div className={styles.fileUploadContainer}>
           <input
+            id={id}
             ref={fileInputRef}
             type="file"
             name="file"
@@ -47,7 +58,7 @@ export function ExcelUploadForm({ onParsed, onClear }: ExcelUploadFormProps) {
         </div>
         {hasFile && (
           <div className={styles.fileUploadButtons}>
-            <button type="submit" className="button button--primary">
+            <button type="submit" disabled={isParsed} className="button button--primary">
               Завантажити
             </button>
             <button type="button" onClick={handleClear} className="button button--secondary">

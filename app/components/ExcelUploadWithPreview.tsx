@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ExcelUploadForm } from "./ExcelUploadForm";
+import NormsTable from "./NormsTable";
+import styles from "./ExcelUploadWithPreview.module.css";
 
 export function ExcelUploadWithPreview({ onChange }: { onChange?: (rows: any[]) => void }) {
   const [rows, setRows] = useState<any[] | null>(null);
   const [showPreview, setShowPreview] = useState(true);
-  
+  const [rawView, setRawView] = useState(false);
 
   function handleParsed(parsed: any[]) {
     setRows(parsed);
@@ -17,26 +19,32 @@ export function ExcelUploadWithPreview({ onChange }: { onChange?: (rows: any[]) 
     setShowPreview(false);
     onChange?.([]);
   }
+  useEffect(()=> {
+    console.log(rows);
+  }, [rows])
 
   return (
-    <div>
-      <ExcelUploadForm
-        onParsed={handleParsed}
-        onClear={handleClear}
-      />
+    <div className={styles.main}>
+      <ExcelUploadForm onParsed={handleParsed} onClear={handleClear} isParsed={!!rows} />
 
       {rows && (
         <div>
-          <button
-            type="button"
-            onClick={() => setShowPreview((v) => !v)}
-          >
-            {showPreview ? "Сховати" : "Показати"}
-          </button>
+          <div className={styles.topBar}>
+            <p className={styles.heading}>Попередній перегляд</p>
+            <div className={styles.controls}>
+              {showPreview && (
+                <button type="button" onClick={() => setRawView((v) => !v)}>
+                  {rawView ? "no-dev" : "Dev"}
+                </button>
+              )}
+              <button type="button" onClick={() => setShowPreview((v) => !v)}>
+                {showPreview ? "Сховати" : "Показати"}
+              </button>
+            </div>
+          </div>
 
-          {showPreview && (
-            <pre>{JSON.stringify(rows.slice(0, 5), null, 2)}</pre>
-          )}
+          {showPreview && <NormsTable normsJson={rows} />}
+          {showPreview && rawView && <pre>{JSON.stringify(rows.slice(0, 5), null, 2)}</pre>}
         </div>
       )}
     </div>

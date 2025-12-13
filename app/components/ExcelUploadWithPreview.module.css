@@ -1,0 +1,13 @@
+.main {
+}
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.heading {
+}
+.controls {
+  display: flex;
+  column-gap: 12px;
+}
