@@ -20,9 +20,7 @@ export function ExcelUploadWithPreview({ onChange }: { onChange?: (rows: any[]) 
     setShowPreview(false);
     onChange?.([]);
   }
-  useEffect(() => {
-    console.log(rows);
-  }, [rows]);
+
   return (
     <div className={styles.main}>
       <ExcelUploadForm onParsed={handleParsed} onClear={handleClear} isParsed={!!rows} />

@@ -12,6 +12,7 @@ import { buildDynamicTitleValidators, validateFields } from "~/utils/validation"
 import BackLink from "~/components/BackLink";
 import { ExcelUploadForm } from "~/components/ExcelUploadForm";
 import { ExcelUploadWithPreview } from "~/components/ExcelUploadWithPreview";
+import TextField from "~/components/TextField";
 
 type ActionResponse = {
   success: boolean;
@@ -102,18 +103,12 @@ export default function NewProduct() {
       <ExcelUploadWithPreview onChange={setRows} />
       <Form method="post">
         <div className="products-new__top-form">
-          <label>
-            Назва:
-            <input type="text" name="main__title" placeholder="КС-Г(В)-010 СН" minLength={4} required />
-          </label>{" "}
-          <label>
-            Код:
-            <input type="text" name="main__code" placeholder="070.00.00.000" />
-          </label>
+          <TextField label="Назва" name="main__title" placeholder="КС-Г(В)-010 СН" minLength={4} isRequired />
+          <TextField label="Код" name="main__code" placeholder="070.00.00.000" />
         </div>
         <div className="products-new__main-form">
           {/* <ProductNormsTable normRows={initialData} isEditable={true} /> */}
-          <button className="button button--primary" aria-label="Збрегети зміни" type="submit" disabled>
+          <button className="button button--primary" aria-label="Збрегети зміни" type="submit" disabled={!rows}>
             Зберегти
           </button>
         </div>
