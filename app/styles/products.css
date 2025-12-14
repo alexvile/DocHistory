@@ -55,3 +55,10 @@
 .edit-button__edit-container .button:first-of-type{
  margin-right: 6px;
 }
+
+
+/* product new */
+.products-new__top-form {
+  display: flex;
+  column-gap: 12px;
+}

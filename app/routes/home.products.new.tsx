@@ -2,15 +2,12 @@ import { ActionFunction, ActionFunctionArgs, LoaderFunction, LoaderFunctionArgs 
 import { Form, Link, useActionData, useParams } from "@remix-run/react";
 import { getUserId, requireUserRole } from "~/server/auth.server";
 import { createProduct } from "~/server/products.server";
-import ProductNormsTable from "~/components/ProductNormsTable";
 import { useMemo, useState } from "react";
 import { filterStringEntries, shortId } from "~/utils/main";
-import { useHasHydrated } from "~/utils/hooks";
 import { parseFormData } from "~/utils/rowHandlers";
 import { Icon } from "~/components/Icon";
 import { buildDynamicTitleValidators, validateFields } from "~/utils/validation";
 import BackLink from "~/components/BackLink";
-import { ExcelUploadForm } from "~/components/ExcelUploadForm";
 import { ExcelUploadWithPreview } from "~/components/ExcelUploadWithPreview";
 import TextField from "~/components/TextField";
 
