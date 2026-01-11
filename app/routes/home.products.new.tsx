@@ -2,7 +2,7 @@ import { ActionFunction, ActionFunctionArgs, LoaderFunction, LoaderFunctionArgs 
 import { Form, Link, useActionData, useParams } from "@remix-run/react";
 import { getUserId, requireUserRole } from "~/server/auth.server";
 import { createProduct } from "~/server/products.server";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { filterStringEntries, shortId } from "~/utils/main";
 import { parseFormData } from "~/utils/rowHandlers";
 import { Icon } from "~/components/Icon";
@@ -10,59 +10,75 @@ import { buildDynamicTitleValidators, validateFields } from "~/utils/validation"
 import BackLink from "~/components/BackLink";
 import { ExcelUploadWithPreview } from "~/components/ExcelUploadWithPreview";
 import TextField from "~/components/TextField";
-
-type ActionResponse = {
-  success: boolean;
-  errors: Record<string, string>;
-};
+import { validateProductForm } from "~/utils/vanildateNewProduct.server";
 
 // todo use _new !!!!
 export const action: ActionFunction = async ({ request }: ActionFunctionArgs) => {
   const userId = await getUserId(request);
   if (!userId) {
-    const res: ActionResponse = {
-      success: false,
-      errors: { global: "Unauthorized" },
-    };
-    return Response.json(res, { status: 401 });
+    throw new Response("Unauthorized", { status: 401 });
   }
-
   const formData = await request.formData();
   const raw = Object.fromEntries(formData);
-  const strings = filterStringEntries(raw);
-  const { main__title, main__code, ...rest } = strings;
 
-  const dynamicTitleFields = buildDynamicTitleValidators(rest);
-  const fieldErrors = validateFields({
-    title: {
-      value: main__title,
-      type: "string",
-      required: true,
-      minLength: 4,
-    },
-    code: {
-      value: main__code,
-      type: "string",
-      optional: true,
-    },
-    ...dynamicTitleFields,
-  });
+  const { errors, hasErrors, data } = validateProductForm(raw);
 
-  if (Object.keys(fieldErrors).length > 0) {
-    const res: ActionResponse = { success: false, errors: fieldErrors };
-    return Response.json(res, { status: 400 });
+  if (hasErrors) {
+    return new Response(JSON.stringify({ errors }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
-  const jsonNorms = parseFormData(rest);
+  return new Response(
+    JSON.stringify({
+      status: "created",
+      resource: "product",
+      id: "product.id",
+    }),
+    {
+      status: 201,
+      headers: {
+        "Content-Type": "application/json",
+        Location: `/products/${"product.id"}`,
+      },
+    }
+  );
 
-  await createProduct({
-    productTitle: main__title,
-    code: main__code ?? null,
-    norms: jsonNorms,
-    creatorId: userId,
-  });
-  const res: ActionResponse = { success: true, errors: {} };
-  return Response.json(res, { status: 201 });
+  // const strings = filterStringEntries(raw);
+  // const { main__title, main__code, ...rest } = strings;
+
+  // const dynamicTitleFields = buildDynamicTitleValidators(rest);
+  // const fieldErrors = validateFields({
+  //   title: {
+  //     value: main__title,
+  //     type: "string",
+  //     required: true,
+  //     minLength: 4,
+  //   },
+  //   code: {
+  //     value: main__code,
+  //     type: "string",
+  //     optional: true,
+  //   },
+  //   ...dynamicTitleFields,
+  // });
+
+  // if (Object.keys(fieldErrors).length > 0) {
+  //   const res: ActionResponse = { success: false, errors: fieldErrors };
+  //   return Response.json(res, { status: 400 });
+  // }
+
+  // const jsonNorms = parseFormData(rest);
+
+  // await createProduct({
+  //   productTitle: main__title,
+  //   code: main__code ?? null,
+  //   norms: jsonNorms,
+  //   creatorId: userId,
+  // });
+  // const res: ActionResponse = { success: true, errors: {} };
+  // return Response.json(res, { status: 201 });
 };
 
 export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
@@ -77,14 +93,15 @@ export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) =>
 // todo - show all norms
 // todo - show errors in the frontend ?
 // todo - show warning if try to quit
-export default function NewProduct() {
-  const data = useActionData();
-  // console.log("actionData", data);
+// todo - errors + disabled state
+// todo - when try to exit - show warning !!!
+// todo - mark inputs with red color
 
-  const [id] = useState(() => shortId());
-  // todo - when try to exit - show warning !!!
-  const params = useParams();
-  // console.log("id", params.productId);
+export default function NewProduct() {
+  const actionData = useActionData<typeof action>();
+  const errors = actionData?.errors;
+  const hasErrors = errors && Object.keys(errors).length > 0;
+
   const [rows, setRows] = useState<any[] | null>(null);
 
   return (
@@ -97,15 +114,34 @@ export default function NewProduct() {
         </h3>
       </div>
 
+      {hasErrors && (
+        <div className="form-errors">
+          <p className="form-errors__title">Будь ласка, виправте помилки:</p>
+
+          <ul className="form-errors__list">
+            {Object.values(errors).map((message, index) => (
+              <li key={index}>{message}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <ExcelUploadWithPreview onChange={setRows} />
       <Form method="post">
+        <input type="hidden" name="jsonString" value={rows ? JSON.stringify(rows) : ""} />
         <div className="products-new__top-form">
-          <TextField label="Назва" name="main__title" placeholder="КС-Г(В)-010 СН" minLength={4} isRequired />
-          <TextField label="Код" name="main__code" placeholder="070.00.00.000" />
+          <TextField label="Назва" name="title" placeholder="КС-Г(В)-010 СН" minLength={4} isRequired />
+          <TextField label="Код" name="code" placeholder="070.00.00.000" />
         </div>
         <div className="products-new__main-form">
           {/* <ProductNormsTable normRows={initialData} isEditable={true} /> */}
-          <button className="button button--primary" aria-label="Збрегети зміни" type="submit" disabled={!rows}>
+          <button
+            className="button button--primary"
+            aria-label="Збрегети зміни"
+            disabled={!rows || rows.length === 0}
+            aria-disabled={!rows || rows.length === 0}
+            type="submit"
+          >
             Зберегти
           </button>
         </div>

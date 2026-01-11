@@ -33,6 +33,7 @@ export function ExcelUploadForm({ onParsed, onClear, isParsed }: ExcelUploadForm
     setHasFile(false);
     onClear();
   }
+  // todo - error if cann't be parsed
 
   return (
     <fetcher.Form method="post" action="/parse-excel" encType="multipart/form-data" onSubmit={handleSubmit} className={styles.form}>

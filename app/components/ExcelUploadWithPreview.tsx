@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ExcelUploadForm } from "./ExcelUploadForm";
 import NormsTable from "./NormsTable";
 import styles from "./ExcelUploadWithPreview.module.css";
