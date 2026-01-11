@@ -1,4 +1,5 @@
 // todo - do we need to connect creator of norm ???
+import { ProductInvalidStateError, ProductNotFoundError } from "~/utils/domain-errors";
 import { prisma } from "./prisma.server";
 import { Product, Prisma, SnapshotStatus } from "@prisma/client";
 
@@ -136,11 +137,11 @@ export async function getProductWithNormsById(productId: string) {
   });
 
   if (!product) {
-    throw new Error("Product not found");
+    throw new ProductNotFoundError();
   }
 
   if (!product.currentSnapshotId) {
-    throw new Error("Product has no active snapshot");
+    throw new ProductInvalidStateError("Product has no active snapshot");
   }
   // 2️⃣ fetch active snapshot (only what we need)
   const snapshot = await prisma.normSnapshot.findUnique({
@@ -148,16 +149,17 @@ export async function getProductWithNormsById(productId: string) {
     select: {
       id: true,
       rows: true,
+      status: true,
     },
   });
 
-  if (!snapshot) {
-    throw new Error("Active snapshot not found");
+  if (!snapshot || snapshot.status !== "BASELINE") {
+    throw new ProductInvalidStateError("Active snapshot not found");
   }
 
   return {
     product,
-    currentSnapshot: snapshot
+    currentSnapshot: snapshot,
   };
 }
 
