@@ -29,56 +29,44 @@ export const action: ActionFunction = async ({ request }: ActionFunctionArgs) =>
       headers: { "Content-Type": "application/json" },
     });
   }
+  
+  try {
+    const { product } = await createProduct({
+      title: data.title,
+      norms: data.norms,
+      creatorId: userId,
+    });
 
-  return new Response(
-    JSON.stringify({
-      status: "created",
-      resource: "product",
-      id: "product.id",
-    }),
-    {
-      status: 201,
-      headers: {
-        "Content-Type": "application/json",
-        Location: `/products/${"product.id"}`,
-      },
-    }
-  );
+    return new Response(
+      JSON.stringify({
+        status: "created",
+        resource: "product",
+        id: product.id,
+      }),
+      {
+        status: 201,
+        headers: {
+          "Content-Type": "application/json",
+          Location: `/products/${product.id}`,
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Create product failed", error);
 
-  // const strings = filterStringEntries(raw);
-  // const { main__title, main__code, ...rest } = strings;
-
-  // const dynamicTitleFields = buildDynamicTitleValidators(rest);
-  // const fieldErrors = validateFields({
-  //   title: {
-  //     value: main__title,
-  //     type: "string",
-  //     required: true,
-  //     minLength: 4,
-  //   },
-  //   code: {
-  //     value: main__code,
-  //     type: "string",
-  //     optional: true,
-  //   },
-  //   ...dynamicTitleFields,
-  // });
-
-  // if (Object.keys(fieldErrors).length > 0) {
-  //   const res: ActionResponse = { success: false, errors: fieldErrors };
-  //   return Response.json(res, { status: 400 });
-  // }
-
-  // const jsonNorms = parseFormData(rest);
-
-  // await createProduct({
-  //   productTitle: main__title,
-  //   code: main__code ?? null,
-  //   norms: jsonNorms,
-  //   creatorId: userId,
-  // });
-  // const res: ActionResponse = { success: true, errors: {} };
-  // return Response.json(res, { status: 201 });
+    throw new Response(
+      JSON.stringify({
+        status: "error",
+        message: "Failed to create product",
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
 };
 
 export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
@@ -103,6 +91,10 @@ export default function NewProduct() {
   const hasErrors = errors && Object.keys(errors).length > 0;
 
   const [rows, setRows] = useState<any[] | null>(null);
+
+  useEffect(() => {
+    console.log("rows", rows);
+  }, [rows]);
 
   return (
     <>

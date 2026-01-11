@@ -11,7 +11,7 @@ export type UsersListProps = {
   users: FilteredUser[];
 };
 
-export type FilteredProduct = Pick<Product, "id" | "productTitle" | "updatedAt">;
+export type FilteredProduct = Pick<Product, "id" | "title" | "updatedAt">;
 
 export type ProductsListProps = {
   products: FilteredProduct[];

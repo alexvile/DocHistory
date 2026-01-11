@@ -1,28 +1,67 @@
 // todo - do we need to connect creator of norm ???
 import { prisma } from "./prisma.server";
-import { Product, Prisma } from "@prisma/client";
+import { Product, Prisma, SnapshotStatus } from "@prisma/client";
 
-export const createProduct = async ({
-  creatorId,
-  productTitle,
-  code,
-}: Pick<Product, "productTitle" | "code" | "creatorId">) => {
-  await prisma.product.create({
-    data: {
-      productTitle,
-      code,
-      creator: {
-        connect: {
-          id: creatorId,
-        },
-      },
-    },
-  });
+type CreateProductInput = {
+  title: string;
+  code?: string;
+  norms: any;
+  creatorId: string;
 };
 
-export const getTotalProductsCount = async (
-  whereFilter: Prisma.ProductWhereInput
-) => {
+export async function createProduct(input: CreateProductInput) {
+  const { title, code, norms, creatorId } = input
+
+  return await prisma.$transaction(async (tx) => {
+    // 1️⃣ creating product
+    const product = await tx.product.create({
+      data: {
+        title,
+        code,
+        createdById: creatorId
+      }
+    })
+
+    // 2️⃣ creating initial snapshot
+    const snapshot = await tx.normSnapshot.create({
+      data: {
+        productId: product.id,
+        createdById: creatorId,
+        status: SnapshotStatus.BASELINE,
+        rows: norms
+      }
+    })
+
+    // 3️⃣ assign initial snapshot for product
+    const updatedProduct = await tx.product.update({
+      where: { id: product.id },
+      data: {
+        currentSnapshotId: snapshot.id
+      }
+    })
+
+    return {
+      product: updatedProduct,
+      snapshot
+    }
+  })
+}
+
+// export const createProduct = async ({ creatorId, productTitle, code }: Pick<Product, "productTitle" | "code" | "creatorId">) => {
+//   await prisma.product.create({
+//     data: {
+//       productTitle,
+//       code,
+//       creator: {
+//         connect: {
+//           id: creatorId,
+//         },
+//       },
+//     },
+//   });
+// };
+
+export const getTotalProductsCount = async (whereFilter: Prisma.ProductWhereInput) => {
   return await prisma.product.count({ where: whereFilter });
 };
 export const getFilteredProducts = async (

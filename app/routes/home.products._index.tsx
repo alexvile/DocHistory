@@ -8,7 +8,6 @@ import {
 import ProductsTable from "~/components/ProductsTable";
 import { Prisma } from "@prisma/client";
 import { SortAndFilterBar } from "~/components/SortAndFilterBar";
-import { prisma } from "~/server/prisma.server";
 import { Pagination } from "~/components/Pagination";
 
 export const loader: LoaderFunction = async ({
@@ -32,14 +31,14 @@ export const loader: LoaderFunction = async ({
   let sortOptions: Prisma.ProductOrderByWithRelationInput = {};
   if (sort) {
     if (sort === "title") {
-      sortOptions = { productTitle: `${direction}` };
+      sortOptions = { title: `${direction}` };
     }
     if (sort === "updated") {
       sortOptions = { updatedAt: `${direction}` };
     }
   }
   const whereFilter: Prisma.ProductWhereInput = filter
-    ? { productTitle: { contains: filter, mode: "insensitive" } }
+    ? { title: { contains: filter, mode: "insensitive" } }
     : {};
   const totalCount = await getTotalProductsCount(whereFilter);
   const totalPages = Math.ceil(totalCount / take);

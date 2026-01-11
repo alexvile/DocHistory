@@ -57,7 +57,8 @@ model Product {
   createdBy   User   @relation(fields: [createdById], references: [id])
 
   snapshots         NormSnapshot[]
-  currentSnapshotId String         @db.ObjectId
+  // actually this is required field
+  currentSnapshotId String?         @db.ObjectId
 }
 
 model NormSnapshot {
