@@ -48,7 +48,7 @@ export default function SideMenu({ role }: SideMenuProps) {
               }
               to={"/home/changes"}
             >
-              <Icon name="changes" /> !!!!!!!!!!!Зміни
+              <Icon name="changes" /> !!! Мої Зміни (draft)
             </NavLink>
           </li>
              <li className="side-menu__item">
