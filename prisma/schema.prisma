@@ -19,67 +19,77 @@ enum Role {
 }
 
 enum SnapshotStatus {
-  DRAFT
   BASELINE
   ARCHIVED
+  DRAFT
 }
 
 enum ChangeSetStatus {
   DRAFT
-  PUBLISHED
-  VIEWED
+  APPROVED
+  REJECTED
 }
 
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  role      Role
   email     String   @unique
   password  String
   firstName String
   lastName  String
+  role      Role
 
-  products   Product[]      @relation("UserProducts")
-  changeSets ChangeSet[]    @relation("UserChangeSets")
-  snapshots  NormSnapshot[] @relation("UserSnapshots")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  productsCreated Product[]
+  changeSets      ChangeSet[]
 }
+
 
 model Product {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  productTitle String   @unique
-  code         String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  note        String?
+  code        String?
 
-  creator   User   @relation("UserProducts", fields: [creatorId], references: [id])
-  creatorId String @db.ObjectId
-
-  snapshots NormSnapshot[] @relation("ProductSnapshots")
-}
-
-model NormSnapshot {
-  id             String         @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt      DateTime       @default(now())
-  label          String?
-  sourceFilePath String?
-  parsedHash     String
-  status         SnapshotStatus @default(DRAFT)
-
-  productId String  @db.ObjectId
-  product   Product @relation("ProductSnapshots", fields: [productId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   createdById String @db.ObjectId
-  createdBy   User   @relation("UserSnapshots", fields: [createdById], references: [id])
+  createdBy   User   @relation(fields: [createdById], references: [id])
 
-  // весь нормалізований Excel одним масивом
+  currentSnapshotId String       @db.ObjectId
+  currentSnapshot   NormSnapshot @relation(fields: [currentSnapshotId], references: [id])
+
+  snapshots  NormSnapshot[]
+  changeSets ChangeSet[]
+
+  @@index([currentSnapshotId])
+}
+model NormSnapshot {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+
+  label     String?
+  status    SnapshotStatus
+
+  productId String  @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id])
+
+  createdById String @db.ObjectId
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  sourceFilePath String?
+  parsedHash     String
+
+  // весь Excel → нормалізований JSON
   rows Json
 
-  // зворотні сторони двох різних реляцій із ChangeSet
-  prevForChangeSets ChangeSet[] @relation("ChangeSetPrev")
-  nextForChangeSets ChangeSet[] @relation("ChangeSetNext")
+  // звʼязок з ChangeSet
+  asPrev ChangeSet[] @relation("PrevSnapshot")
+  asNext ChangeSet[] @relation("NextSnapshot")
 
-  @@index([productId])
+  @@index([productId, status])
 }
 
 model ChangeSet {
@@ -87,20 +97,21 @@ model ChangeSet {
   createdAt DateTime        @default(now())
   status    ChangeSetStatus @default(DRAFT)
 
-  // хто ініціював
-  creatorId String @db.ObjectId
-  creator   User   @relation("UserChangeSets", fields: [creatorId], references: [id])
-
-  // щоб легко фільтрувати історію по продукту — просто scalar (без @relation)
   productId String @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id])
 
-  // що порівнювали
+  createdById String @db.ObjectId
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  // що було
   prevSnapshotId String       @db.ObjectId
-  prevSnapshot   NormSnapshot @relation("ChangeSetPrev", fields: [prevSnapshotId], references: [id])
+  prevSnapshot   NormSnapshot @relation("PrevSnapshot", fields: [prevSnapshotId], references: [id])
 
+  // що хочемо зробити
   nextSnapshotId String       @db.ObjectId
-  nextSnapshot   NormSnapshot @relation("ChangeSetNext", fields: [nextSnapshotId], references: [id])
+  nextSnapshot   NormSnapshot @relation("NextSnapshot", fields: [nextSnapshotId], references: [id])
 
-  // результат
+  // результат порівняння
   diff Json
 }
+
