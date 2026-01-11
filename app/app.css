@@ -248,3 +248,15 @@ footer {
   column-gap: 12px;
   margin-bottom: 16px;
 }
+
+
+/* tmp solution */
+.columns {
+  display: flex;
+  flex-direction: column; /* default */
+  gap: 16px;
+}
+
+.columns--side-by-side {
+  flex-direction: row;
+}

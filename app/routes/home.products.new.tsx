@@ -8,7 +8,7 @@ import { parseFormData } from "~/utils/rowHandlers";
 import { Icon } from "~/components/Icon";
 import { buildDynamicTitleValidators, validateFields } from "~/utils/validation";
 import BackLink from "~/components/BackLink";
-import { ExcelUploadWithPreview } from "~/components/ExcelUploadWithPreview";
+import { ExcelUploadContainer } from "~/components/ExcelUploadContainer";
 import TextField from "~/components/TextField";
 import { validateProductForm } from "~/utils/vanildateNewProduct.server";
 
@@ -92,10 +92,6 @@ export default function NewProduct() {
 
   const [rows, setRows] = useState<any[] | null>(null);
 
-  useEffect(() => {
-    console.log("rows", rows);
-  }, [rows]);
-
   return (
     <>
       <div className="dashboard-topbar">
@@ -118,7 +114,7 @@ export default function NewProduct() {
         </div>
       )}
 
-      <ExcelUploadWithPreview onChange={setRows} />
+      <ExcelUploadContainer onChange={setRows} />
       <Form method="post">
         <input type="hidden" name="norms" value={rows ? JSON.stringify(rows) : ""} />
         <div className="products-new__top-form">

@@ -1,21 +1,18 @@
-import { Form, isRouteErrorResponse, Outlet, useActionData, useLoaderData, useRouteError, useSubmit } from "@remix-run/react";
-import { useEffect, useRef, useState } from "react";
+import { Form, isRouteErrorResponse, Outlet, useLoaderData, useRouteError } from "@remix-run/react";
+import { useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
-import { getProductbyId, getProductWithNormsById } from "~/server/products.server";
+import { getProductWithNormsById } from "~/server/products.server";
 import { getUserId } from "~/server/auth.server";
-import ProductNormsTable from "~/components/ProductNormsTable";
-import NormsGenerator from "~/utils/normsGenerator";
 import { LastChanged } from "~/components/LastChangedTooltip";
 import BackLink from "~/components/BackLink";
-import { areFormDataEqual } from "~/utils/areFormDataEqual";
-import { useFormSnapshotOnVisible } from "~/utils/hooks";
 import { diffNorms, filterStringEntries } from "~/utils/main";
 import { buildDynamicTitleValidators, validateFields } from "~/utils/validation";
 import { parseFormData } from "~/utils/rowHandlers";
 import { updateProductAndCreateChange } from "~/server/atomic.server";
 import NormsTable from "~/components/NormsTable";
 import { CanonicalRow } from "~/types";
+import { ExcelUploadContainer } from "~/components/ExcelUploadContainer";
 
 type ActionResponse = {
   success: boolean;
@@ -160,67 +157,33 @@ export function ErrorBoundary() {
 }
 
 export default function ProductNorm() {
-  const submit = useSubmit();
   const loaderData = useLoaderData<typeof loader>();
   // const actData = useActionData();
   // console.log("loaderData", loaderData);
+  const [rows, setRows] = useState<any[] | null>(null);
 
-  // const [isEditable, setIsEditable] = useState(false);
-  // const formRef = useRef<HTMLFormElement>(null);
-  // const initialFormSnapshot = useFormSnapshotOnVisible(formRef, isEditable);
+  const [isEditable, setIsEditable] = useState(false);
+  const [comparison, setComparison] = useState(false);
 
-  // const onEditClick = () => {
-  //   setIsEditable(true);
-  // };
+  // todo - move to tsx if no need extend
+  const enableEdit = () => {
+    setIsEditable(true);
+  };
 
-  // const onSaveClick = () => {
-  //   console.log("on save");
-  //   // todo - prevent code duplicate
-  //   if (!formRef.current || !initialFormSnapshot) {
-  //     setIsEditable(false);
-  //     return;
-  //   }
+  const toggleComparison = () => {
+    setComparison((prev) => !prev);
+  };
 
-  //   const current = new FormData(formRef.current);
-  //   const hasChanged = !areFormDataEqual(current, initialFormSnapshot);
+  const discardChanges = () => {
+    // TODO: confirm discard / clear child
+    setRows(null);
+    setIsEditable(false);
+  };
 
-  //   if (!hasChanged) {
-  //     setIsEditable(false);
-  //     return;
-  //   }
-  //   // todo - prevent code duplicate
-
-  //   // save new file
-  //   // save change instance
-  //   if (formRef.current) {
-  //     console.log("sumbit !!!");
-  //     submit(formRef.current);
-  //   }
-  // };
-
-  // const onCancelClick = () => {
-  //   // todo - prevent code duplicate
-
-  //   if (!formRef.current || !initialFormSnapshot) {
-  //     setIsEditable(false);
-  //     return;
-  //   }
-
-  //   const current = new FormData(formRef.current);
-  //   const hasChanged = !areFormDataEqual(current, initialFormSnapshot);
-
-  //   if (!hasChanged) {
-  //     setIsEditable(false);
-  //     return;
-  //   }
-  //   // todo - prevent code duplicate
-
-  //   const confirmed = window.confirm("Ви впевнені, що хочете скасувати зміни?");
-  //   if (confirmed) {
-  //     setIsEditable(false);
-  //     formRef.current.reset();
-  //   }
-  // };
+  // todo - compare table - (ExcelUploadContainer with separate preview element) - current - new version
+  // todo - recently uploda check
+  // todo - changes show - edit
+  // todo - check if not the same (can use hash or checking by keys)
 
   return (
     <>
@@ -231,20 +194,30 @@ export default function ProductNorm() {
           <LastChanged date={loaderData.product.updatedAt} />
         </h3>
         <div className="edit-button__wrapper">
-          {/* {isEditable ? (
-            <div className="edit-button__edit-container">
-              <button type="button" onClick={onCancelClick} className="button button--secondary">
+          {isEditable ? (
+            <>
+              <button type="button" className="button button--secondary" onClick={discardChanges}>
                 Відмінити
               </button>
-              <button type="button" onClick={onSaveClick} className="button button--primary">
-                Зберегти
-              </button>
-            </div>
+              <Form method="post">
+                <input type="hidden" name="norms" value={rows ? JSON.stringify(rows) : ""} />
+
+                <button
+                  className="button button--primary"
+                  aria-label="Збрегети зміни"
+                  disabled={!rows || rows.length === 0}
+                  aria-disabled={!rows || rows.length === 0}
+                  type="submit"
+                >
+                  Зберегти
+                </button>
+              </Form>
+            </>
           ) : (
-            <button type="button" onClick={onEditClick} className="button button--primary">
+            <button type="button" onClick={enableEdit} className="button button--primary">
               Змінити
             </button>
-          )} */}
+          )}
         </div>
       </div>
       {loaderData.product.code && (
@@ -253,11 +226,23 @@ export default function ProductNorm() {
           {loaderData.product.code}
         </p>
       )}
+      {isEditable && <ExcelUploadContainer onChange={setRows} preview={false} />}
       <div className="products-details__main-form">
-        <NormsTable normsJson={loaderData.norms as CanonicalRow[]} />
-        {/* <Form method="post" ref={formRef}>
-          <ProductNormsTable normRows={data.rows} isEditable={isEditable} />
-        </Form> */}
+        {rows && (
+            <button type="button" onClick={toggleComparison}>
+              Порівняти
+            </button>
+        )}
+        <div className={`columns ${comparison ? "columns--side-by-side" : ""}`}>
+          {rows && (
+            <div>
+              {!comparison && <p>Перевірте правильність сформованих даних</p>}
+              <NormsTable normsJson={rows} />{" "}
+            </div>
+          )}
+
+          <NormsTable normsJson={loaderData.norms as CanonicalRow[]} />
+        </div>
       </div>
       <Outlet />
     </>
