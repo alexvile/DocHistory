@@ -2,7 +2,7 @@ import { Form, isRouteErrorResponse, Outlet, useActionData, useLoaderData, useRo
 import { useEffect, useRef, useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
-import { getProductbyId } from "~/server/products.server";
+import { getProductbyId, getProductWithNormsById } from "~/server/products.server";
 import { getUserId } from "~/server/auth.server";
 import ProductNormsTable from "~/components/ProductNormsTable";
 import NormsGenerator from "~/utils/normsGenerator";
@@ -88,109 +88,146 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.productId, "Missing productId param");
-  const detailedProduct = await getProductbyId(params.productId);
-  if (!detailedProduct) {
-    throw new Response(null, {
-      status: 404,
-      statusText: "Not Found",
-    });
+  try {
+    const productWithNorms = await getProductWithNormsById(params.productId);
+    return productWithNorms;
+  } catch (error) {
+    // domain → HTTP mapping
+    if (error instanceof Error) {
+      if (error.message === "Product not found") {
+        throw new Response("Not Found", { status: 404 });
+      }
+
+      if (error.message === "Product has no active snapshot") {
+        throw new Response("Invalid product state", { status: 409 });
+      }
+    }
+
+    // fallback — unexpected error
+    console.error("Product loader failed", error);
+    throw new Response("Internal Server Error", { status: 500 });
   }
-  const { code, createdAt, id, productTitle, updatedAt } = detailedProduct;
-  // const rows = NormsGenerator.createRows(norms);
-  return { rows: [], product: { code, createdAt, id, productTitle, updatedAt } };
 };
 
 export function ErrorBoundary() {
   const error = useRouteError();
-  if (isRouteErrorResponse(error)) {
-    if (error.status === 404) {
-      return <p>Продукт не знайдено (404)</p>;
-    }
 
+  // 🔹 HTTP errors (throw Response)
+  if (isRouteErrorResponse(error)) {
+    switch (error.status) {
+      case 404:
+        return (
+          <div>
+            <h1>Продукт не знайдено</h1>
+            <p>Запитуваний продукт не існує.</p>
+          </div>
+        );
+
+      case 409:
+        return (
+          <div>
+            <h1>Некоректний стан продукту</h1>
+            <p>Для цього продукту немає активних норм.</p>
+          </div>
+        );
+
+      default:
+        return (
+          <div>
+            <h1>{error.status}</h1>
+            <p>{error.statusText}</p>
+          </div>
+        );
+    }
+  }
+
+  // 🔥 Unexpected JS / runtime errors
+  if (error instanceof Error) {
     return (
       <div>
-        <h1>Помилка: {error.status}</h1>
-        <p>{error.statusText}</p>
+        <h1>Щось пішло не так...</h1>
+        <pre>{error.message}</pre>
       </div>
     );
   }
 
-  return <p>Щось пішло не так</p>;
+  // ❓ Fallback (дуже рідко)
+  return <h1>Unknown error</h1>;
 }
 
 export default function ProductNorm() {
   const submit = useSubmit();
-  const data = useLoaderData<typeof loader>();
-  const actData = useActionData();
-  console.log("actionData", actData);
+  const loaderData = useLoaderData<typeof loader>();
+  // const actData = useActionData();
+  console.log("loaderData", loaderData);
 
-  const [isEditable, setIsEditable] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
-  const initialFormSnapshot = useFormSnapshotOnVisible(formRef, isEditable);
+  // const [isEditable, setIsEditable] = useState(false);
+  // const formRef = useRef<HTMLFormElement>(null);
+  // const initialFormSnapshot = useFormSnapshotOnVisible(formRef, isEditable);
 
-  const onEditClick = () => {
-    setIsEditable(true);
-  };
+  // const onEditClick = () => {
+  //   setIsEditable(true);
+  // };
 
-  const onSaveClick = () => {
-    console.log("on save");
-    // todo - prevent code duplicate
-    if (!formRef.current || !initialFormSnapshot) {
-      setIsEditable(false);
-      return;
-    }
+  // const onSaveClick = () => {
+  //   console.log("on save");
+  //   // todo - prevent code duplicate
+  //   if (!formRef.current || !initialFormSnapshot) {
+  //     setIsEditable(false);
+  //     return;
+  //   }
 
-    const current = new FormData(formRef.current);
-    const hasChanged = !areFormDataEqual(current, initialFormSnapshot);
+  //   const current = new FormData(formRef.current);
+  //   const hasChanged = !areFormDataEqual(current, initialFormSnapshot);
 
-    if (!hasChanged) {
-      setIsEditable(false);
-      return;
-    }
-    // todo - prevent code duplicate
+  //   if (!hasChanged) {
+  //     setIsEditable(false);
+  //     return;
+  //   }
+  //   // todo - prevent code duplicate
 
-    // save new file
-    // save change instance
-    if (formRef.current) {
-      console.log("sumbit !!!");
-      submit(formRef.current);
-    }
-  };
+  //   // save new file
+  //   // save change instance
+  //   if (formRef.current) {
+  //     console.log("sumbit !!!");
+  //     submit(formRef.current);
+  //   }
+  // };
 
-  const onCancelClick = () => {
-    // todo - prevent code duplicate
+  // const onCancelClick = () => {
+  //   // todo - prevent code duplicate
 
-    if (!formRef.current || !initialFormSnapshot) {
-      setIsEditable(false);
-      return;
-    }
+  //   if (!formRef.current || !initialFormSnapshot) {
+  //     setIsEditable(false);
+  //     return;
+  //   }
 
-    const current = new FormData(formRef.current);
-    const hasChanged = !areFormDataEqual(current, initialFormSnapshot);
+  //   const current = new FormData(formRef.current);
+  //   const hasChanged = !areFormDataEqual(current, initialFormSnapshot);
 
-    if (!hasChanged) {
-      setIsEditable(false);
-      return;
-    }
-    // todo - prevent code duplicate
+  //   if (!hasChanged) {
+  //     setIsEditable(false);
+  //     return;
+  //   }
+  //   // todo - prevent code duplicate
 
-    const confirmed = window.confirm("Ви впевнені, що хочете скасувати зміни?");
-    if (confirmed) {
-      setIsEditable(false);
-      formRef.current.reset();
-    }
-  };
+  //   const confirmed = window.confirm("Ви впевнені, що хочете скасувати зміни?");
+  //   if (confirmed) {
+  //     setIsEditable(false);
+  //     formRef.current.reset();
+  //   }
+  // };
 
   return (
     <>
       <div className="dashboard-topbar">
         <BackLink />
         <h3 className="product-details__title">
-          {data.product.productTitle}
-          <LastChanged date={data.product.updatedAt} />
+          {loaderData.product.title}
+          <LastChanged date={loaderData.product.updatedAt} />
         </h3>
         <div className="edit-button__wrapper">
-          {isEditable ? (
+          {/* {isEditable ? (
             <div className="edit-button__edit-container">
               <button type="button" onClick={onCancelClick} className="button button--secondary">
                 Відмінити
@@ -203,19 +240,21 @@ export default function ProductNorm() {
             <button type="button" onClick={onEditClick} className="button button--primary">
               Змінити
             </button>
-          )}
+          )} */}
         </div>
       </div>
-      <p className="product-details__code">
-        <span className="bold">Код: </span>
-        {data.product.code}
-      </p>
+      {loaderData.product.code && (
+        <p className="product-details__code">
+          <span className="bold">Код: </span>
+          {loaderData.product.code}
+        </p>
+      )}
       <div className="products-details__main-form">
-        <Form method="post" ref={formRef}>
+        {/* <Form method="post" ref={formRef}>
           <ProductNormsTable normRows={data.rows} isEditable={isEditable} />
-        </Form>
+        </Form> */}
       </div>
-      <Outlet/>
+      <Outlet />
     </>
   );
 }

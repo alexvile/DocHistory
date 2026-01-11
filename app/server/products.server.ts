@@ -10,7 +10,7 @@ type CreateProductInput = {
 };
 
 export async function createProduct(input: CreateProductInput) {
-  const { title, code, norms, creatorId } = input
+  const { title, code, norms, creatorId } = input;
 
   return await prisma.$transaction(async (tx) => {
     // 1️⃣ creating product
@@ -18,9 +18,9 @@ export async function createProduct(input: CreateProductInput) {
       data: {
         title,
         code,
-        createdById: creatorId
-      }
-    })
+        createdById: creatorId,
+      },
+    });
 
     // 2️⃣ creating initial snapshot
     const snapshot = await tx.normSnapshot.create({
@@ -28,23 +28,23 @@ export async function createProduct(input: CreateProductInput) {
         productId: product.id,
         createdById: creatorId,
         status: SnapshotStatus.BASELINE,
-        rows: norms
-      }
-    })
+        rows: norms,
+      },
+    });
 
     // 3️⃣ assign initial snapshot for product
     const updatedProduct = await tx.product.update({
       where: { id: product.id },
       data: {
-        currentSnapshotId: snapshot.id
-      }
-    })
+        currentSnapshotId: snapshot.id,
+      },
+    });
 
     return {
       product: updatedProduct,
-      snapshot
-    }
-  })
+      snapshot,
+    };
+  });
 }
 
 // export const createProduct = async ({ creatorId, productTitle, code }: Pick<Product, "productTitle" | "code" | "creatorId">) => {
@@ -105,22 +105,61 @@ export const getAllFilteredProducts = async () => {
   });
 };
 
-export const getProductbyId = async (id: string) => {
-  // todo - get Last 50 changes with creator
-  //  add Link for filter all changes by this norm
-  return await prisma.product.findUnique({
-    where: {
-      id: id,
-    },
+// export const getProductbyId = async (id: string) => {
+//   // todo - get Last 50 changes with creator
+//   //  add Link for filter all changes by this norm
+//   return await prisma.product.findUnique({
+//     where: {
+//       id: id,
+//     },
+//     select: {
+//       id: true,
+//       title: true,
+//       code: true,
+//       createdAt: true,
+//       updatedAt: true,
+//     },
+//   });
+// };
+
+export async function getProductWithNormsById(productId: string) {
+  // 1️⃣ fetch product (only what we need)
+  const product = await prisma.product.findUnique({
+    where: { id: productId },
     select: {
       id: true,
-      productTitle: true,
+      title: true,
       code: true,
-      createdAt: true,
       updatedAt: true,
+      currentSnapshotId: true,
     },
   });
-};
+
+  if (!product) {
+    throw new Error("Product not found");
+  }
+
+  if (!product.currentSnapshotId) {
+    throw new Error("Product has no active snapshot");
+  }
+  // 2️⃣ fetch active snapshot (only what we need)
+  const snapshot = await prisma.normSnapshot.findUnique({
+    where: { id: product.currentSnapshotId },
+    select: {
+      id: true,
+      rows: true,
+    },
+  });
+
+  if (!snapshot) {
+    throw new Error("Active snapshot not found");
+  }
+
+  return {
+    product,
+    norms: snapshot
+  };
+}
 
 // todo - need refactor
 
