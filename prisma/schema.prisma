@@ -19,9 +19,10 @@ enum Role {
 }
 
 enum SnapshotStatus {
-  BASELINE
-  ARCHIVED
-  DRAFT
+  BASELINE // active, current
+  ARCHIVED // was active in the past
+  DRAFT // pending / proposed
+  REJECTED // proposed but explicitly rejected
 }
 
 enum ChangeSetStatus {
@@ -43,6 +44,7 @@ model User {
 
   productsCreated Product[]
   NormSnapshot    NormSnapshot[]
+  changeSets      ChangeSet[]
 }
 
 model Product {
@@ -58,7 +60,8 @@ model Product {
 
   snapshots         NormSnapshot[]
   // actually this is required field
-  currentSnapshotId String?         @db.ObjectId
+  currentSnapshotId String?        @db.ObjectId
+  changeSets        ChangeSet[]
 }
 
 model NormSnapshot {
@@ -76,23 +79,19 @@ model NormSnapshot {
   // parsedHash     String
 }
 
-// model ChangeSet {
-//   id        String          @id @default(auto()) @map("_id") @db.ObjectId
-//   createdAt DateTime        @default(now())
-//   status    ChangeSetStatus @default(DRAFT)
+model ChangeSet {
+  id        String          @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime        @default(now())
+  status    ChangeSetStatus @default(DRAFT)
 
-//   productId String  @db.ObjectId
-//   product   Product @relation(fields: [productId], references: [id])
+  productId String  @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id])
 
-//   createdById String @db.ObjectId
-//   createdBy   User   @relation(fields: [createdById], references: [id])
+  createdById String @db.ObjectId
+  createdBy   User   @relation(fields: [createdById], references: [id])
 
-//   prevSnapshotId String       @db.ObjectId
-//   prevSnapshot   NormSnapshot @relation(fields: [prevSnapshotId], references: [id])
-
-//   nextSnapshotId String       @db.ObjectId
-//   nextSnapshot   NormSnapshot @relation(fields: [nextSnapshotId], references: [id])
-
-//   // результат порівняння
-//   diff Json
-// }
+  oldSnapshotId String @db.ObjectId
+  newSnapshotId String @db.ObjectId
+  
+  diff          Json
+}
