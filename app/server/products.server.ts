@@ -157,7 +157,7 @@ export async function getProductWithNormsById(productId: string) {
 
   return {
     product,
-    norms: snapshot
+    currentSnapshot: snapshot
   };
 }
 

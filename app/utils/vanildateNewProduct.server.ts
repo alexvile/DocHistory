@@ -1,3 +1,5 @@
+import { JsonValue } from "@prisma/client/runtime/library";
+
 type RawForm = Record<string, FormDataEntryValue>;
 
 export type ProductFormErrors = {
@@ -6,7 +8,7 @@ export type ProductFormErrors = {
 };
 
 export type ProductFormData = {
-  norms: string;
+  norms: JsonValue;
   title: string;
   code?: string;
 };
@@ -14,10 +16,17 @@ export type ProductFormData = {
 export function validateProductForm(raw: RawForm) {
   const errors: ProductFormErrors = {};
 
-  const norms =
-    typeof raw.norms === "string"
-      ? raw.norms
-      : "";
+  let norms: JsonValue | undefined;
+
+  if (typeof raw.norms === "string" && raw.norms.trim()) {
+    try {
+      norms = JSON.parse(raw.norms);
+    } catch {
+      errors.excel = "Некоректний формат даних Excel";
+    }
+  } else {
+    errors.excel = "Потрібно завантажити Excel-файл";
+  }
 
   const title =
     typeof raw.title === "string"
@@ -28,10 +37,6 @@ export function validateProductForm(raw: RawForm) {
     typeof raw.code === "string"
       ? raw.code.trim()
       : undefined;
-
-  if (!norms) {
-    errors.excel = "Потрібно завантажити Excel-файл";
-  }
 
   if (!title) {
     errors.title = "Назва є обовʼязковою";

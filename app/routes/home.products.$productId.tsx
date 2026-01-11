@@ -14,6 +14,8 @@ import { diffNorms, filterStringEntries } from "~/utils/main";
 import { buildDynamicTitleValidators, validateFields } from "~/utils/validation";
 import { parseFormData } from "~/utils/rowHandlers";
 import { updateProductAndCreateChange } from "~/server/atomic.server";
+import NormsTable from "~/components/NormsTable";
+import { CanonicalRow } from "~/types";
 
 type ActionResponse = {
   success: boolean;
@@ -89,8 +91,11 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.productId, "Missing productId param");
   try {
-    const productWithNorms = await getProductWithNormsById(params.productId);
-    return productWithNorms;
+    const { product, currentSnapshot } = await getProductWithNormsById(params.productId);
+    return {
+      product,
+      norms: currentSnapshot.rows,
+    };
   } catch (error) {
     // domain → HTTP mapping
     if (error instanceof Error) {
@@ -98,7 +103,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
         throw new Response("Not Found", { status: 404 });
       }
 
-      if (error.message === "Product has no active snapshot") {
+      if (error.message === "Product has no active snapshot" || "Active snapshot not found") {
         throw new Response("Invalid product state", { status: 409 });
       }
     }
@@ -111,7 +116,6 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export function ErrorBoundary() {
   const error = useRouteError();
-
   // 🔹 HTTP errors (throw Response)
   if (isRouteErrorResponse(error)) {
     switch (error.status) {
@@ -159,7 +163,7 @@ export default function ProductNorm() {
   const submit = useSubmit();
   const loaderData = useLoaderData<typeof loader>();
   // const actData = useActionData();
-  console.log("loaderData", loaderData);
+  // console.log("loaderData", loaderData);
 
   // const [isEditable, setIsEditable] = useState(false);
   // const formRef = useRef<HTMLFormElement>(null);
@@ -250,6 +254,7 @@ export default function ProductNorm() {
         </p>
       )}
       <div className="products-details__main-form">
+        <NormsTable normsJson={loaderData.norms as CanonicalRow[]} />
         {/* <Form method="post" ref={formRef}>
           <ProductNormsTable normRows={data.rows} isEditable={isEditable} />
         </Form> */}
