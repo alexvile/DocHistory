@@ -117,7 +117,7 @@ export type NormChange = GroupAdded | GroupRemoved | GroupUpdated | DetailAdded 
 
 // Канонічний рядок під твої колонки
 export type CanonicalRow = {
-  businessKey: string; // NAME+ASSORTMENT+DSTU+UNIT (нормалізовані)
+  businessKey: string; // NAME+DSTU+UNIT (нормалізовані)
   name?: string; // Назва
   assortment?: string; // Сортамент
   dstu?: string; // ДСТУ

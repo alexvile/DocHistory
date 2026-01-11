@@ -51,10 +51,9 @@ const asString = (v: unknown): string | undefined => {
 // Бізнес-ключ: стабільний ID рядка
 function makeBusinessKey(r: Partial<CanonicalRow>) {
   const name = (r.name ?? "").toUpperCase().trim();
-  const asrt = (r.assortment ?? "").toUpperCase().trim();
   const dstu = (r.dstu ?? "").toUpperCase().trim();
   const unit = (r.unit ?? "").toUpperCase().trim();
-  return `NAME:${name}|ASRT:${asrt}|DSTU:${dstu}|UNIT:${unit}`;
+  return `NAME:${name}|DSTU:${dstu}|UNIT:${unit}`;
 }
 
 // Знайти рядок заголовків у перших N рядках (де збігається 3+ відомих колонок)
