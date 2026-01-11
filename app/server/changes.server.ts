@@ -1,6 +1,6 @@
 import { CanonicalRow } from "~/types";
 import { prisma } from "./prisma.server";
-import { SnapshotStatus, ChangeSetStatus } from "@prisma/client";
+import { SnapshotStatus, ChangeSetStatus, Prisma } from "@prisma/client";
 import { diffNorms, hasChanges } from "~/utils/comparison";
 
 type CreateChangeSetParams = {
@@ -111,3 +111,25 @@ export async function createChangeSet(params: CreateChangeSetParams) {
 //   });
 // };
 // todo - get the snapshot
+
+
+
+export const getFilteredChangeSetsByProduct = async (
+  productId: string,
+  sortFilter: Prisma.ChangeSetOrderByWithRelationInput,
+  whereFilter: Prisma.ChangeSetWhereInput,
+  skip: number,
+  take: number
+) => {
+  return await prisma.changeSet.findMany({
+    where: {
+      productId,
+      ...whereFilter,
+    },
+    orderBy: {
+      ...sortFilter,
+    },
+    skip,
+    take,
+  });
+};
