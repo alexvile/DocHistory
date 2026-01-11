@@ -1,4 +1,4 @@
-import { Form, isRouteErrorResponse, Outlet, useLoaderData, useRouteError } from "@remix-run/react";
+import { Form, isRouteErrorResponse, Outlet, useActionData, useLoaderData, useRouteError } from "@remix-run/react";
 import { useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
@@ -6,13 +6,16 @@ import { getProductWithNormsById } from "~/server/products.server";
 import { getUserId } from "~/server/auth.server";
 import { LastChanged } from "~/components/LastChangedTooltip";
 import BackLink from "~/components/BackLink";
-import { diffNorms, filterStringEntries } from "~/utils/main";
 import { buildDynamicTitleValidators, validateFields } from "~/utils/validation";
 import { parseFormData } from "~/utils/rowHandlers";
 import { updateProductAndCreateChange } from "~/server/atomic.server";
 import NormsTable from "~/components/NormsTable";
 import { CanonicalRow } from "~/types";
 import { ExcelUploadContainer } from "~/components/ExcelUploadContainer";
+import { validateProductForm, validateProductNorms } from "~/utils/vanildateNewProduct.server";
+import { mapProductErrorToResponse } from "~/server/products.http.server";
+import { diffNorms, hasChanges } from "~/utils/comparison";
+import { createChangeSet } from "~/server/changes.server";
 
 type ActionResponse = {
   success: boolean;
@@ -27,62 +30,73 @@ type ActionResponse = {
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   // invariant(params.productId, "Missing contactId param");
   // const userIdFromSession = await getUserId(request);
-  // ! tmp solution starts
-  invariant(params.productId, "Missing productId param");
-  const detailedProduct = await getProductbyId(params.productId);
-  const { code, createdAt, id, productTitle, updatedAt, norms: oldNorms } = detailedProduct;
-  // ! tmp solution ends
 
-  // todo - use in future data from frontend to prevent extra fetch
-  // todo -PREVENT code duplicate !!
   const userId = await getUserId(request);
   if (!userId) {
-    const res: ActionResponse = {
-      success: false,
-      errors: { global: "Unauthorized" },
-    };
-    return Response.json(res, { status: 401 });
+    throw new Response("Unauthorized", { status: 401 });
   }
-  // todo - check role !!
+
   const formData = await request.formData();
   const raw = Object.fromEntries(formData);
-  const strings = filterStringEntries(raw);
-  const { main__title, main__code, ...rest } = strings;
 
-  const dynamicTitleFields = buildDynamicTitleValidators(rest);
-  const fieldErrors = validateFields({
-    title: {
-      value: main__title,
-      type: "string",
-      required: true,
-      minLength: 4,
-    },
-    code: {
-      value: main__code,
-      type: "string",
-      optional: true,
-    },
-    ...dynamicTitleFields,
-  });
+  const { errors, hasErrors, data } = validateProductNorms(raw);
 
-  // todo - update validation
-  // if (Object.keys(fieldErrors).length > 0) {
-  //   const res: ActionResponse = { success: false, errors: fieldErrors };
-  //   console.log(222, res);
-  //   return Response.json(res, { status: 400 });
-  // }
+  if (hasErrors) {
+    return new Response(JSON.stringify({ errors }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+  const newNorms = data.norms;
 
-  const newNorms = parseFormData(rest);
-  // console.log(111, main__title, main__code, newNorms);
-  const diff = diffNorms(oldNorms, newNorms);
-  // extra checking
-  if (diff.length === 0) {
-    return { updated: false, message: "No changes detected" };
+  // get current Product with norms
+  invariant(params.productId, "Missing productId param");
+  let response;
+  try {
+    const productWithNorms = await getProductWithNormsById(params.productId);
+    response = productWithNorms;
+  } catch (error) {
+    mapProductErrorToResponse(error);
+  }
+  const currentSnapshot = response.currentSnapshot;
+
+  const diff = diffNorms(currentSnapshot.rows, newNorms);
+
+  if (!hasChanges(diff)) {
+    console.log("no changes");
+    return new Response(JSON.stringify({ message: "No changes detected" }), {
+      status: 409,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
 
-  const response = await updateProductAndCreateChange({ creatorId: userId, productId: params.productId, diff, newNorms });
-  const res = { success: true, errors: {}, data: response };
-  return res;
+  console.log("diff", diff);
+
+  await createChangeSet({
+    productId: params.productId,
+    createdById: userId,
+    oldSnapshotId: currentSnapshot.id,
+    newRows: newNorms,
+    diff,
+  });
+
+  return new Response(JSON.stringify({ status: "change_created" }), {
+    status: 201,
+    headers: { "Content-Type": "application/json" },
+  });
+  // const userId = await getUserId(request);
+  // if (!userId) {
+  //   const res: ActionResponse = {
+  //     success: false,
+  //     errors: { global: "Unauthorized" },
+  //   };
+  //   return Response.json(res, { status: 401 });
+  // }
+  // todo - check role !!
+
+  return null;
 };
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -94,20 +108,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       norms: currentSnapshot.rows,
     };
   } catch (error) {
-    // domain → HTTP mapping
-    if (error instanceof Error) {
-      if (error.message === "Product not found") {
-        throw new Response("Not Found", { status: 404 });
-      }
-
-      if (error.message === "Product has no active snapshot" || "Active snapshot not found") {
-        throw new Response("Invalid product state", { status: 409 });
-      }
-    }
-
-    // fallback — unexpected error
-    console.error("Product loader failed", error);
-    throw new Response("Internal Server Error", { status: 500 });
+    mapProductErrorToResponse(error);
   }
 };
 
@@ -158,8 +159,9 @@ export function ErrorBoundary() {
 
 export default function ProductNorm() {
   const loaderData = useLoaderData<typeof loader>();
-  // const actData = useActionData();
-  // console.log("loaderData", loaderData);
+  const actionData = useActionData<typeof action>();
+  console.log("actionData", actionData);
+
   const [rows, setRows] = useState<any[] | null>(null);
 
   const [isEditable, setIsEditable] = useState(false);
@@ -220,6 +222,9 @@ export default function ProductNorm() {
           )}
         </div>
       </div>
+
+      {actionData?.message && <div className="alert alert-warning">{actionData.message}</div>}
+
       {loaderData.product.code && (
         <p className="product-details__code">
           <span className="bold">Код: </span>
@@ -229,9 +234,9 @@ export default function ProductNorm() {
       {isEditable && <ExcelUploadContainer onChange={setRows} preview={false} />}
       <div className="products-details__main-form">
         {rows && (
-            <button type="button" onClick={toggleComparison}>
-              Порівняти
-            </button>
+          <button type="button" onClick={toggleComparison}>
+            Порівняти
+          </button>
         )}
         <div className={`columns ${comparison ? "columns--side-by-side" : ""}`}>
           {rows && (
