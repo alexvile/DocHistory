@@ -6,7 +6,7 @@ export type ProductFormErrors = {
 };
 
 export type ProductFormData = {
-  jsonString: string;
+  norms: string;
   title: string;
   code?: string;
 };
@@ -14,9 +14,9 @@ export type ProductFormData = {
 export function validateProductForm(raw: RawForm) {
   const errors: ProductFormErrors = {};
 
-  const jsonString =
-    typeof raw.jsonString === "string"
-      ? raw.jsonString
+  const norms =
+    typeof raw.norms === "string"
+      ? raw.norms
       : "";
 
   const title =
@@ -29,7 +29,7 @@ export function validateProductForm(raw: RawForm) {
       ? raw.code.trim()
       : undefined;
 
-  if (!jsonString) {
+  if (!norms) {
     errors.excel = "Потрібно завантажити Excel-файл";
   }
 
@@ -41,7 +41,7 @@ export function validateProductForm(raw: RawForm) {
     errors,
     hasErrors: Object.keys(errors).length > 0,
     data: {
-      jsonString,
+      norms,
       title,
       code,
     } as ProductFormData,

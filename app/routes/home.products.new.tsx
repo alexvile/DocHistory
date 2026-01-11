@@ -128,7 +128,7 @@ export default function NewProduct() {
 
       <ExcelUploadWithPreview onChange={setRows} />
       <Form method="post">
-        <input type="hidden" name="jsonString" value={rows ? JSON.stringify(rows) : ""} />
+        <input type="hidden" name="norms" value={rows ? JSON.stringify(rows) : ""} />
         <div className="products-new__top-form">
           <TextField label="Назва" name="title" placeholder="КС-Г(В)-010 СН" minLength={4} isRequired />
           <TextField label="Код" name="code" placeholder="070.00.00.000" />
