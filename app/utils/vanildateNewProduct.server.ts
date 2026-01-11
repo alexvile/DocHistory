@@ -28,15 +28,9 @@ export function validateProductForm(raw: RawForm) {
     errors.excel = "Потрібно завантажити Excel-файл";
   }
 
-  const title =
-    typeof raw.title === "string"
-      ? raw.title.trim()
-      : "";
+  const title = typeof raw.title === "string" ? raw.title.trim() : "";
 
-  const code =
-    typeof raw.code === "string"
-      ? raw.code.trim()
-      : undefined;
+  const code = typeof raw.code === "string" ? raw.code.trim() : undefined;
 
   if (!title) {
     errors.title = "Назва є обовʼязковою";
@@ -49,6 +43,32 @@ export function validateProductForm(raw: RawForm) {
       norms,
       title,
       code,
+    } as ProductFormData,
+  };
+}
+
+// todo - make reusable!
+
+export function validateProductNorms(raw: RawForm) {
+  const errors: ProductFormErrors = {};
+
+  let norms: JsonValue | undefined;
+
+  if (typeof raw.norms === "string" && raw.norms.trim()) {
+    try {
+      norms = JSON.parse(raw.norms);
+    } catch {
+      errors.excel = "Некоректний формат даних Excel";
+    }
+  } else {
+    errors.excel = "Потрібно завантажити Excel-файл";
+  }
+
+  return {
+    errors,
+    hasErrors: Object.keys(errors).length > 0,
+    data: {
+      norms,
     } as ProductFormData,
   };
 }

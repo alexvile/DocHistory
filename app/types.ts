@@ -130,3 +130,14 @@ export type CanonicalRow = {
 export type NormsTableProps = {
   normsJson: CanonicalRow[];
 };
+
+export type NormDiff = {
+  added: CanonicalRow[];
+  removed: CanonicalRow[];
+  changed: {
+    key: string;
+    before: CanonicalRow;
+    after: CanonicalRow;
+    fields: string[];
+  }[];
+};
