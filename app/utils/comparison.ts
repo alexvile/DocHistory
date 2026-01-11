@@ -24,16 +24,21 @@ export function diffNorms(oldRows: CanonicalRow[], newRows: CanonicalRow[]): Nor
       continue;
     }
 
-    if (!isEqual(oldRow, newRow)) {
-      const fields = Object.keys(newRow).filter((f) => !isEqual(oldRow[f], newRow[f]));
+    // find only реально змінені поля
+    const changedFields = Object.keys(newRow).filter(
+      (field) => !isEqual(oldRow[field as keyof CanonicalRow], newRow[field as keyof CanonicalRow])
+    );
 
-      changed.push({
-        key,
-        before: oldRow,
-        after: newRow,
-        fields,
-      });
+    if (changedFields.length === 0) {
+      continue; // ⬅️ НІЯКИХ змін — ігноруємо
     }
+
+    changed.push({
+      key,
+      before: oldRow,
+      after: newRow,
+      fields: changedFields,
+    });
   }
 
   for (const [key, oldRow] of oldMap) {
