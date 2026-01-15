@@ -38,15 +38,13 @@ export default function NormChanges() {
   console.log("loaderData", loaderData);
   return (
     <>
-      <div className="edit-button__wrapper">
-        <ul className="list-unstyled">
-          {loaderData.map(({ id, status, createdAt, diff }) => (
-            <li key={id}>
-              <ChangeSetCard {...{ id, status, createdAt, diff }} />
-            </li>
-          ))}
-        </ul>
-      </div>
+      <ul className="list-unstyled">
+        {loaderData.map(({ id, status, createdAt, diff }) => (
+          <li key={id}>
+            <ChangeSetCard {...{ id, status, createdAt, diff }} />
+          </li>
+        ))}
+      </ul>
       <Outlet />
     </>
   );
