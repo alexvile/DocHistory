@@ -5,7 +5,7 @@ import invariant from "tiny-invariant";
 import { getProductWithNormsById } from "~/server/products.server";
 import { getUserId } from "~/server/auth.server";
 import { LastChanged } from "~/components/LastChangedTooltip";
-import BackLink from "~/components/BackLink";
+import BackLink from "~/components/common/BackLink";
 import { buildDynamicTitleValidators, validateFields } from "~/utils/validation";
 import { parseFormData } from "~/utils/rowHandlers";
 import { updateProductAndCreateChange } from "~/server/atomic.server";

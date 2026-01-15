@@ -1,7 +1,7 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { NavLink, Outlet, useActionData, useLoaderData, useParams } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import BackLink from "~/components/BackLink";
+import BackLink from "~/components/common/BackLink";
 import { LastChanged } from "~/components/LastChangedTooltip";
 import ProductNavigation from "~/components/ProductNavigation";
 import { mapProductErrorToResponse } from "~/server/products.http.server";

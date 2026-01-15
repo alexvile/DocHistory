@@ -7,7 +7,7 @@ import { filterStringEntries, shortId } from "~/utils/main";
 import { parseFormData } from "~/utils/rowHandlers";
 import { Icon } from "~/components/Icon";
 import { buildDynamicTitleValidators, validateFields } from "~/utils/validation";
-import BackLink from "~/components/BackLink";
+import BackLink from "~/components/common/BackLink";
 import { ExcelUploadContainer } from "~/components/ExcelUploadContainer";
 import TextField from "~/components/TextField";
 import { validateProductForm } from "~/utils/vanildateNewProduct.server";

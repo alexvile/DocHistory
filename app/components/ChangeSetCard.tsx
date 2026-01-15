@@ -1,6 +1,6 @@
 import { ChangeSetVM } from "~/types";
 import { formatDateForUA } from "~/utils/formatDateUA";
-import Badge from "./Badge";
+import Badge from "./ui/Badge";
 import styles from "./ChangeSetCard.module.css";
 import { Accordion } from "./Accordion";
 import NormsTable from "./NormsTable";

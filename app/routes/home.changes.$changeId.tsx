@@ -1,7 +1,7 @@
 import { isRouteErrorResponse, useLoaderData, useRouteError } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
-import BackLink from "~/components/BackLink";
+import BackLink from "~/components/common/BackLink";
 import { getChangebyId } from "~/server/changes.server";
 import ChangeList from "~/components/ChangeList";
 import { formatDateForUA } from "~/utils/formatDateUA";
