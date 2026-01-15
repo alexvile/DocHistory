@@ -54,6 +54,12 @@ footer {
 .link-unstyled {
   text-decoration: none;
 }
+
+.list-unstyled {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 /* reset ends */
 .bold {
   font-weight: 700;
@@ -249,7 +255,6 @@ footer {
   margin-bottom: 16px;
 }
 
-
 /* tmp solution */
 .columns {
   display: flex;
@@ -259,4 +264,18 @@ footer {
 
 .columns--side-by-side {
   flex-direction: row;
+}
+
+/* tmp solution */
+.before {
+  color: #a33;
+}
+
+.after {
+  color: #2a7;
+  font-weight: 500;
+}
+
+.arrow {
+  opacity: 0.4;
 }
