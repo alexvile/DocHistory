@@ -1,0 +1,37 @@
+.accordion {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.summary {
+  cursor: pointer;
+  list-style: none;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.icon {
+  width: 12px;
+  height: 12px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.accordion[open] .icon {
+  transform: rotate(-135deg);
+}
+
+.content {
+  margin-top: 8px;
+  color: #4b5563;
+  font-size: 14px;
+}
