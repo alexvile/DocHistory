@@ -5,7 +5,7 @@ import { Icon } from "./Icon";
 export default function SideMenu({ role }: SideMenuProps) {
   return (
     <aside>
-      <nav>
+      <nav aria-label="Main navigation">
         <ul className="side-menu__list">
           {role === "ADMIN" ? (
             <>
@@ -14,7 +14,7 @@ export default function SideMenu({ role }: SideMenuProps) {
                   className={({ isActive, isPending }) =>
                     isActive ? "active" : isPending ? "pending" : ""
                   }
-                  to={"/home/register"}
+                  to={"register"}
                 >
                   <Icon name="create-user" /> Реєстрація
                 </NavLink>
@@ -24,7 +24,7 @@ export default function SideMenu({ role }: SideMenuProps) {
                   className={({ isActive, isPending }) =>
                     isActive ? "active" : isPending ? "pending" : ""
                   }
-                  to={"/home/users"}
+                  to={"users"}
                 >
                   <Icon name="users" /> Користувачі
                 </NavLink>
@@ -36,7 +36,7 @@ export default function SideMenu({ role }: SideMenuProps) {
               className={({ isActive, isPending }) =>
                 isActive ? "active" : isPending ? "pending" : ""
               }
-              to={"/home/products"}
+              to={"products"}
             >
               <Icon name="products" /> Продукти
             </NavLink>
@@ -46,7 +46,7 @@ export default function SideMenu({ role }: SideMenuProps) {
               className={({ isActive, isPending }) =>
                 isActive ? "active" : isPending ? "pending" : ""
               }
-              to={"/home/changes"}
+              to={"changes"}
             >
               <Icon name="changes" /> !!! Мої Зміни (draft)
             </NavLink>
@@ -56,7 +56,7 @@ export default function SideMenu({ role }: SideMenuProps) {
               className={({ isActive, isPending }) =>
                 isActive ? "active" : isPending ? "pending" : ""
               }
-              to={"/home/help"}
+              to={"help"}
             >
               <Icon name="help" />Допомога
             </NavLink>
