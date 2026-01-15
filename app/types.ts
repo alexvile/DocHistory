@@ -1,4 +1,7 @@
-import type { User, Product, Change, Prisma } from "@prisma/client";
+import type { User, Product, ChangeSet, Prisma } from "@prisma/client";
+
+// todo - USE DTO - for DB and backend
+// todo - use VM (view model) for frontend
 
 export type SideMenuProps = {
   role: User["role"];
@@ -141,3 +144,4 @@ export type NormDiff = {
     fields: string[];
   }[];
 };
+export type ChangeSetVM = Pick<ChangeSet, "id" | "status"> & { createdAt: string; diff: NormDiff };
