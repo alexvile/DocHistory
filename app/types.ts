@@ -144,4 +144,8 @@ export type NormDiff = {
     fields: string[];
   }[];
 };
-export type ChangeSetVM = Pick<ChangeSet, "id" | "status"> & { createdAt: string; diff: NormDiff };
+export type ChangeSetVM = Pick<ChangeSet, "id" | "status"> & {
+  createdAt: string;
+  diff: NormDiff;
+  createdBy: Pick<User, "firstName" | "lastName">;
+};

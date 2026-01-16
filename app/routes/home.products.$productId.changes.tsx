@@ -39,9 +39,9 @@ export default function NormChanges() {
   return (
     <>
       <ul className="list-unstyled">
-        {loaderData.map(({ id, status, createdAt, diff }) => (
+        {loaderData.map(({ id, status, createdAt, diff, createdBy }) => (
           <li key={id}>
-            <ChangeSetCard {...{ id, status, createdAt, diff }} />
+            <ChangeSetCard {...{ id, status, createdAt, diff, createdBy }} />
           </li>
         ))}
       </ul>

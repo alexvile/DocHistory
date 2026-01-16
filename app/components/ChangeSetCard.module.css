@@ -1,6 +1,19 @@
 .container {
   border: 1px dashed;
+  padding: 10px;
+  border-radius: 8px;
 }
-.summaryContainer {
-  
+
+.changeSetCardMetaContainer {
+  margin-bottom: 12px;
+}
+
+.changeSetCardMetaTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.changeSetCardMetaField {
+  margin-block: 4px;
 }

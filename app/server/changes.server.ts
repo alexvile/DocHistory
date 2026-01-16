@@ -118,18 +118,26 @@ export const getFilteredChangeSetsByProduct = async (
   productId: string,
   sortFilter: Prisma.ChangeSetOrderByWithRelationInput,
   whereFilter: Prisma.ChangeSetWhereInput,
-  skip: number,
-  take: number
+  skip?: number,
+  take?: number
 ) => {
   return await prisma.changeSet.findMany({
     where: {
-      productId,
       ...whereFilter,
+      productId,
     },
     orderBy: {
       ...sortFilter,
     },
     skip,
     take,
+    include: {
+      createdBy: {
+        select: {
+          firstName: true,
+          lastName: true
+        }
+      }
+    }
   });
 };
