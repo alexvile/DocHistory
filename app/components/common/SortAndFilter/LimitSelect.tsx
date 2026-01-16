@@ -1,3 +1,5 @@
+import styles from "./SortAndFilterBar.module.css";
+
 export function LimitSelect({
   searchParams,
   setSearchParams,
@@ -14,7 +16,7 @@ export function LimitSelect({
   }
 
   return (
-    <select value={limit} onChange={handleChange} className="limit-select">
+    <select value={limit} onChange={handleChange} className={styles.limitSelect}>
       <option value="5">5</option>
       <option value="10">10</option>
       <option value="20">20</option>

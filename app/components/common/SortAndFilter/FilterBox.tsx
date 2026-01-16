@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import styles from "./SortAndFilterBar.module.css";
 
 export function FilterBox({
   searchParams,
@@ -26,14 +27,16 @@ export function FilterBox({
 
     return () => clearTimeout(timeout);
   }, [inputValue]);
+
 // todo - fix error when using "(" in query
+
   return (
     <input
       type="text"
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
       placeholder="Пошук за назвою"
-      className="filter-box"
+      className={styles.filterBox}
     />
   );
 }

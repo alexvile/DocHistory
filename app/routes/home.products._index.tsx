@@ -7,7 +7,7 @@ import {
 } from "~/server/products.server";
 import ProductsTable from "~/components/ProductsTable";
 import { Prisma } from "@prisma/client";
-import { SortAndFilterBar } from "~/components/SortAndFilterBar";
+import { SortAndFilterBar } from "~/components/common/SortAndFilter/SortAndFilterBar";
 import { Pagination } from "~/components/common/Pagination";
 
 export const loader: LoaderFunction = async ({

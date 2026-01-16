@@ -2,6 +2,7 @@ import { useSearchParams } from "@remix-run/react";
 import { SortBox } from "./SortBox";
 import { FilterBox } from "./FilterBox";
 import { LimitSelect } from "./LimitSelect";
+import styles from "./SortAndFilterBar.module.css";
 
 export function SortAndFilterBar() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -17,7 +18,7 @@ export function SortAndFilterBar() {
   }
 
   return (
-    <div className="filter-bar">
+    <div className={styles.filterBar}>
       <SortBox searchParams={searchParams} setSearchParams={setSearchParams} />
       <FilterBox
         searchParams={searchParams}
@@ -28,7 +29,7 @@ export function SortAndFilterBar() {
         setSearchParams={setSearchParams}
       />
       {hasActiveFilters && (
-        <button onClick={handleClear} className="clear-btn">
+        <button onClick={handleClear} className={styles.clearBtn}>
           Очистити
         </button>
       )}

@@ -1,3 +1,5 @@
+import styles from "./SortAndFilterBar.module.css";
+
 export function SortBox({ searchParams, setSearchParams }: {
   searchParams: URLSearchParams;
   setSearchParams: (params: URLSearchParams) => void;
@@ -13,7 +15,7 @@ export function SortBox({ searchParams, setSearchParams }: {
   }
 
   return (
-    <select value={`${sort}:${dir}`} onChange={handleChange} className="sort-box">
+    <select value={`${sort}:${dir}`} onChange={handleChange} className={styles.sortBox}>
       <option value="title:asc">Назва ↑</option>
       <option value="title:desc">Назва ↓</option>
       <option value="updated:asc">Оновлено ↑</option>
