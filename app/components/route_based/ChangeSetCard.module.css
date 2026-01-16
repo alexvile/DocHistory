@@ -17,3 +17,13 @@
 .changeSetCardMetaField {
   margin-block: 4px;
 }
+
+.summaryContainer > details:not(:last-child) {
+  margin-bottom: 4px;
+}
+
+.summaryTitle {
+  gap: 8px;
+  display: flex;
+  align-items: center;
+}
