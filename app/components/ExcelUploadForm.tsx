@@ -1,7 +1,7 @@
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useId, useRef, useState } from "react";
 import styles from "./ExcelUploadForm.module.css";
-import { Icon } from "./Icon";
+import { Icon } from "./ui/Icon";
 
 type ExcelUploadFormProps<T = unknown> = {
   onParsed: (rows: T[]) => void;

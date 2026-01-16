@@ -1,6 +1,7 @@
 import { Link } from "@remix-run/react";
-import { Icon } from "../Icon";
+import { Icon } from "../ui/Icon";
 import styles from "./BackLink.module.css";
+
 type BackLinkProps = {
   ariaLabel?: string;
   type?: "history" | "default";

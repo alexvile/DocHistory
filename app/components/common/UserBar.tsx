@@ -1,13 +1,15 @@
 import { UserBarProps } from "~/types";
-import { Icon } from "./Icon";
+import { Icon } from "../ui/Icon";
+import styles from "./UserBar.module.css";
+
 
 export default function UserBar({ user }: UserBarProps) {
   return (
-    <div className="userbar">
+    <div className={styles.container}>
       <div>Role: {user.role}</div>
       <div>Welcome, {user.firstName} {user.lastName}</div>
       <form action="/logout" method="post">
-        <button type="submit" aria-label="Logout" className="userbar__logout">
+        <button type="submit" aria-label="Logout" className={styles.logout}>
           <Icon name="logout"/>
         </button>
       </form>

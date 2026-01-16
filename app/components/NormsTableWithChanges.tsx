@@ -1,5 +1,5 @@
 import { CanonicalRow } from "~/types";
-import Table from "./Table";
+import Table from "./ui/Table";
 
 type ChangedRow = {
   before: CanonicalRow;

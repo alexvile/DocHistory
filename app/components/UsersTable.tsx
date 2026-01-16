@@ -1,6 +1,6 @@
 import { Link } from "@remix-run/react";
 import { UsersListProps } from "~/types";
-import Table from "./Table";
+import Table from "./ui/Table";
 import translate from "~/utils/translate";
 
 export default function UsersTable({ users }: UsersListProps) {

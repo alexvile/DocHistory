@@ -1,19 +1,11 @@
 import { json, LoaderFunction, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { ModalProvider } from "~/components/ModalProvider";
-import SideMenu from "~/components/SideMenu";
-import UserBar from "~/components/UserBar";
 import { getUser, requireUserRole } from "~/server/auth.server";
 
-import userBarStyles from "~/components/UserBar.css?url";
-import sideMenuStyles from "~/components/SideMenu.css?url";
+import { ModalProvider } from "~/components/ModalProvider";
+import SideMenu from "~/components/common/SideMenu";
+import UserBar from "~/components/common/UserBar";
 
-export function links() {
-  return [
-    { rel: "stylesheet", href: userBarStyles },
-    { rel: "stylesheet", href: sideMenuStyles },
-  ];
-}
 
 export const loader: LoaderFunction = async ({ request }) => {
   const role = await requireUserRole(request);

@@ -1,10 +1,10 @@
 
-.side-menu__list {
+.sideMenuList {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-.side-menu__item a {
+.sideMenuItem a {
   padding: 6px 8px;
   text-decoration: none;
   width: 100%;
@@ -14,15 +14,15 @@
   /* transition: background-color 300ms ease; */
   align-items: center;
 }
-.side-menu__item:not(:last-child) {
+.sideMenuItem:not(:last-child) {
   margin-bottom: 4px;
 }
-.side-menu__item a {
+.sideMenuItem a {
   color: #303030;
 }
-.side-menu__item a.active {
+.sideMenuItem a.active {
   background-color: #fff;
 }
-.side-menu__item a:not(.active):hover {
+.sideMenuItem a:not(.active):hover {
   background-color: #ffffff94;
 }

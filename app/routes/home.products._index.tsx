@@ -8,7 +8,7 @@ import {
 import ProductsTable from "~/components/ProductsTable";
 import { Prisma } from "@prisma/client";
 import { SortAndFilterBar } from "~/components/SortAndFilterBar";
-import { Pagination } from "~/components/Pagination";
+import { Pagination } from "~/components/common/Pagination";
 
 export const loader: LoaderFunction = async ({
   request,

@@ -1,5 +1,5 @@
 import { NormsTableProps } from "~/types";
-import Table from "./Table";
+import Table from "./ui/Table";
 
 export default function NormsTable({ normsJson }: NormsTableProps) {
   return (

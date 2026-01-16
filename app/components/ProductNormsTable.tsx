@@ -1,8 +1,8 @@
 import { ProductNormsTableProps } from "~/types";
-import Table from "./Table";
+import Table from "./ui/Table";
 import { useCallback, useEffect, useState } from "react";
 import Extender from "./Extender";
-import { Icon } from "./Icon";
+import { Icon } from "./ui/Icon";
 import { createRows } from "~/utils/rowHandlers";
 
 function ProductNormsTable({ normRows, isEditable }: ProductNormsTableProps) {

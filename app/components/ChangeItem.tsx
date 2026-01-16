@@ -1,5 +1,5 @@
 import { NormChange } from "~/types";
-import { Icon } from "./Icon";
+import { Icon } from "./ui/Icon";
 
 // todo - rename changes insde change
 type ChangeItemProps = {

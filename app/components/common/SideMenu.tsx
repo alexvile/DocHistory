@@ -1,15 +1,16 @@
 import { NavLink } from "@remix-run/react";
 import { SideMenuProps } from "~/types";
-import { Icon } from "./Icon";
+import { Icon } from "../ui/Icon";
+import styles from "./SideMenu.module.css";
 
 export default function SideMenu({ role }: SideMenuProps) {
   return (
     <aside>
       <nav aria-label="Main navigation">
-        <ul className="side-menu__list">
+        <ul className={styles.sideMenuList}>
           {role === "ADMIN" ? (
             <>
-              <li className="side-menu__item">
+              <li className={styles.sideMenuItem}>
                 <NavLink
                   className={({ isActive, isPending }) =>
                     isActive ? "active" : isPending ? "pending" : ""
@@ -19,7 +20,7 @@ export default function SideMenu({ role }: SideMenuProps) {
                   <Icon name="create-user" /> Реєстрація
                 </NavLink>
               </li>
-              <li className="side-menu__item">
+              <li className={styles.sideMenuItem}>
                 <NavLink
                   className={({ isActive, isPending }) =>
                     isActive ? "active" : isPending ? "pending" : ""
@@ -31,7 +32,7 @@ export default function SideMenu({ role }: SideMenuProps) {
               </li>
             </>
           ) : null}
-          <li className="side-menu__item">
+          <li className={styles.sideMenuItem}>
             <NavLink
               className={({ isActive, isPending }) =>
                 isActive ? "active" : isPending ? "pending" : ""
@@ -41,7 +42,7 @@ export default function SideMenu({ role }: SideMenuProps) {
               <Icon name="products" /> Продукти
             </NavLink>
           </li>
-          <li className="side-menu__item">
+          <li className={styles.sideMenuItem}>
             <NavLink
               className={({ isActive, isPending }) =>
                 isActive ? "active" : isPending ? "pending" : ""
@@ -51,7 +52,7 @@ export default function SideMenu({ role }: SideMenuProps) {
               <Icon name="changes" /> !!! Мої Зміни (draft)
             </NavLink>
           </li>
-             <li className="side-menu__item">
+             <li className={styles.sideMenuItem}>
             <NavLink
               className={({ isActive, isPending }) =>
                 isActive ? "active" : isPending ? "pending" : ""

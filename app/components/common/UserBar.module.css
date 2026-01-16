@@ -1,8 +1,9 @@
-.userbar {
+.container {
   display: flex;
   justify-content: space-between;
 }
-.userbar__logout {
+
+.logout {
   padding: 0;
   cursor: pointer;
   border: none;

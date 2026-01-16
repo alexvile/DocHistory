@@ -5,11 +5,11 @@ import { createProduct } from "~/server/products.server";
 import { useEffect, useMemo, useState } from "react";
 import { filterStringEntries, shortId } from "~/utils/main";
 import { parseFormData } from "~/utils/rowHandlers";
-import { Icon } from "~/components/Icon";
+import { Icon } from "~/components/ui/Icon";
 import { buildDynamicTitleValidators, validateFields } from "~/utils/validation";
 import BackLink from "~/components/common/BackLink";
 import { ExcelUploadContainer } from "~/components/ExcelUploadContainer";
-import TextField from "~/components/TextField";
+import TextField from "~/components/ui/TextField";
 import { validateProductForm } from "~/utils/vanildateNewProduct.server";
 
 // todo use _new !!!!

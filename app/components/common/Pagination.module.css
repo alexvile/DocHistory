@@ -6,46 +6,46 @@
   margin-top: 1rem;
 }
 
-.pagination__buttons {
+.paginationButtons {
   display: flex;
   column-gap: 2px;
 }
-.pagination__btn {
+
+.paginationButton {
   background: #f4f4f4;
   border: 1px solid #ccc;
   text-decoration: none;
   display: inline-flex;
   color: #303030;
-}
-.pagination__btn .icon-wrapper {
   padding: 6px 5px;
 }
 
-.pagination__btn:hover {
-  background-color: #e0e0e0;
-}
-
-.pagination__info {
-  font-weight: bold;
-  color: #555;
-}
-
-.pagination__btn {
+.paginationButton {
   background-color: rgba(235, 235, 235, 1);
   border: none;
 }
-.pagination__btn:active {
+
+.paginationButton:active {
   background-color: rgba(204, 204, 204, 1);
-  box-shadow: 0rem 0.125rem 0.0625rem 0rem rgba(26, 26, 26, 0.2) inset,
-    0.0625rem 0rem 0.0625rem 0rem rgba(26, 26, 26, 0.12) inset,
+  box-shadow: 0rem 0.125rem 0.0625rem 0rem rgba(26, 26, 26, 0.2) inset, 0.0625rem 0rem 0.0625rem 0rem rgba(26, 26, 26, 0.12) inset,
     -0.0625rem 0rem 0.0625rem 0rem rgba(26, 26, 26, 0.12) inset;
 }
-.pagination__btn.pagination__btn--back {
+
+.paginationButton:hover {
+  background-color: #e0e0e0;
+}
+
+.paginationButton.backward {
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 }
 
-.pagination__btn.pagination__btn--next {
+.paginationButton.forward {
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
+}
+
+.paginationInfo {
+  font-weight: bold;
+  color: #555;
 }

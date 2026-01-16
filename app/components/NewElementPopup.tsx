@@ -1,5 +1,5 @@
 import { TableAction } from "~/types";
-import { Icon } from "./Icon";
+import { Icon } from "./ui/Icon";
 import Popup from "./Popup";
 
 // todo - show group borders

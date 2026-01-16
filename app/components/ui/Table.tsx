@@ -1,4 +1,5 @@
-import React, { ReactNode, Children, isValidElement } from "react";
+import React, { ReactNode } from "react";
+import styles from './Table.module.css'
 
 type TableProps = {
   headings: string[];
@@ -15,11 +16,11 @@ function Table({ children, headings, layout }: TableProps) {
   //   });
   const hasChildren = React.Children.count(children) > 0;
   return (
-    <div className="table__wrapper">
+    <div className={styles.tableWrapper}>
       {!hasChildren ? (
         "No data"
       ) : (
-        <table className="table">
+        <table className={styles.table}>
           {layout && (
             <colgroup>
               {headings.map((heading, index) => (
@@ -28,10 +29,10 @@ function Table({ children, headings, layout }: TableProps) {
             </colgroup>
           )}
           {headings && (
-            <thead className="table__head">
+            <thead className={styles.tableHead}>
               <tr>
                 {headings.map((heading, index) => (
-                  <th key={index} className="table__heading-cell">
+                  <th key={index} className={styles.tableHeadingCell}>
                     {heading}
                   </th>
                 ))}
@@ -56,7 +57,7 @@ function TableRow({ children }: TableRowProps) {
   //     }
   //   });
 
-  return <tr className="table__row">{children}</tr>;
+  return <tr className={styles.tableRow}>{children}</tr>;
 }
 
 type TableCellProps = {
@@ -64,7 +65,7 @@ type TableCellProps = {
 };
 
 function TableCell({ children }: TableCellProps) {
-  return <td className="table__cell">{children}</td>;
+  return <td className={styles.tableCell}>{children}</td>;
 }
 
 Table.Row = TableRow;

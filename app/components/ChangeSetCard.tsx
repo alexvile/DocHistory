@@ -2,7 +2,7 @@ import { ChangeSetVM } from "~/types";
 import { formatDateForUA } from "~/utils/formatDateUA";
 import Badge from "./ui/Badge";
 import styles from "./ChangeSetCard.module.css";
-import { Accordion } from "./Accordion";
+import { Accordion } from "./ui/Accordion";
 import NormsTable from "./NormsTable";
 import NormsTableWithChanges from "./NormsTableWithChanges";
 
@@ -13,7 +13,7 @@ export default function ChangeSetCard({ status, createdAt, diff }: ChangeSetVM) 
       <div>
         <p>Зміна від: Іван</p>
         <p>Дата: {formatDateForUA(createdAt, { withYear: true })}</p>
-        <Badge tone="draft">{status}</Badge>
+        <p>Статус: <Badge tone="draft">{status}</Badge></p>
       </div>
       {/* summary */}
       <div className={styles.summaryContainer}>

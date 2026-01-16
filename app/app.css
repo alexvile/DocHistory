@@ -92,36 +92,6 @@ footer {
 }
 /* base elements ends */
 
-/* table base */
-.table__wrapper {
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scrollbar-width: none;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-}
-.table {
-  width: 100%;
-  min-width: 100%;
-  border-collapse: collapse;
-  color: #616161;
-}
-.table__row {
-  border-top: 1px solid #ddd;
-}
-
-.table__head {
-  background-color: rgb(251, 251, 251);
-}
-.table__heading-cell {
-  text-align: left;
-  padding: 8px 6px;
-}
-.table__cell {
-  padding: 6px 6px;
-}
-/* table base ends */
-
 /* modal */
 .modal-overlay {
   position: fixed;
@@ -156,18 +126,6 @@ footer {
   list-style-type: none;
   padding: 0;
   margin: 0;
-}
-
-/* icon starts */
-.icon-wrapper {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--icon-color, currentColor);
-  svg {
-    width: 100%;
-    height: 100%;
-  }
 }
 
 /* new element */

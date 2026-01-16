@@ -1,6 +1,6 @@
 import { Link } from "@remix-run/react";
 import { ChangesListProps } from "~/types";
-import Table from "./Table";
+import Table from "./ui/Table";
 import { formatDateForUA } from "~/utils/formatDateUA";
 
 export default function ChangesTable({ changes }: ChangesListProps) {

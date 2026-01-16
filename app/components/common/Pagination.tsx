@@ -1,5 +1,7 @@
 import { Link, useSearchParams } from "@remix-run/react";
-import { Icon } from "./Icon";
+import { Icon } from "../ui/Icon";
+import styles from "./Pagination.module.css";
+import clsx from "clsx";
 
 type PaginationProps = {
   page: number;
@@ -8,13 +10,8 @@ type PaginationProps = {
   toPagination: number;
   totalCount: number;
 };
-export function Pagination({
-  page,
-  totalPages,
-  fromPagination,
-  toPagination,
-  totalCount,
-}: PaginationProps) {
+
+export function Pagination({ page, totalPages, fromPagination, toPagination, totalCount }: PaginationProps) {
   const [searchParams] = useSearchParams();
 
   const createLink = (targetPage: number) => {
@@ -24,37 +21,29 @@ export function Pagination({
   };
 
   return (
-    <div className="pagination">
-      <div className="pagination__buttons">
+    <div className={styles.pagination}>
+      <div className={styles.paginationButtons}>
         {page > 1 ? (
-          <Link
-            to={createLink(page - 1)}
-            className="link-unstyled pagination__btn pagination__btn--back"
-            aria-label="Назад"
-          >
+          <Link to={createLink(page - 1)} className={clsx("link-unstyled", styles.paginationButton, styles.backward)} aria-label="Назад">
             <Icon name="back" />
           </Link>
         ) : (
-          <span className="link-unstyled pagination__btn pagination__btn--back disabled">
+          <span className={clsx("link-unstyled", "disabled", styles.paginationButton, styles.backward)}>
             <Icon name="back" />
           </span>
         )}
         {page < totalPages ? (
-          <Link
-            to={createLink(page + 1)}
-            className="link-unstyled pagination__btn pagination__btn--next"
-            aria-label="Вперед"
-          >
+          <Link to={createLink(page + 1)} className={clsx("link-unstyled", styles.paginationButton, styles.forward)} aria-label="Вперед">
             <Icon name="next" />
           </Link>
         ) : (
-          <span className="link-unstyled pagination__btn pagination__btn--next disabled">
+          <span className={clsx("link-unstyled", "disabled", styles.paginationButton, styles.forward)}>
             <Icon name="next" />
           </span>
         )}
       </div>
 
-      <span className="pagination__info">
+      <span className={styles.paginationInfo}>
         Сторінка: {page} з {totalPages}
       </span>
       <span>

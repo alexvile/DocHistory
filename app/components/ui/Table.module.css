@@ -1,0 +1,32 @@
+
+.tableWrapper {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.table {
+  width: 100%;
+  min-width: 100%;
+  border-collapse: collapse;
+  color: #616161;
+}
+
+.tableRow {
+  border-top: 1px solid #ddd;
+}
+
+.tableHead {
+  background-color: rgb(251, 251, 251);
+}
+
+.tableHeadingCell {
+  text-align: left;
+  padding: 8px 6px;
+}
+
+.tableCell {
+  padding: 6px 6px;
+}

@@ -1,6 +1,6 @@
 import { Link } from "@remix-run/react";
 import { ProductsListProps } from "~/types";
-import Table from "./Table";
+import Table from "./ui/Table";
 import { formatDateForUA } from "~/utils/formatDateUA";
 
 export default function ProductsTable({ products }: ProductsListProps) {
