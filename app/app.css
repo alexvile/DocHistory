@@ -238,9 +238,8 @@ footer {
   opacity: 0.4;
 }
 
+/* combobox styles */
 
-/* combobox */
-/* контейнер */
 .combo {
   position: relative;
   width: 320px;
@@ -255,7 +254,7 @@ footer {
 }
 
 .combo__select {
-  /* position: absolute; */
+  position: absolute;
   top: calc(100% + 2px);
   left: 0;
   width: 100%;

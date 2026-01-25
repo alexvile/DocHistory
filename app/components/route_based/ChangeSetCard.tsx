@@ -6,7 +6,8 @@ import { Accordion } from "../ui/Accordion";
 import NormsTable from "../NormsTable";
 import NormsTableWithChanges from "../NormsTableWithChanges";
 import { Icon } from "../ui/Icon";
-import {  ApproverSelect } from "./ApproverCombobox";
+import { ApproverCombobox, ApproverSelect } from "./ApproverCombobox";
+import { useEffect, useState } from "react";
 
 type ChangeSetCardMetaProps = Pick<ChangeSetVM, "createdBy" | "createdAt" | "status">;
 
@@ -101,10 +102,18 @@ function AdminActions() {
 }
 
 function CommitterActions() {
+  const [approverId, setApproverId] = useState<string | undefined>();
+  useEffect(() => {
+    console.log(11, approverId);
+  }, [approverId]);
   return (
     <div role="group" aria-label="Commiter actions">
-      Комбо з вибором
-      <ApproverSelect name={"aaa"} />
+      <ApproverCombobox
+        value={approverId}
+        onChange={(id) => {
+          setApproverId(id || undefined);
+        }}
+      />
       <button type="button">Надіслати</button>
       <button type="button" aria-label="Delete change set">
         🗑
