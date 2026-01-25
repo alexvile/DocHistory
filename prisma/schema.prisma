@@ -95,3 +95,11 @@ model ChangeSet {
   
   diff          Json
 }
+
+
+// todo - send to approve
+// select approver!
+// approver - notification!
+// approver - action buttons!
+//  approver after approve - send to reviewver
+// cancell - if wrnong - when remove change + remove newSnapshot by id
