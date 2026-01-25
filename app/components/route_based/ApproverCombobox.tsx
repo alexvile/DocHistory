@@ -9,8 +9,8 @@ type FetcherData = {
 };
 
 type Props = {
-  value?: string;
-  onChange?: (id: string) => void;
+  value: string;
+  onChange: (id: string) => void;
 };
 
 export function ApproverCombobox({ value, onChange }: Props) {
@@ -58,6 +58,7 @@ export function ApproverCombobox({ value, onChange }: Props) {
   return (
     <div ref={wrapperRef} className="combo" role="combobox" aria-expanded={focused} aria-haspopup="listbox">
       {/* search / display */}
+      <label htmlFor="">Погоджує</label>
       <input
         type="text"
         className="combo__input"
@@ -107,7 +108,7 @@ export function ApproverCombobox({ value, onChange }: Props) {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-
+            onChange(undefined);
             setSelectedId(undefined);
             setQuery("");
             setIsEditing(false);

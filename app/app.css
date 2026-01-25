@@ -242,7 +242,8 @@ footer {
 
 .combo {
   position: relative;
-  width: 320px;
+  min-width: 230px;
+  display: flex;
 }
 
 .combo__input {
@@ -263,4 +264,17 @@ footer {
   background: #fff;
   font-size: 14px;
   z-index: 10;
+}
+
+
+
+.commiterActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block-start: 12px;
+}
+.commiterActions-buttons {
+  column-gap: 12px;
+  display: flex;
 }

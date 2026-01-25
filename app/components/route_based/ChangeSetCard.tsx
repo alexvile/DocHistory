@@ -107,17 +107,21 @@ function CommitterActions() {
     console.log(11, approverId);
   }, [approverId]);
   return (
-    <div role="group" aria-label="Commiter actions">
+    <div role="group" className="commiterActions" aria-label="Commiter actions">
       <ApproverCombobox
         value={approverId}
         onChange={(id) => {
           setApproverId(id || undefined);
         }}
       />
-      <button type="button">Надіслати</button>
-      <button type="button" aria-label="Delete change set">
-        🗑
-      </button>
+      <div className="commiterActions-buttons">
+        <button disabled={!approverId} className="button button--primary">
+          Надіслати
+        </button>
+        <button className="button button--secondary" type="button" aria-label="Delete change set">
+          Видалити
+        </button>
+      </div>
     </div>
   );
 }
