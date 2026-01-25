@@ -6,7 +6,6 @@ import { ModalProvider } from "~/components/ModalProvider";
 import SideMenu from "~/components/common/SideMenu";
 import UserBar from "~/components/common/UserBar";
 
-
 export const loader: LoaderFunction = async ({ request }) => {
   const role = await requireUserRole(request);
   const user = await getUser(request);
@@ -14,7 +13,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw redirect("/login");
   }
   // console.log('fetch in index')
-  return json({ user: user });
+  return { user: user };
 };
 
 // todo - structure

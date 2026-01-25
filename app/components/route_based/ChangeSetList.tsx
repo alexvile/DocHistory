@@ -1,8 +1,7 @@
 import { ChangeSetVM } from "~/types";
 import ChangeSetCard from "./ChangeSetCard";
 
-// todo = fix ts issues
-export default function ChangeSetList({ changes }: ChangeSetVM[]) {
+export default function ChangeSetList({ changes }: { changes: ChangeSetVM[] }) {
   return (
     <ul className="list-unstyled">
       {changes.map(({ id, status, createdAt, diff, createdBy }) => (

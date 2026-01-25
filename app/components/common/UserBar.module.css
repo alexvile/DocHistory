@@ -9,8 +9,9 @@
   border: none;
   background-color: transparent;
   width: 22px;
-  .icon-wrapper {
-    width: 100%;
-    height: 100%;
-  }
+}
+
+.logout > span {
+  width: 100%;
+  height: 100%;
 }
