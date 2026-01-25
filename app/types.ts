@@ -3,15 +3,11 @@ import type { User, Product, ChangeSet, Prisma } from "@prisma/client";
 // todo - USE DTO - for DB and backend
 // todo - use VM (view model) for frontend
 
-export type SideMenuProps = {
-  role: User["role"];
-};
-export type UserBarProps = Pick<User, "id" | "firstName" | "lastName" | "email" | "role">;
-
-export type FilteredUser = Pick<User, "id" | "email" | "firstName" | "lastName" | "role">;
+export type UserRoleVM = User["role"];
+export type UserVM = Pick<User, "id" | "email" | "firstName" | "lastName" | "role">;
 
 export type UsersListProps = {
-  users: FilteredUser[];
+  users: UserVM[];
 };
 
 export type FilteredProduct = Pick<Product, "id" | "title" | "updatedAt">;

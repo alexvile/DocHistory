@@ -7,7 +7,7 @@ import SideMenu from "~/components/common/SideMenu";
 import UserBar from "~/components/common/UserBar";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const role = await requireUserRole(request);
+  // const role = await requireUserRole(request);
   const user = await getUser(request);
   if (!user) {
     throw redirect("/login");
@@ -25,7 +25,6 @@ export default function Home() {
     <>
       <ModalProvider>
         <header>
-          {/* <h1>Document history</h1> */}
           <UserBar user={user} />
         </header>
         <SideMenu role={user.role} />
