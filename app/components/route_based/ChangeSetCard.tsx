@@ -1,4 +1,4 @@
-import { ChangeSetVM } from "~/types";
+import { ChangeSetVM, UserRoleVM } from "~/types";
 import { formatDateForUA } from "~/utils/formatDateUA";
 import Badge from "../ui/Badge";
 import styles from "./ChangeSetCard.module.css";
@@ -6,6 +6,7 @@ import { Accordion } from "../ui/Accordion";
 import NormsTable from "../NormsTable";
 import NormsTableWithChanges from "../NormsTableWithChanges";
 import { Icon } from "../ui/Icon";
+import {  ApproverSelect } from "./ApproverCombobox";
 
 type ChangeSetCardMetaProps = Pick<ChangeSetVM, "createdBy" | "createdAt" | "status">;
 
@@ -85,12 +86,60 @@ function ChangeSetCardSummary({ diff }: ChangeSetCardSummaryProps) {
   );
 }
 
-export default function ChangeSetCard({ status, createdAt, diff, createdBy }: ChangeSetVM) {
+function AdminActions() {
+  return (
+    <div role="group" aria-label="Admin actions">
+      <button type="button">Approve</button>
+
+      <button type="button">Reject</button>
+
+      <button type="button" aria-label="Delete change set">
+        🗑
+      </button>
+    </div>
+  );
+}
+
+function CommitterActions() {
+  return (
+    <div role="group" aria-label="Commiter actions">
+      Комбо з вибором
+      <ApproverSelect name={"aaa"} />
+      <button type="button">Надіслати</button>
+      <button type="button" aria-label="Delete change set">
+        🗑
+      </button>
+    </div>
+  );
+}
+
+function ViewerActions() {
+  return <div role="group" aria-label="Admin actions"></div>;
+}
+
+function ChangeSetCardActions({ role }: { role: UserRoleVM }) {
+  switch (role) {
+    case "ADMIN":
+      return <AdminActions />;
+
+    case "COMMITTER":
+      return <CommitterActions />;
+
+    case "VIEWER":
+    default:
+      return <ViewerActions />;
+  }
+}
+
+type ChangeSetCardProps = ChangeSetVM & {
+  role: UserRoleVM;
+};
+export default function ChangeSetCard({ status, createdAt, diff, createdBy, role }: ChangeSetCardProps) {
   return (
     <div className={styles.container}>
       <ChangeSetCardMeta createdBy={createdBy} createdAt={createdAt} status={status} />
       <ChangeSetCardSummary diff={diff} />
-      {/* actions for admin only */}
+      <ChangeSetCardActions role="COMMITTER" />
     </div>
   );
 }

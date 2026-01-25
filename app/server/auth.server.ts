@@ -5,6 +5,7 @@ import { createUser } from "./user.server";
 import bcrypt from "bcryptjs";
 
 import type { User as UserProps } from "@prisma/client";
+import { UserRoleVM } from "~/types";
 
 // todo - json is deprecated
 const sessionSecret = process.env.SESSION_SECRET;
@@ -59,7 +60,6 @@ export async function requireUserId(
   }
   return userId;
 }
-
 export async function requireUserRole(
   request: Request,
   redirectTo: string = new URL(request.url).pathname
@@ -71,7 +71,8 @@ export async function requireUserRole(
     const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
     throw redirect(`/login?${searchParams}`);
   }
-  return role;
+  // todo ts safe
+  return role as UserRoleVM;
 }
 
 export async function getUserId(request: Request) {
