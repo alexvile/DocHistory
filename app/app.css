@@ -237,3 +237,31 @@ footer {
 .arrow {
   opacity: 0.4;
 }
+
+
+/* combobox */
+/* контейнер */
+.combo {
+  position: relative;
+  width: 320px;
+}
+
+.combo__input {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.combo__select {
+  /* position: absolute; */
+  top: calc(100% + 2px);
+  left: 0;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 14px;
+  z-index: 10;
+}
