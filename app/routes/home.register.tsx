@@ -5,6 +5,7 @@ import { validateEmail, validateName, validatePassword } from "~/server/validato
 import { Role } from "@prisma/client";
 import translate from "~/utils/translate";
 import { Form } from "@remix-run/react";
+import TextField from "~/components/ui/TextField";
 
 export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
   const role = await requireUserRole(request);
@@ -36,7 +37,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         fields: { email, password, firstName, lastName },
         form: action,
       },
-      { status: 400 }
+      { status: 400 },
     );
   // todo - ts check
   await register({
@@ -49,29 +50,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Register() {
-
   return (
     <>
       <h2>Register (only for admin)</h2>
 
       <Form method="post" className="form form--register">
-        <div className="form__field">
-          <label htmlFor="firstName">Ім'я</label>
-          <input className="input" type="text" id="firstName" name="firstName" />
-        </div>
-
-        <div className="form__field">
-          <label htmlFor="lastName">Прізвище</label>
-          <input className="input" type="text" id="lastName" name="lastName" />
-        </div>
-        <div className="form__field">
-          <label htmlFor="email">Email</label>
-          <input className="input" type="text" id="email" name="email" autoComplete="off" />
-        </div>
-        <div className="form__field">
-          <label htmlFor="password">Пароль</label>
-          <input className="input" type="password" id="password" name="password" autoComplete="off" />
-        </div>
+        <TextField label="Ім'я" name="firstName" isRequired />
+        <TextField label="Прізвище" name="lastName" isRequired />
+        <TextField type="email" label="Email" name="email" isRequired autoComplete="off" />
+        <TextField type="password" label="Пароль" name="password" isRequired autoComplete="off" />
         <div className="form__field">
           {/* todo - only superadmin can create ADMIN */}
           <label htmlFor="role">Роль</label>

@@ -6,7 +6,7 @@ import { Accordion } from "../ui/Accordion";
 import NormsTable from "../NormsTable";
 import NormsTableWithChanges from "../NormsTableWithChanges";
 import { Icon } from "../ui/Icon";
-import { ApproverCombobox, ApproverSelect } from "./ApproverCombobox";
+import { ApproverCombobox } from "./ApproverCombobox";
 import { useEffect, useState } from "react";
 
 type ChangeSetCardMetaProps = Pick<ChangeSetVM, "createdBy" | "createdAt" | "status">;

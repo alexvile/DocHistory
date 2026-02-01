@@ -6,9 +6,11 @@ type TextFieldProps = {
   placeholder?: string;
   isRequired?: boolean;
   minLength?: number;
+  autoComplete?: React.HTMLInputAutoCompleteAttribute;
+  type?: React.HTMLInputTypeAttribute;
 };
 
-export default function TextField({ name, label, placeholder, isRequired, minLength }: TextFieldProps) {
+export default function TextField({ name, label, placeholder, isRequired, minLength, autoComplete, type = "text" }: TextFieldProps) {
   return (
     <label className={styles.field}>
       {label && (
@@ -19,12 +21,13 @@ export default function TextField({ name, label, placeholder, isRequired, minLen
       )}
 
       <input
-        type="text"
+        type={type}
         className={styles.input}
         name={name}
         placeholder={placeholder}
         required={isRequired || undefined}
         minLength={minLength}
+        autoComplete={autoComplete}
       />
     </label>
   );
