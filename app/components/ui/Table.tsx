@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
-import styles from './Table.module.css'
+import styles from "./Table.module.css";
+import { Icon } from "./Icon";
 
 type TableProps = {
   headings: string[];
@@ -8,6 +9,15 @@ type TableProps = {
 };
 // todo - check this error
 
+function EmptyState() {
+  return (
+    <div className={styles.emptyStateContainer}>
+      <Icon name="magnify" />
+      <p className={styles.emptyStateHeading}>No data found</p>
+      <p className={styles.emptyStateDescription}>Try changing the filters or search term</p>
+    </div>
+  );
+}
 function Table({ children, headings, layout }: TableProps) {
   //   Children.forEach(children, (child) => {
   //     if (!isValidElement(child) || child.type !== TableRow) {
@@ -18,7 +28,7 @@ function Table({ children, headings, layout }: TableProps) {
   return (
     <div className={styles.tableWrapper}>
       {!hasChildren ? (
-        "No data"
+        <EmptyState />
       ) : (
         <table className={styles.table}>
           {layout && (

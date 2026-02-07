@@ -3,7 +3,7 @@ import { HiMagnifyingGlassCircle } from "react-icons/hi2";
 import { VscIndent } from "react-icons/vsc";
 import { GoHeading } from "react-icons/go";
 import { FaLayerGroup, FaUsers, FaRegClock, FaPlus, FaMinus, FaPlusSquare, FaMinusSquare } from "react-icons/fa";
-import { FaCircleMinus, FaCirclePlus, FaPencil } from "react-icons/fa6";
+import { FaCircleMinus, FaCirclePlus, FaMagnifyingGlass, FaPencil } from "react-icons/fa6";
 import { TbExchange } from "react-icons/tb";
 import { MdManageAccounts, MdLogout, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdChangeCircle } from "react-icons/md";
 import { CgSmartHomeBoiler } from "react-icons/cg";
@@ -54,6 +54,8 @@ export function Svg({ name }: { name: string }) {
       );
     case "checkmark":
       return <IoCheckmarkOutline />;
+    case "magnify":
+      return <FaMagnifyingGlass />;
     default:
       return <AiOutlineStop />;
   }
