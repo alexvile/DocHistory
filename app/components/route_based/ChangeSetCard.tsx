@@ -12,7 +12,7 @@ import { Form } from "@remix-run/react";
 
 type ChangeSetCardMetaProps = Pick<ChangeSetVM, "createdBy" | "createdAt" | "status">;
 
-const STATUS_TONE_MAP: Record<ChangeSetVM['status'], "green" | "yellow" | "blue" | "red"> = {
+const STATUS_TONE_MAP: Record<ChangeSetVM["status"], "green" | "yellow" | "blue" | "red"> = {
   DRAFT: "yellow",
   ON_REVIEW: "blue",
   APPROVED: "green",
@@ -140,14 +140,19 @@ function CommitterActions({ id }: { id: string }) {
 function ViewerActions() {
   return <div role="group" aria-label="Admin actions"></div>;
 }
+type ChangeSetCardActionsProps = {
+  role: UserRoleVM;
+  id: string;
+  status: ChangeSetVM["status"];
+};
 
-function ChangeSetCardActions({ role, id }: { role: UserRoleVM; id: string }) {
+function ChangeSetCardActions({ role, id, status }: ChangeSetCardActionsProps) {
   switch (role) {
     case "ADMIN":
       return <AdminActions />;
 
     case "COMMITTER":
-      return <CommitterActions id={id} />;
+      return status === "DRAFT" ? <CommitterActions id={id} /> : null;
 
     case "VIEWER":
     default:
@@ -163,7 +168,7 @@ export default function ChangeSetCard({ id, status, createdAt, diff, createdBy, 
     <div className={styles.container}>
       <ChangeSetCardMeta createdBy={createdBy} createdAt={createdAt} status={status} />
       <ChangeSetCardSummary diff={diff} />
-      <ChangeSetCardActions role={role} id={id} />
+      <ChangeSetCardActions role={role} id={id} status={status} />
     </div>
   );
 }
