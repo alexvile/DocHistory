@@ -81,9 +81,9 @@ type ChangeSetCardSummaryProps = Pick<ChangeSetVM, "diff">;
 function ChangeSetCardSummary({ diff }: ChangeSetCardSummaryProps) {
   return (
     <div className={styles.summaryContainer}>
-      {diff?.added?.length && renderSummaryCard("added", diff?.added)}
-      {diff?.removed?.length && renderSummaryCard("removed", diff?.removed)}
-      {diff?.changed?.length && renderSummaryCard("changed", diff?.changed)}
+      {diff?.added?.length ? renderSummaryCard("added", diff?.added) : null}
+      {diff?.removed?.length ? renderSummaryCard("removed", diff?.removed) : null}
+      {diff?.changed?.length ? renderSummaryCard("changed", diff?.changed) : null}
     </div>
   );
 }
