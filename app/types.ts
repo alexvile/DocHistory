@@ -151,3 +151,28 @@ export type ChangeSetVM = Pick<ChangeSet, "id" | "status"> & {
   diff: NormDiff;
   createdBy: Pick<User, "firstName" | "lastName">;
 };
+
+
+// sort and filterbar
+export type SortOption = {
+  label: string;
+  value: string;
+};
+
+export type SortConfig = {
+  default: string;
+  options: SortOption[];
+};
+
+export type SortBoxProps = {
+  searchParams: URLSearchParams;
+  setSearchParams: (params: URLSearchParams) => void;
+  config: SortConfig;
+};
+
+export type SortAndFilterBarProps = {
+  sortConfig?: SortConfig;
+  showStatusFilter?: boolean;
+  showProductFilter?: boolean;
+  showLimit?: boolean;
+};

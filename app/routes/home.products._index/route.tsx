@@ -9,6 +9,7 @@ import ProductsTable from "~/components/ProductsTable";
 import { Prisma } from "@prisma/client";
 import { SortAndFilterBar } from "~/components/common/SortAndFilter/SortAndFilterBar";
 import { Pagination } from "~/components/common/Pagination";
+import productSortConfig from "./productSortConfig";
 
 export const loader: LoaderFunction = async ({
   request,
@@ -22,9 +23,10 @@ export const loader: LoaderFunction = async ({
   const take = Math.max(1, parseInt(limitParam));
   const skip = (page - 1) * take;
 
-  //  sort be update by default
-  const sort = url.searchParams.get("sort") ?? "name";
-  const dir = url.searchParams.get("dir") ?? "asc";
+  const defaultSort = productSortConfig.default;
+  const sort = url.searchParams.get("sort") ?? defaultSort.split(":")[0];
+  const dir = url.searchParams.get("dir") ?? defaultSort.split(":")[1];
+
   const filter = url.searchParams.get("q") ?? "";
 
   const direction: Prisma.SortOrder = dir === "desc" ? "desc" : "asc";
@@ -37,6 +39,7 @@ export const loader: LoaderFunction = async ({
       sortOptions = { updatedAt: `${direction}` };
     }
   }
+  
   const whereFilter: Prisma.ProductWhereInput = filter
     ? { title: { contains: filter, mode: "insensitive" } }
     : {};
@@ -63,7 +66,7 @@ export default function Products() {
   const data = useLoaderData<typeof loader>();
   return (
     <>
-      <SortAndFilterBar />
+      <SortAndFilterBar sortConfig={productSortConfig}/>
       <div className="products-all__top">
         <h2 className="products-all__title">Всі продукти</h2>
         <Link

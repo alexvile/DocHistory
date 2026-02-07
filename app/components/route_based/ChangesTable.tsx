@@ -2,7 +2,7 @@ import { Link } from "@remix-run/react";
 import { formatDateForUA } from "~/utils/formatDateUA";
 import Table from "../ui/Table";
 
-export default function ChnagesTable({ changes }: any) {
+export default function ChangesTable({ changes }: any) {
   return (
     <Table headings={["№", "Остання зміна", "Статус"]}>
       {changes.map(({ id, createdAt, status }, index) => (

@@ -1,13 +1,12 @@
-import { json, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { Link, Outlet, useLoaderData } from "@remix-run/react";
+import { LoaderFunction } from "@remix-run/node";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import { requireUserRole } from "~/server/auth.server";
-import { getFilteredProducts, getTotalProductsCount } from "~/server/products.server";
-import ProductsTable from "~/components/ProductsTable";
 import { ChangeSetStatus, Prisma } from "@prisma/client";
 import { SortAndFilterBar } from "~/components/common/SortAndFilter/SortAndFilterBar";
 import { Pagination } from "~/components/common/Pagination";
 import ChnagesTable from "~/components/route_based/ChangesTable";
-import { getFilteredChangeSets, getFilteredChangeSetsByProduct, getTotalChangesCount } from "~/server/changes.server";
+import { getFilteredChangeSets, getTotalChangesCount } from "~/server/changes.server";
+import changesSortConfig from "./changesSortConfig";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const role = await requireUserRole(request);
@@ -18,14 +17,15 @@ export const loader: LoaderFunction = async ({ request }) => {
   const take = Math.max(1, Number(url.searchParams.get("limit") ?? 10));
   const skip = (page - 1) * take;
 
+  const defaultSort = changesSortConfig.default;
+  const dir = url.searchParams.get("dir") ?? defaultSort.split(":")[1];
+  const direction: Prisma.SortOrder = dir === "asc" ? "asc" : "desc";
+  const orderBy: Prisma.ChangeSetOrderByWithRelationInput = {
+    createdAt: direction,
+  };
   // фільтри
   const productId = url.searchParams.get("productId"); // з комбобокса
   const statusParam = url.searchParams.get("status"); // DRAFT | APPROVED | REJECTED
-
-  // сортування — ТІЛЬКИ по даті
-  const orderBy: Prisma.ChangeSetOrderByWithRelationInput = {
-    createdAt: "desc",
-  };
 
   // where формується динамічно
   const where: Prisma.ChangeSetWhereInput = {
@@ -36,12 +36,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const totalCount = await getTotalChangesCount(where);
   const totalPages = Math.ceil(totalCount / take);
 
-  const changes = await getFilteredChangeSets(
-    where,
-    orderBy,
-    skip,
-    take
-  );
+  const changes = await getFilteredChangeSets(where, orderBy, skip, take);
 
   return {
     changes,
@@ -62,7 +57,7 @@ export default function Products() {
   const data = useLoaderData<typeof loader>();
   return (
     <>
-      <SortAndFilterBar />
+      <SortAndFilterBar sortConfig={changesSortConfig} />
       <div>
         <ChnagesTable changes={data?.changes} />
       </div>
