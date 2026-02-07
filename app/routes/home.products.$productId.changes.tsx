@@ -1,32 +1,54 @@
 import { Outlet, useLoaderData } from "@remix-run/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
-import { getFilteredChangeSetsByProduct, getTotalChangesCount } from "~/server/changes.server";
+import { assignApproverToChangeSet, getFilteredChangeSets, getFilteredChangeSetsByProduct } from "~/server/changes.server";
 import { NormDiff } from "~/types";
 import ChangeSetList from "~/components/route_based/ChangeSetList";
 import { requireUserRole } from "~/server/auth.server";
-import { ChangeSetStatus, Prisma } from "@prisma/client";
-import { SortAndFilterBar } from "~/components/common/SortAndFilter/SortAndFilterBar";
-import { Pagination } from "~/components/common/Pagination";
-import ChnagesTable from "~/components/route_based/ChangesTable";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   // invariant(params.productId, "Missing contactId param");
   // const userIdFromSession = await getUserId(request);
 
   const formData = await request.formData();
-  const raw = Object.fromEntries(formData);
-  console.log(raw);
+  const intent = formData.get("intent");
+  console.log(intent);
 
+  if (intent === "assign-approver") {
+    const changeSetId = formData.get("changeSetId");
+    const approverId = formData.get("approverId");
+
+    if (!changeSetId || !approverId) return null;
+    if (typeof changeSetId !== "string" || typeof approverId !== "string") return null;
+
+    // await assignApproverToChangeSet({
+    //   changeSetId,
+    //   approverId,
+    // });
+
+    return null;
+    // return redirect(request.url);
+  }
   return null;
 };
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   invariant(params.productId, "Missing productId param");
   const role = await requireUserRole(request);
-  const productId = params.productId;
-  const lastPendingChanges = await getFilteredChangeSetsByProduct(params.productId, { createdAt: "desc" }, { status: "DRAFT" }, 0, 20);
+
+  const lastPendingChanges = await getFilteredChangeSets(
+    {
+      productId: params.productId,
+      status: {
+        in: ["DRAFT", "ON_REVIEW"],
+      },
+    },
+    { createdAt: "desc" },
+    0,
+    50,
+  );
   // todo - tmp solution
+  // todo - add try-catch
   const changeSetVMs = lastPendingChanges.flatMap((cs) =>
     cs.diff
       ? [
@@ -38,20 +60,6 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
       : [],
   );
   return { changes: changeSetVMs, role };
-
-  // const role = await requireUserRole(request);
-
-
-  // invariant(params.productId, "Missing productId param");
-  // try {
-  //   const { product, currentSnapshot } = await getProductWithNormsById(params.productId);
-  //   return {
-  //     product,
-  //     norms: currentSnapshot.rows,
-  //   };
-  // } catch (error) {
-  //   mapProductErrorToResponse(error);
-  // }
 };
 
 export default function NormChanges() {
@@ -59,7 +67,6 @@ export default function NormChanges() {
   // const data = useLoaderData<typeof loader>();
   return (
     <>
-  
       <ChangeSetList changes={changes} role={role} />
       <Outlet />
     </>

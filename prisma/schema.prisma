@@ -27,6 +27,7 @@ enum SnapshotStatus {
 
 enum ChangeSetStatus {
   DRAFT
+  ON_REVIEW
   APPROVED
   REJECTED
 }

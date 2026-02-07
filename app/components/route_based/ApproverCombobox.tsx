@@ -1,5 +1,5 @@
 import { useFetcher } from "@remix-run/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { UserVM } from "~/types";
 
 type Approver = Pick<UserVM, "id" | "firstName" | "lastName">;
@@ -9,11 +9,13 @@ type FetcherData = {
 };
 
 type Props = {
-  value: string;
+  value: string | undefined;
   onChange: (id: string) => void;
 };
 
+// todo - fix controlled-uncontrolled issue!!!!
 export function ApproverCombobox({ value, onChange }: Props) {
+  const id = useId();
   const fetcher = useFetcher<FetcherData>();
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -28,6 +30,7 @@ export function ApproverCombobox({ value, onChange }: Props) {
       fetcher.load("/resources/approvers");
     }
   }, [fetcher]);
+
 
   const approvers = fetcher.data?.approvers ?? [];
 
@@ -59,22 +62,26 @@ export function ApproverCombobox({ value, onChange }: Props) {
     <div ref={wrapperRef} className="combo" role="combobox" aria-expanded={focused} aria-haspopup="listbox">
       {/* search / display */}
 
-      {/* <label htmlFor="">Погоджує</label> */}
-      <input
-        type="text"
-        name="approver"
-        className="combo__input"
-        placeholder="Оберіть особу"
-        value={isEditing ? query : selectedLabel}
-        onFocus={() => {
-          setFocused(true);
-          setShowSelect(true);
-          setIsEditing(true);
-          setQuery("");
-        }}
-        onChange={(e) => setQuery(e.target.value)}
-        aria-autocomplete="list"
-      />
+      <div className="combo__input-and-label">
+        <input type="hidden" name="approverId" value={selectedId} />
+        <label htmlFor={id}>Погоджує:</label>
+        <input
+          id={id}
+          type="text"
+          name="approverName"
+          className="combo__input"
+          placeholder="Оберіть особу"
+          value={isEditing ? query : selectedLabel}
+          onFocus={() => {
+            setFocused(true);
+            setShowSelect(true);
+            setIsEditing(true);
+            setQuery("");
+          }}
+          onChange={(e) => setQuery(e.target.value)}
+          aria-autocomplete="list"
+        />
+      </div>
 
       {showSelect && (
         <select

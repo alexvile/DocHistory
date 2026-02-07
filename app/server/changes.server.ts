@@ -1,7 +1,9 @@
-import { CanonicalRow } from "~/types";
 import { prisma } from "./prisma.server";
 import { SnapshotStatus, ChangeSetStatus, Prisma } from "@prisma/client";
-import { diffNorms, hasChanges } from "~/utils/comparison";
+
+export const getTotalChangesCount = async (whereFilter: Prisma.ChangeSetWhereInput) => {
+  return await prisma.changeSet.count({ where: whereFilter });
+};
 
 type CreateChangeSetParams = {
   productId: string;
@@ -50,100 +52,23 @@ export async function createChangeSet(params: CreateChangeSetParams) {
   });
 }
 
-// export const getTotalChangesCount = async (whereFilter: Prisma.ChangeWhereInput) => {
-//   return await prisma.change.count({ where: whereFilter });
-// };
+type AssignApproverParams = {
+  changeSetId: string;
+  approverId: string;
+};
 
-// export const getFilteredChanges = async (
-//   sortFilter: Prisma.ChangeOrderByWithRelationInput,
-//   whereFilter: Prisma.ChangeWhereInput,
-//   skip: number,
-//   take: number
-// ) => {
-//   return await prisma.change.findMany({
-//     orderBy: {
-//       ...sortFilter,
-//     },
-//     where: {
-//       // ownerId: userId,
-//       ...whereFilter,
-//     },
-//     skip,
-//     take,
-//     select: {
-//       id: true,
-//       createdAt: true,
-//       creator: {
-//         select: {
-//           firstName: true,
-//           lastName: true,
-//         },
-//       },
-//       product: {
-//         select: {
-//           productTitle: true,
-//         },
-//       },
-//     },
-//   });
-// };
-// export const getChangebyId = async (id: string) => {
-//   return await prisma.change.findUnique({
-//     where: {
-//       id: id,
-//     },
-//     select: {
-//       id: true,
-//       createdAt: true,
-//       diff: true,
-//       creator: {
-//         select: {
-//           firstName: true,
-//           lastName: true,
-//         },
-//       },
-//       product: {
-//         select: {
-//           productTitle: true,
-//         },
-//       },
-//     },
-//   });
-// };
-// todo - get the snapshot
-
-// todo - change last change set draft by product
-export const getFilteredChangeSetsByProduct = async (
-  productId: string,
-  sortFilter: Prisma.ChangeSetOrderByWithRelationInput,
-  whereFilter: Prisma.ChangeSetWhereInput,
-  skip?: number,
-  take?: number
-) => {
-  return await prisma.changeSet.findMany({
-    where: {
-      ...whereFilter,
-      productId,
+export async function assignApproverToChangeSet({ changeSetId, approverId }: AssignApproverParams) {
+  return prisma.changeSet.update({
+    where: { id: changeSetId },
+    data: {
+      approverId,
+      status: "ON_REVIEW",
     },
-    orderBy: {
-      ...sortFilter,
-    },
-    skip,
-    take,
-    include: {
-      createdBy: {
-        select: {
-          firstName: true,
-          lastName: true
-        }
-      }
-    }
   });
-};
+}
 
-export const getTotalChangesCount = async (whereFilter: Prisma.ChangeSetWhereInput) => {
-  return await prisma.changeSet.count({ where: whereFilter });
-};
+// todo - get the snapshot
+// todo - change last change set draft by product
 
 export const getFilteredChangeSets = async (
   where: Prisma.ChangeSetWhereInput,
@@ -166,38 +91,3 @@ export const getFilteredChangeSets = async (
     },
   });
 };
-
-// export const getFilteredChangeSetsByProduct = async (
-//   productId: string,
-//   sortFilter: Prisma.ChangeSetOrderByWithRelationInput,
-//   whereFilter: Prisma.ChangeSetWhereInput,
-//   skip?: number,
-//   take?: number
-// ) => {
-//   return await prisma.changeSet.findMany({
-//     where: {
-//       ...whereFilter,
-//       productId,
-//     },
-//     orderBy: {
-//       ...sortFilter,
-//     },
-//     skip,
-//     take,
-//     include: {
-//       createdBy: {
-//         select: {
-//           firstName: true,
-//           lastName: true
-//         }
-//       }
-//     }
-//   });
-// };
-
-// const changeSets = await prisma.changeSet.findMany({
-//   where: whereFilter,
-//   orderBy: sortOptions,
-//   skip,
-//   take,
-// });

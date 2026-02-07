@@ -12,14 +12,22 @@ import { Form } from "@remix-run/react";
 
 type ChangeSetCardMetaProps = Pick<ChangeSetVM, "createdBy" | "createdAt" | "status">;
 
+const STATUS_TONE_MAP: Record<ChangeSetVM['status'], "green" | "yellow" | "blue" | "red"> = {
+  DRAFT: "yellow",
+  ON_REVIEW: "blue",
+  APPROVED: "green",
+  REJECTED: "red",
+};
+
 function ChangeSetCardMeta({ createdBy, createdAt, status }: ChangeSetCardMetaProps) {
+  const tone = STATUS_TONE_MAP[status];
   return (
     <div className={styles.changeSetCardMetaContainer}>
       <div className={styles.changeSetCardMetaTop}>
         <p className={styles.changeSetCardMetaField}>
           <strong>Зміна від:</strong> {createdBy.firstName} {createdBy.lastName}
         </p>
-        <Badge tone="draft">{status}</Badge>
+        <Badge tone={tone}>{status}</Badge>
       </div>
       <p className={styles.changeSetCardMetaField}>
         <strong>Дата внесення:</strong> {formatDateForUA(createdAt, { withYear: true })}
@@ -102,31 +110,30 @@ function AdminActions() {
   );
 }
 
-function CommitterActions() {
+function CommitterActions({ id }: { id: string }) {
   const [approverId, setApproverId] = useState<string | undefined>();
-  useEffect(() => {
-    console.log(11, approverId);
-  }, [approverId]);
 
   return (
-    <Form method="post">
-      <div role="group" className="commiterActions" aria-label="Commiter actions">
+    <div role="group" className="commiterActions" aria-label="Commiter actions">
+      <Form method="post" aria-label="Approve change set" className="commiterActionsSetApprover">
+        <input type="hidden" name="changeSetId" value={id} />
+        <input type="hidden" name="intent" value="assign-approver" />
         <ApproverCombobox
           value={approverId}
           onChange={(id) => {
             setApproverId(id || undefined);
           }}
         />
-        <div className="commiterActions-buttons">
-          <button type="submit" disabled={!approverId} className="button button--primary">
-            Надіслати
-          </button>
-          <button className="button button--secondary" type="button" aria-label="Delete change set">
-            Видалити
-          </button>
-        </div>
-      </div>
-    </Form>
+        <button type="submit" disabled={!approverId} className="button button--primary">
+          Надіслати
+        </button>
+      </Form>
+      <Form method="post" aria-label="Delete change set">
+        <button className="button button--secondary" type="button" aria-label="Delete change set">
+          Видалити
+        </button>
+      </Form>
+    </div>
   );
 }
 
@@ -134,13 +141,13 @@ function ViewerActions() {
   return <div role="group" aria-label="Admin actions"></div>;
 }
 
-function ChangeSetCardActions({ role }: { role: UserRoleVM }) {
+function ChangeSetCardActions({ role, id }: { role: UserRoleVM; id: string }) {
   switch (role) {
     case "ADMIN":
       return <AdminActions />;
 
     case "COMMITTER":
-      return <CommitterActions />;
+      return <CommitterActions id={id} />;
 
     case "VIEWER":
     default:
@@ -151,12 +158,12 @@ function ChangeSetCardActions({ role }: { role: UserRoleVM }) {
 type ChangeSetCardProps = ChangeSetVM & {
   role: UserRoleVM;
 };
-export default function ChangeSetCard({ status, createdAt, diff, createdBy, role }: ChangeSetCardProps) {
+export default function ChangeSetCard({ id, status, createdAt, diff, createdBy, role }: ChangeSetCardProps) {
   return (
     <div className={styles.container}>
       <ChangeSetCardMeta createdBy={createdBy} createdAt={createdAt} status={status} />
       <ChangeSetCardSummary diff={diff} />
-      <ChangeSetCardActions role={role} />
+      <ChangeSetCardActions role={role} id={id} />
     </div>
   );
 }
