@@ -1,64 +1,71 @@
-import { Prisma } from "@prisma/client";
-import { LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
+import { json, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
-import ChangesTable from "~/components/ChangesTable";
-import { Pagination } from "~/components/common/Pagination";
+import { requireUserRole } from "~/server/auth.server";
+import { getFilteredProducts, getTotalProductsCount } from "~/server/products.server";
+import ProductsTable from "~/components/ProductsTable";
+import { ChangeSetStatus, Prisma } from "@prisma/client";
 import { SortAndFilterBar } from "~/components/common/SortAndFilter/SortAndFilterBar";
-import { getFilteredChanges, getTotalChangesCount } from "~/server/changes.server";
+import { Pagination } from "~/components/common/Pagination";
+import ChnagesTable from "~/components/route_based/ChangesTable";
+import { getFilteredChangeSets, getFilteredChangeSetsByProduct, getTotalChangesCount } from "~/server/changes.server";
 
-export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
-  // const role = await requireUserRole(request);
+export const loader: LoaderFunction = async ({ request }) => {
+  const role = await requireUserRole(request);
 
   const url = new URL(request.url);
-  const pageParam = url.searchParams.get("page") ?? "1";
-  const limitParam = url.searchParams.get("limit") ?? "10";
-  const page = Math.max(1, parseInt(pageParam));
-  const take = Math.max(1, parseInt(limitParam));
+
+  const page = Math.max(1, Number(url.searchParams.get("page") ?? 1));
+  const take = Math.max(1, Number(url.searchParams.get("limit") ?? 10));
   const skip = (page - 1) * take;
 
-  const sort = url.searchParams.get("sort") ?? "name";
-  const dir = url.searchParams.get("dir") ?? "asc";
-  const filter = url.searchParams.get("q") ?? "";
+  // фільтри
+  const productId = url.searchParams.get("productId"); // з комбобокса
+  const statusParam = url.searchParams.get("status"); // DRAFT | APPROVED | REJECTED
 
-  const direction: Prisma.SortOrder = dir === "desc" ? "desc" : "asc";
-  let sortOptions: Prisma.ProductOrderByWithRelationInput = {};
-  if (sort) {
-    if (sort === "title") {
-      sortOptions = { productTitle: `${direction}` };
-    }
-    if (sort === "updated") {
-      sortOptions = { updatedAt: `${direction}` };
-    }
-  }
-  // const whereFilter: Prisma.ChangeWhereInput = filter
-  //   ? { productTitle: { contains: filter, mode: "insensitive" } }
-  //   : {};
-  const whereFilter = {};
-  const totalCount = await getTotalChangesCount(whereFilter);
+  // сортування — ТІЛЬКИ по даті
+  const orderBy: Prisma.ChangeSetOrderByWithRelationInput = {
+    createdAt: "desc",
+  };
+
+  // where формується динамічно
+  const where: Prisma.ChangeSetWhereInput = {
+    ...(productId && { productId }),
+    ...(statusParam && { status: statusParam as ChangeSetStatus }),
+  };
+
+  const totalCount = await getTotalChangesCount(where);
   const totalPages = Math.ceil(totalCount / take);
 
-  const fromPagination = skip + 1;
-  const toPagination = Math.min(skip + take, totalCount);
+  const changes = await getFilteredChangeSets(
+    where,
+    orderBy,
+    skip,
+    take
+  );
 
-  const changes = await getFilteredChanges(sortOptions, whereFilter, skip, take);
-  return { changes, page, totalPages, totalCount, fromPagination, toPagination };
+  return {
+    changes,
+    page,
+    totalPages,
+    totalCount,
+    fromPagination: skip + 1,
+    toPagination: Math.min(skip + take, totalCount),
+    role,
+  };
 };
+// todo - rewrite all to future responses
 
-export default function Changes() {
+// todo - create can commiter or ADMIN
+// todo - show all norms
+
+export default function Products() {
   const data = useLoaderData<typeof loader>();
-  console.log(data);
   return (
     <>
-    {/* todo - change sort and filter bar */}
       <SortAndFilterBar />
-      {/* todo - update classes, use universal class */}
-      <div className="products-all__top">
-        <h2 className="products-all__title">Всі зміни</h2>
+      <div>
+        <ChnagesTable changes={data?.changes} />
       </div>
-
-      <div className="products-table__wrapper">
-        <ChangesTable changes={data?.changes} />
-      </div> 
       <Pagination
         page={data.page}
         totalPages={data.totalPages}

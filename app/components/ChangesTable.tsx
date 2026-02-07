@@ -3,7 +3,7 @@ import { ChangesListProps } from "~/types";
 import Table from "./ui/Table";
 import { formatDateForUA } from "~/utils/formatDateUA";
 
-export default function ChangesTable({ changes }: ChangesListProps) {
+export default function ChangesTable1({ changes }: ChangesListProps) {
   return (
     <Table headings={["Id", "Created", "Product", "Creator"]}>
       {changes.map(({ id, createdAt, product, creator }) => (

@@ -8,6 +8,7 @@ import NormsTableWithChanges from "../NormsTableWithChanges";
 import { Icon } from "../ui/Icon";
 import { ApproverCombobox } from "./ApproverCombobox";
 import { useEffect, useState } from "react";
+import { Form } from "@remix-run/react";
 
 type ChangeSetCardMetaProps = Pick<ChangeSetVM, "createdBy" | "createdAt" | "status">;
 
@@ -106,23 +107,26 @@ function CommitterActions() {
   useEffect(() => {
     console.log(11, approverId);
   }, [approverId]);
+
   return (
-    <div role="group" className="commiterActions" aria-label="Commiter actions">
-      <ApproverCombobox
-        value={approverId}
-        onChange={(id) => {
-          setApproverId(id || undefined);
-        }}
-      />
-      <div className="commiterActions-buttons">
-        <button disabled={!approverId} className="button button--primary">
-          Надіслати
-        </button>
-        <button className="button button--secondary" type="button" aria-label="Delete change set">
-          Видалити
-        </button>
+    <Form method="post">
+      <div role="group" className="commiterActions" aria-label="Commiter actions">
+        <ApproverCombobox
+          value={approverId}
+          onChange={(id) => {
+            setApproverId(id || undefined);
+          }}
+        />
+        <div className="commiterActions-buttons">
+          <button type="submit" disabled={!approverId} className="button button--primary">
+            Надіслати
+          </button>
+          <button className="button button--secondary" type="button" aria-label="Delete change set">
+            Видалити
+          </button>
+        </div>
       </div>
-    </div>
+    </Form>
   );
 }
 

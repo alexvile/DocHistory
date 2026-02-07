@@ -65,6 +65,9 @@ export async function createProduct(input: CreateProductInput) {
 export const getTotalProductsCount = async (whereFilter: Prisma.ProductWhereInput) => {
   return await prisma.product.count({ where: whereFilter });
 };
+
+
+
 export const getFilteredProducts = async (
   sortFilter: Prisma.ProductOrderByWithRelationInput,
   whereFilter: Prisma.ProductWhereInput,

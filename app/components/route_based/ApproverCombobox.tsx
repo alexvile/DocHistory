@@ -58,9 +58,11 @@ export function ApproverCombobox({ value, onChange }: Props) {
   return (
     <div ref={wrapperRef} className="combo" role="combobox" aria-expanded={focused} aria-haspopup="listbox">
       {/* search / display */}
-      <label htmlFor="">Погоджує</label>
+
+      {/* <label htmlFor="">Погоджує</label> */}
       <input
         type="text"
+        name="approver"
         className="combo__input"
         placeholder="Оберіть особу"
         value={isEditing ? query : selectedLabel}

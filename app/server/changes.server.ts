@@ -112,8 +112,7 @@ export async function createChangeSet(params: CreateChangeSetParams) {
 // };
 // todo - get the snapshot
 
-
-
+// todo - change last change set draft by product
 export const getFilteredChangeSetsByProduct = async (
   productId: string,
   sortFilter: Prisma.ChangeSetOrderByWithRelationInput,
@@ -141,3 +140,64 @@ export const getFilteredChangeSetsByProduct = async (
     }
   });
 };
+
+export const getTotalChangesCount = async (whereFilter: Prisma.ChangeSetWhereInput) => {
+  return await prisma.changeSet.count({ where: whereFilter });
+};
+
+export const getFilteredChangeSets = async (
+  where: Prisma.ChangeSetWhereInput,
+  orderBy: Prisma.ChangeSetOrderByWithRelationInput,
+  skip?: number,
+  take?: number,
+) => {
+  return prisma.changeSet.findMany({
+    where,
+    orderBy,
+    skip,
+    take,
+    include: {
+      createdBy: {
+        select: {
+          firstName: true,
+          lastName: true,
+        },
+      },
+    },
+  });
+};
+
+// export const getFilteredChangeSetsByProduct = async (
+//   productId: string,
+//   sortFilter: Prisma.ChangeSetOrderByWithRelationInput,
+//   whereFilter: Prisma.ChangeSetWhereInput,
+//   skip?: number,
+//   take?: number
+// ) => {
+//   return await prisma.changeSet.findMany({
+//     where: {
+//       ...whereFilter,
+//       productId,
+//     },
+//     orderBy: {
+//       ...sortFilter,
+//     },
+//     skip,
+//     take,
+//     include: {
+//       createdBy: {
+//         select: {
+//           firstName: true,
+//           lastName: true
+//         }
+//       }
+//     }
+//   });
+// };
+
+// const changeSets = await prisma.changeSet.findMany({
+//   where: whereFilter,
+//   orderBy: sortOptions,
+//   skip,
+//   take,
+// });

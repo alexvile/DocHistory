@@ -11,7 +11,7 @@ export default function ProductNavigation() {
         </li>
         <li className="product-nav__item">
           <NavLink to="changes" className={({ isActive, isPending }) => (isActive ? "active" : isPending ? "pending" : "")}>
-            Зміни
+            Останні зміни
           </NavLink>
         </li>
         <li className="product-nav__item">

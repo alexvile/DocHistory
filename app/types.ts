@@ -140,6 +140,12 @@ export type NormDiff = {
     fields: string[];
   }[];
 };
+
+export type ChangeVM = Pick<ChangeSet, "id" | "status"> & {
+  createdAt: string;
+  createdBy: Pick<User, "firstName" | "lastName">;
+};
+
 export type ChangeSetVM = Pick<ChangeSet, "id" | "status"> & {
   createdAt: string;
   diff: NormDiff;

@@ -29,7 +29,7 @@ export default function SideMenu({ role }: { role: UserRoleVM }) {
           </li>
           <li className={styles.sideMenuItem}>
             <NavLink className={({ isActive, isPending }) => (isActive ? "active" : isPending ? "pending" : "")} to={"changes"}>
-              <Icon name="changes" /> !!! Мої Зміни (draft)
+              <Icon name="changes" />Всі зміни
             </NavLink>
           </li>
           <li className={styles.sideMenuItem}>
