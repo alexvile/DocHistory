@@ -1,6 +1,7 @@
 import { UserVM } from "~/types";
 import { Icon } from "../ui/Icon";
 import styles from "./UserBar.module.css";
+import translate from "~/utils/translate";
 
 type UserBarProps = {
   user: UserVM;
@@ -9,9 +10,12 @@ type UserBarProps = {
 export default function UserBar({ user }: UserBarProps) {
   return (
     <div className={styles.container}>
-      <div>Role: {user.role}</div>
       <div>
-        Welcome, {user.firstName} {user.lastName}
+        Роль:
+        {translate("ROLES", user.role)}
+      </div>
+      <div>
+        Вітаю, {user.firstName} {user.lastName}
       </div>
       <form action="/logout" method="post">
         <button type="submit" aria-label="Logout" className={styles.logout}>

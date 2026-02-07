@@ -156,7 +156,7 @@ export default function ChangeSetCard({ status, createdAt, diff, createdBy, role
     <div className={styles.container}>
       <ChangeSetCardMeta createdBy={createdBy} createdAt={createdAt} status={status} />
       <ChangeSetCardSummary diff={diff} />
-      <ChangeSetCardActions role="COMMITTER" />
+      <ChangeSetCardActions role={role} />
     </div>
   );
 }
