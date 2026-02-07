@@ -12,6 +12,10 @@ export function FilterBox({
   const [inputValue, setInputValue] = useState(initialFilter);
 
   useEffect(() => {
+    setInputValue(searchParams.get("q") ?? "");
+  }, [searchParams]);
+
+  useEffect(() => {
     const timeout = setTimeout(() => {
       const trimmed = inputValue.trim();
 
@@ -28,7 +32,7 @@ export function FilterBox({
     return () => clearTimeout(timeout);
   }, [inputValue]);
 
-// todo - fix error when using "(" in query
+  // todo - fix error when using "(" in query
 
   return (
     <input
