@@ -68,14 +68,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Changes() {
   const data = useLoaderData<typeof loader>();
-  console.log(data);
-
   return (
     <>
       <SortAndFilterBar
         sortConfig={changesSortConfig}
         showChangeStatusFilter={true}
-        showMyFilter={data.role === "ADMIN" || data.role === "COMIITER"}
+        showMyFilter={data.role === "ADMIN" || data.role === "COMMITTER"}
       />
       <div>
         <ChangesTable changes={data?.changes} />
