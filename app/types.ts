@@ -171,9 +171,10 @@ export type SortBoxProps = {
 
 export type SortAndFilterBarProps = {
   sortConfig?: SortConfig;
-  showChangeStatusFilter: boolean;
+  showChangeStatusFilter?: boolean;
   filterConfigs?: FilterConfig[];
   showQueryFilter?: boolean;
+  showMyFilter?: boolean;
   showLimit?: boolean;
 };
 

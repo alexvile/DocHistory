@@ -1,6 +1,6 @@
 import { LoaderFunction } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { requireUserRole } from "~/server/auth.server";
+import { getUserId, requireUserRole } from "~/server/auth.server";
 import { ChangeSetStatus, Prisma } from "@prisma/client";
 import { SortAndFilterBar } from "~/components/common/SortAndFilter/SortAndFilterBar";
 import { Pagination } from "~/components/common/Pagination";
@@ -10,6 +10,7 @@ import changesSortConfig from "./changesSortConfig";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const role = await requireUserRole(request);
+  const userId = await getUserId(request);
 
   const url = new URL(request.url);
 
@@ -26,12 +27,24 @@ export const loader: LoaderFunction = async ({ request }) => {
   // фільтри
   const productId = url.searchParams.get("productId"); // з комбобокса
   const statusParam = url.searchParams.get("status"); // DRAFT | APPROVED | REJECTED
+  const myOnly = url.searchParams.get("my") === "1";
 
   // where формується динамічно
   const where: Prisma.ChangeSetWhereInput = {
     ...(productId && { productId }),
     ...(statusParam && { status: statusParam as ChangeSetStatus }),
   };
+
+  if (myOnly) {
+    // todo - fix warning
+    if (role === "ADMIN") {
+      where.approverId = userId;
+    }
+
+    if (role === "COMMITTER") {
+      where.createdById = userId;
+    }
+  }
 
   const totalCount = await getTotalChangesCount(where);
   const totalPages = Math.ceil(totalCount / take);
@@ -53,11 +66,17 @@ export const loader: LoaderFunction = async ({ request }) => {
 // todo - create can commiter or ADMIN
 // todo - show all norms
 
-export default function Products() {
+export default function Changes() {
   const data = useLoaderData<typeof loader>();
+  console.log(data);
+
   return (
     <>
-      <SortAndFilterBar sortConfig={changesSortConfig} showChangeStatusFilter={true}/>
+      <SortAndFilterBar
+        sortConfig={changesSortConfig}
+        showChangeStatusFilter={true}
+        showMyFilter={data.role === "ADMIN" || data.role === "COMIITER"}
+      />
       <div>
         <ChangesTable changes={data?.changes} />
       </div>
