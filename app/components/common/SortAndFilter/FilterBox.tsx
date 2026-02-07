@@ -35,12 +35,16 @@ export function FilterBox({
   // todo - fix error when using "(" in query
 
   return (
-    <input
-      type="text"
-      value={inputValue}
-      onChange={(e) => setInputValue(e.target.value)}
-      placeholder="Пошук за назвою"
-      className={styles.filterBox}
-    />
+    <label>
+      <span className="visually-hidden">Пошук</span>
+      <input
+        name="q"
+        type="text"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        placeholder="Пошук за назвою"
+        className={styles.filterBox}
+      />
+    </label>
   );
 }

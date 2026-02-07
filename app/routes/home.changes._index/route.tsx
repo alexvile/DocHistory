@@ -57,7 +57,7 @@ export default function Products() {
   const data = useLoaderData<typeof loader>();
   return (
     <>
-      <SortAndFilterBar sortConfig={changesSortConfig} />
+      <SortAndFilterBar sortConfig={changesSortConfig} showChangeStatusFilter={true}/>
       <div>
         <ChangesTable changes={data?.changes} />
       </div>

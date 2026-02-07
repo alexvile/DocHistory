@@ -36,6 +36,11 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   invariant(params.productId, "Missing productId param");
   const role = await requireUserRole(request);
 
+
+  // todo - depend on role
+  // admin - on review + approved
+  // commit - draft + approved + onreview
+  // viewer - only approved
   const lastPendingChanges = await getFilteredChangeSets(
     {
       productId: params.productId,

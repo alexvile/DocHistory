@@ -152,7 +152,6 @@ export type ChangeSetVM = Pick<ChangeSet, "id" | "status"> & {
   createdBy: Pick<User, "firstName" | "lastName">;
 };
 
-
 // sort and filterbar
 export type SortOption = {
   label: string;
@@ -172,7 +171,27 @@ export type SortBoxProps = {
 
 export type SortAndFilterBarProps = {
   sortConfig?: SortConfig;
-  showStatusFilter?: boolean;
+  showChangeStatusFilter: boolean;
+  filterConfigs?: FilterConfig[];
   showQueryFilter?: boolean;
   showLimit?: boolean;
+};
+
+export type FilterOption = {
+  label: string;
+  value: string;
+};
+
+export type FilterConfig = {
+  /** query param key, наприклад "status" */
+  key: string;
+
+  /** label для UI */
+  label: string;
+
+  /** значення селекта */
+  options: FilterOption[];
+
+  /** дефолтне значення */
+  default: string;
 };

@@ -4,10 +4,11 @@ import { FilterBox } from "./FilterBox";
 import { LimitSelect } from "./LimitSelect";
 import styles from "./SortAndFilterBar.module.css";
 import { SortAndFilterBarProps } from "~/types";
+import ChangeStatusFilter from "./ChangesStatusSelect";
 
 export function SortAndFilterBar({
   sortConfig,
-  showStatusFilter = false,
+  showChangeStatusFilter = false,
   showQueryFilter = false,
   showLimit = true,
 }: SortAndFilterBarProps) {
@@ -23,7 +24,8 @@ export function SortAndFilterBar({
     <div className={styles.filterBar}>
       {sortConfig && <SortBox searchParams={searchParams} setSearchParams={setSearchParams} config={sortConfig} />}
       {showQueryFilter && <FilterBox searchParams={searchParams} setSearchParams={setSearchParams} />}
-      <LimitSelect searchParams={searchParams} setSearchParams={setSearchParams} />
+      {showChangeStatusFilter && <ChangeStatusFilter searchParams={searchParams} setSearchParams={setSearchParams} />}
+      {showLimit && <LimitSelect searchParams={searchParams} setSearchParams={setSearchParams} />}
       {hasActiveFilters && (
         <button onClick={handleClear} className={styles.clearBtn}>
           Очистити
