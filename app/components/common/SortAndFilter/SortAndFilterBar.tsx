@@ -8,7 +8,7 @@ import { SortAndFilterBarProps } from "~/types";
 export function SortAndFilterBar({
   sortConfig,
   showStatusFilter = false,
-  showProductFilter = false,
+  showQueryFilter = false,
   showLimit = true,
 }: SortAndFilterBarProps) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -22,7 +22,7 @@ export function SortAndFilterBar({
   return (
     <div className={styles.filterBar}>
       {sortConfig && <SortBox searchParams={searchParams} setSearchParams={setSearchParams} config={sortConfig} />}
-      <FilterBox searchParams={searchParams} setSearchParams={setSearchParams} />
+      {showQueryFilter && <FilterBox searchParams={searchParams} setSearchParams={setSearchParams} />}
       <LimitSelect searchParams={searchParams} setSearchParams={setSearchParams} />
       {hasActiveFilters && (
         <button onClick={handleClear} className={styles.clearBtn}>

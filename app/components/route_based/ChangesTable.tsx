@@ -1,10 +1,14 @@
-import { Link } from "@remix-run/react";
 import { formatDateForUA } from "~/utils/formatDateUA";
 import Table from "../ui/Table";
+import { ChangeVM } from "~/types";
 
-export default function ChangesTable({ changes }: any) {
+type ChangesTableProps = {
+  changes: Pick<ChangeVM, "id" | "createdAt" | "status">[]
+}
+
+export default function ChangesTable({ changes }: ChangesTableProps) {
   return (
-    <Table headings={["№", "Остання зміна", "Статус"]}>
+    <Table headings={["№", "Статус", "Дата"]}>
       {changes.map(({ id, createdAt, status }, index) => (
         <Table.Row key={id}>
           <Table.Cell>{index + 1}</Table.Cell>

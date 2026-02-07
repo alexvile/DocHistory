@@ -66,7 +66,7 @@ export default function Products() {
   const data = useLoaderData<typeof loader>();
   return (
     <>
-      <SortAndFilterBar sortConfig={productSortConfig}/>
+      <SortAndFilterBar sortConfig={productSortConfig} showQueryFilter={true}/>
       <div className="products-all__top">
         <h2 className="products-all__title">Всі продукти</h2>
         <Link
