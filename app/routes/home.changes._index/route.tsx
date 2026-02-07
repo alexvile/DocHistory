@@ -4,7 +4,7 @@ import { requireUserRole } from "~/server/auth.server";
 import { ChangeSetStatus, Prisma } from "@prisma/client";
 import { SortAndFilterBar } from "~/components/common/SortAndFilter/SortAndFilterBar";
 import { Pagination } from "~/components/common/Pagination";
-import ChnagesTable from "~/components/route_based/ChangesTable";
+import ChangesTable from "~/components/route_based/ChangesTable";
 import { getFilteredChangeSets, getTotalChangesCount } from "~/server/changes.server";
 import changesSortConfig from "./changesSortConfig";
 
@@ -59,15 +59,17 @@ export default function Products() {
     <>
       <SortAndFilterBar sortConfig={changesSortConfig} />
       <div>
-        <ChnagesTable changes={data?.changes} />
+        <ChangesTable changes={data?.changes} />
       </div>
-      <Pagination
-        page={data.page}
-        totalPages={data.totalPages}
-        fromPagination={data.fromPagination}
-        toPagination={data.toPagination}
-        totalCount={data.totalCount}
-      />
+      {data?.changes?.length > 0 && (
+        <Pagination
+          page={data.page}
+          totalPages={data.totalPages}
+          fromPagination={data.fromPagination}
+          toPagination={data.toPagination}
+          totalCount={data.totalCount}
+        />
+      )}
       <Outlet />
     </>
   );
