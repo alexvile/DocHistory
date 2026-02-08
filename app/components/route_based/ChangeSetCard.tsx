@@ -9,6 +9,7 @@ import { Icon } from "../ui/Icon";
 import { ApproverCombobox } from "./ApproverCombobox";
 import { useState } from "react";
 import { Form } from "@remix-run/react";
+import translate from "~/utils/translate";
 
 type ChangeSetCardMetaProps = Pick<ChangeSetVM, "createdBy" | "approver" | "createdAt" | "status">;
 
@@ -28,7 +29,7 @@ function ChangeSetCardMeta({ createdBy, createdAt, status, approver }: ChangeSet
           <strong>Зміна від: </strong>
           {createdBy.firstName} {createdBy.lastName}
         </p>
-        <Badge tone={tone}>{status}</Badge>
+        <Badge tone={tone}>{translate("CHANGE_STATUS", status)}</Badge>
       </div>
       <p className={styles.changeSetCardMetaField}>
         <strong>Дата внесення: </strong>
@@ -104,10 +105,11 @@ function ChangeSetCardSummary({ diff }: ChangeSetCardSummaryProps) {
   );
 }
 
-function AdminActions() {
+function AdminActions({ id }: { id: string }) {
   return (
     <div role="group" aria-label="Admin actions" className="adminActions">
       <Form method="post">
+        <input type="hidden" name="changeSetId" value={id} />
         <button type="submit" name="intent" value="reject" className="button button--primary button--critical">
           Відхилити
         </button>
@@ -164,7 +166,7 @@ function ChangeSetCardActions({ role, id, status, userId, approverId }: ChangeSe
   switch (role) {
     case "ADMIN":
       const isApprover = Boolean(approverId && approverId === userId);
-      return status === "ON_REVIEW" && isApprover && <AdminActions />;
+      return status === "ON_REVIEW" && isApprover && <AdminActions id={id} />;
 
     case "COMMITTER":
       return status === "DRAFT" ? <CommitterActions id={id} /> : null;

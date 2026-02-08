@@ -67,6 +67,28 @@ export async function assignApproverToChangeSet({ changeSetId, approverId }: Ass
   });
 }
 
+type RejectChangeSetParams = {
+  changeSetId: string;
+  decidedById: string;
+};
+
+export async function rejectChangeSet({
+  changeSetId,
+  decidedById,
+}: RejectChangeSetParams) {
+  return prisma.changeSet.update({
+    where: {
+      id: changeSetId,
+      approverId: decidedById,
+      status: "ON_REVIEW",
+    },
+    data: {
+      status: ChangeSetStatus.REJECTED,
+      decidedAt: new Date(),
+    },
+  });
+}
+
 // todo - get the snapshot
 // todo - change last change set draft by product
 // todo - getPOPULATEDCHANGESETS

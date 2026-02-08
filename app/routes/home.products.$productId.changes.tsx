@@ -1,7 +1,7 @@
 import { Outlet, useLoaderData } from "@remix-run/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
-import { assignApproverToChangeSet, getFilteredChangeSets, getFilteredChangeSetsByProduct } from "~/server/changes.server";
+import { assignApproverToChangeSet, getFilteredChangeSets, getFilteredChangeSetsByProduct, rejectChangeSet } from "~/server/changes.server";
 import { NormDiff } from "~/types";
 import ChangeSetList from "~/components/route_based/ChangeSetList";
 import { getUserId, requireUserRole } from "~/server/auth.server";
@@ -29,6 +29,18 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     return null;
     // return redirect(request.url);
   }
+  // todo validation!!!!!!
+  if (intent === "reject") {
+    const changeSetId = formData.get("changeSetId") as string;
+
+    await rejectChangeSet({
+      changeSetId,
+      decidedById: userId,
+    });
+    return null;
+
+    // return redirect(request.url);
+  }
   return null;
 };
 
@@ -45,7 +57,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     {
       productId: params.productId,
       status: {
-        in: ["DRAFT", "ON_REVIEW"],
+        in: ["DRAFT", "ON_REVIEW", "REJECTED"],
       },
     },
     { createdAt: "desc" },

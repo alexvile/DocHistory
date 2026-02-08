@@ -25,10 +25,10 @@ export default function ChangeStatusFilter({ searchParams, setSearchParams }: Pr
       <span className="visually-hidden">Статус змін</span>
       <select value={value} onChange={handleChange} className={styles.filterSelect} name="change_status">
         <option value="all">Усі</option>
-        <option value="DRAFT">Draft</option>
-        <option value="ON_REVIEW">On review</option>
-        <option value="APPROVED">Approved</option>
-        <option value="REJECTED">Rejected</option>
+        <option value="DRAFT">Чорновий</option>
+        <option value="ON_REVIEW">На розгляді</option>
+        <option value="APPROVED">Схвалено</option>
+        <option value="REJECTED">Відхилено</option>
       </select>
     </label>
   );
