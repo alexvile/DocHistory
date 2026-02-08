@@ -9,7 +9,7 @@ import { Pagination } from "~/components/common/Pagination";
 import productSortConfig from "./productSortConfig";
 
 export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
-  // const role = await requireUserRole(request);
+  const role = await requireUserRole(request);
 
   const url = new URL(request.url);
   const pageParam = url.searchParams.get("page") ?? "1";
@@ -43,7 +43,7 @@ export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) =>
   const toPagination = Math.min(skip + take, totalCount);
 
   const products = await getFilteredProducts(sortOptions, whereFilter, skip, take);
-  return { products, page, totalPages, totalCount, fromPagination, toPagination };
+  return { products, page, totalPages, totalCount, fromPagination, toPagination, role };
 };
 // todo - rewrite all to future responses
 
@@ -57,9 +57,11 @@ export default function Products() {
       <SortAndFilterBar sortConfig={productSortConfig} showQueryFilter={true} />
       <div className="products-all__top">
         <h2 className="products-all__title">Всі продукти</h2>
-        <Link to={"new"} className="link-unstyled button button--primary" aria-label="Додати продукт">
-          Додати
-        </Link>
+        {data?.role === "COMMITTER" && (
+          <Link to={"new"} className="link-unstyled button button--primary" aria-label="Додати продукт">
+            Додати
+          </Link>
+        )}
       </div>
 
       <div className="products-table__wrapper">

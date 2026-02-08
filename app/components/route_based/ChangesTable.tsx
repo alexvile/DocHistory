@@ -1,8 +1,9 @@
-import { formatDateForUA } from "~/utils/formatDateUA";
+import { formatDateShortUA } from "~/utils/formatDateUA";
 import Table from "../ui/Table";
 import { ChangeSetVM, ChangeVM } from "~/types";
 import translate from "~/utils/translate";
 import Status from "../ui/Status";
+import { Link } from "@remix-run/react";
 
 type ChangesTableProps = {
   changes: Pick<ChangeVM, "id" | "createdAt" | "status" | "product" | "createdBy" | "approver">[];
@@ -24,7 +25,9 @@ export default function ChangesTable({ changes }: ChangesTableProps) {
       {changes.map(({ id, createdAt, status, product, createdBy, approver }, index) => (
         <Table.Row key={id}>
           <Table.Cell>{index + 1}</Table.Cell>
-          <Table.Cell>{product.title}</Table.Cell>
+          <Table.Cell>
+            <Link className="link" to={`/home/products/${product.id}`}>{product.title}</Link>
+          </Table.Cell>
           <Table.Cell>
             <p className="tableChangeStatus">
               <Status tone={STATUS_TONE_MAP[status]} />
@@ -39,7 +42,7 @@ export default function ChangesTable({ changes }: ChangesTableProps) {
               ? `${shortenFirstName(approver.firstName)} ${approver.lastName}`
               : "—"}
           </Table.Cell>
-          <Table.Cell>{formatDateForUA(createdAt, { withYear: true })}</Table.Cell>
+          <Table.Cell>{formatDateShortUA(createdAt)}</Table.Cell>
         </Table.Row>
       ))}
     </Table>

@@ -2,6 +2,19 @@ type FormatDateOptions = {
   withYear?: boolean;
 };
 
+
+export function formatDateShortUA(date: string | Date): string {
+  const parsed = new Date(date);
+
+  return new Intl.DateTimeFormat("uk-UA", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(parsed);
+}
+
 export function formatDateForUA(
   date: string | Date,
   { withYear = false }: FormatDateOptions = {}
