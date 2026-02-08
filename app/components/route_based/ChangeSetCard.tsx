@@ -11,7 +11,7 @@ import { useState } from "react";
 import { Form } from "@remix-run/react";
 import translate from "~/utils/translate";
 
-type ChangeSetCardMetaProps = Pick<ChangeSetVM, "createdBy" | "approver" | "createdAt" | "status">;
+type ChangeSetCardMetaProps = Pick<ChangeSetVM, "createdBy" | "approver" | "createdAt" | "status" | "decidedAt">;
 
 const STATUS_TONE_MAP: Record<ChangeSetVM["status"], "green" | "yellow" | "blue" | "red"> = {
   DRAFT: "yellow",
@@ -20,7 +20,7 @@ const STATUS_TONE_MAP: Record<ChangeSetVM["status"], "green" | "yellow" | "blue"
   REJECTED: "red",
 };
 
-function ChangeSetCardMeta({ createdBy, createdAt, status, approver }: ChangeSetCardMetaProps) {
+function ChangeSetCardMeta({ createdBy, createdAt, status, approver, decidedAt }: ChangeSetCardMetaProps) {
   const tone = STATUS_TONE_MAP[status];
   return (
     <div className={styles.changeSetCardMetaContainer}>
@@ -39,6 +39,12 @@ function ChangeSetCardMeta({ createdBy, createdAt, status, approver }: ChangeSet
         <p className={styles.changeSetCardMetaField}>
           <strong>На розгляді: </strong>
           {approver.firstName} {approver.lastName}
+        </p>
+      )}
+      {(status === "APPROVED" || status === "REJECTED") && decidedAt && (
+        <p className={styles.changeSetCardMetaField}>
+          <strong>Рішення прийнято: </strong>
+          {formatDateForUA(decidedAt, { withYear: true })}
         </p>
       )}
     </div>
@@ -181,10 +187,21 @@ type ChangeSetCardProps = ChangeSetVM & {
   role: UserRoleVM;
   userId: string;
 };
-export default function ChangeSetCard({ id, status, createdAt, diff, createdBy, role, approver, approverId, userId }: ChangeSetCardProps) {
+export default function ChangeSetCard({
+  id,
+  status,
+  createdAt,
+  diff,
+  createdBy,
+  role,
+  approver,
+  approverId,
+  userId,
+  decidedAt,
+}: ChangeSetCardProps) {
   return (
     <div className={styles.container}>
-      <ChangeSetCardMeta createdBy={createdBy} createdAt={createdAt} status={status} approver={approver} />
+      <ChangeSetCardMeta createdBy={createdBy} createdAt={createdAt} status={status} approver={approver} decidedAt={decidedAt} />
       <ChangeSetCardSummary diff={diff} />
       <ChangeSetCardActions role={role} id={id} status={status} userId={userId} approverId={approverId} />
     </div>

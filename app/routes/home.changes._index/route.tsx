@@ -75,6 +75,7 @@ export default function Changes() {
         showChangeStatusFilter={true}
         showMyFilter={data.role === "ADMIN" || data.role === "COMMITTER"}
         showProductSelect={true}
+        showCalendar={true}
       />
       <div>
         <ChangesTable changes={data?.changes} />

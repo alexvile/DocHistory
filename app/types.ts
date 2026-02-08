@@ -149,11 +149,11 @@ export type ChangeVM = Pick<ChangeSet, "id" | "status" | "createdAt"> & {
 };
 
 // for set and individual view
-export type ChangeSetVM = Pick<ChangeSet, "id" | "status" | "approverId"> & {
+export type ChangeSetVM = Pick<ChangeSet, "id" | "status" | "approverId" | "decidedAt"> & {
   createdAt: string;
   diff: NormDiff;
   createdBy: Pick<User, "firstName" | "lastName">;
-  approver: Pick<User, "firstName" | "lastName">;
+  approver: Pick<User, "firstName" | "lastName"> | null;
 };
 
 // sort and filterbar
@@ -181,6 +181,7 @@ export type SortAndFilterBarProps = {
   showMyFilter?: boolean;
   showLimit?: boolean;
   showProductSelect?: boolean;
+  showCalendar?: boolean;
 };
 
 export type FilterOption = {

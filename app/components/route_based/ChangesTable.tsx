@@ -20,7 +20,7 @@ const STATUS_TONE_MAP: Record<ChangeSetVM["status"], "green" | "yellow" | "blue"
 
 export default function ChangesTable({ changes }: ChangesTableProps) {
   return (
-    <Table headings={["№", "Продукт", "Статус", "Створено", "На розгляді", "Дата"]}>
+    <Table headings={["№", "Продукт", "Статус", "Створено", "Відповідальний", "Дата"]}>
       {changes.map(({ id, createdAt, status, product, createdBy, approver }, index) => (
         <Table.Row key={id}>
           <Table.Cell>{index + 1}</Table.Cell>
@@ -35,7 +35,9 @@ export default function ChangesTable({ changes }: ChangesTableProps) {
             {shortenFirstName(createdBy.firstName)} {createdBy.lastName}
           </Table.Cell>
           <Table.Cell>
-            {status === "ON_REVIEW" && approver ? `${shortenFirstName(approver.firstName)} ${approver.lastName}` : "—"}
+            {(status === "ON_REVIEW" || status === "REJECTED") && approver
+              ? `${shortenFirstName(approver.firstName)} ${approver.lastName}`
+              : "—"}
           </Table.Cell>
           <Table.Cell>{formatDateForUA(createdAt, { withYear: true })}</Table.Cell>
         </Table.Row>

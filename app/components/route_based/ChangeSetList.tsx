@@ -10,9 +10,9 @@ type ChangeSetListProps = {
 export default function ChangeSetList({ changes, role, userId }: ChangeSetListProps) {
   return (
     <ul className="list-unstyled">
-      {changes.map(({ id, status, createdAt, diff, createdBy, approver, approverId }) => (
+      {changes.map(({ id, status, createdAt, diff, createdBy, approver, approverId, decidedAt }) => (
         <li key={id}>
-          <ChangeSetCard {...{ id, status, createdAt, diff, createdBy, role, approver, userId, approverId }} />
+          <ChangeSetCard {...{ id, status, createdAt, diff, createdBy, role, approver, userId, approverId, decidedAt }} />
         </li>
       ))}
     </ul>

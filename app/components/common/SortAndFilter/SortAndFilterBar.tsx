@@ -13,7 +13,8 @@ export function SortAndFilterBar({
   showQueryFilter = false,
   showLimit = true,
   showMyFilter = false,
-  showProductSelect = false
+  showProductSelect = false,
+  showCalendar = false,
 }: SortAndFilterBarProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const hasActiveFilters =
@@ -34,7 +35,8 @@ export function SortAndFilterBar({
       {sortConfig && <SortBox searchParams={searchParams} setSearchParams={setSearchParams} config={sortConfig} />}
       {showQueryFilter && <FilterBox searchParams={searchParams} setSearchParams={setSearchParams} />}
       {showChangeStatusFilter && <ChangeStatusFilter searchParams={searchParams} setSearchParams={setSearchParams} />}
-      {showProductSelect && 'productselect'}
+      {showProductSelect && "productselect"}{" "}
+      {showCalendar && "calendar"}
       {showMyFilter && <MyChangesFilter searchParams={searchParams} setSearchParams={setSearchParams} />}
       {showLimit && <LimitSelect searchParams={searchParams} setSearchParams={setSearchParams} />}
       {hasActiveFilters && (
