@@ -146,10 +146,11 @@ export type ChangeVM = Pick<ChangeSet, "id" | "status"> & {
   createdBy: Pick<User, "firstName" | "lastName">;
 };
 
-export type ChangeSetVM = Pick<ChangeSet, "id" | "status"> & {
+export type ChangeSetVM = Pick<ChangeSet, "id" | "status" | "approverId"> & {
   createdAt: string;
   diff: NormDiff;
   createdBy: Pick<User, "firstName" | "lastName">;
+  approver: Pick<User, "firstName" | "lastName">;
 };
 
 // sort and filterbar

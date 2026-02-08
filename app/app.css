@@ -168,30 +168,51 @@ footer {
   cursor: pointer;
   border: none;
 }
+
 .button.button--secondary {
   color: #303030;
   background-color: #fff;
   box-shadow: 0rem -0.0625rem 0rem 0rem #b5b5b5 inset, 0rem 0rem 0rem 0.0625rem rgba(0, 0, 0, 0.1) inset,
     0rem 0.03125rem 0rem 0.09375rem #fff inset;
 }
+
 .button.button--secondary:hover {
   background-color: #fafafa;
 }
+
 .button.button--secondary:active {
   box-shadow: -0.0625rem 0rem 0.0625rem 0rem rgba(26, 26, 26, 0.122) inset, 0.0625rem 0rem 0.0625rem 0rem rgba(26, 26, 26, 0.122) inset,
     0rem 0.125rem 0.0625rem 0rem rgba(26, 26, 26, 0.2) inset;
 }
+
 .button.button--primary {
   background-color: rgb(48, 48, 48);
   color: #fff;
 }
+
 .button.button--primary:hover {
   background-color: rgba(26, 26, 26, 1);
 }
+
+.button.button--primary.button--critical {
+  background-color: rgba(199, 10, 36, 1);
+  &:hover {
+    background-color: rgba(163, 10, 36, 1);
+  }
+  &:active {
+    background-color: rgba(142, 11, 31, 1);
+  }
+}
+
 .button.button--primary:disabled,
 .button.button--secondary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.button:focus-visible {
+  outline-offset: 1px;
+  outline: 2px solid #005bd3;
 }
 
 /* buttons ends */
@@ -298,4 +319,10 @@ footer {
 .commiterActions-buttons {
   column-gap: 12px;
   display: flex;
+}
+.adminActions {
+  display: flex;
+  justify-content: flex-end;
+  column-gap: 12px;
+  margin-top: 12px;
 }

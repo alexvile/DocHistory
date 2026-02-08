@@ -14,6 +14,10 @@
   justify-content: space-between;
 }
 
+.changeSetCardMetaTop > p {
+  margin: 0;
+}
+
 .changeSetCardMetaField {
   margin-block: 4px;
 }

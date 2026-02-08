@@ -69,6 +69,7 @@ export async function assignApproverToChangeSet({ changeSetId, approverId }: Ass
 
 // todo - get the snapshot
 // todo - change last change set draft by product
+// todo - getPOPULATEDCHANGESETS
 
 export const getFilteredChangeSets = async (
   where: Prisma.ChangeSetWhereInput,
@@ -88,6 +89,12 @@ export const getFilteredChangeSets = async (
           lastName: true,
         },
       },
+      approver: {
+        select: {
+          firstName: true,
+          lastName: true,
+        }
+      }
     },
   });
 };

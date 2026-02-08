@@ -7,10 +7,10 @@ import NormsTable from "../NormsTable";
 import NormsTableWithChanges from "../NormsTableWithChanges";
 import { Icon } from "../ui/Icon";
 import { ApproverCombobox } from "./ApproverCombobox";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Form } from "@remix-run/react";
 
-type ChangeSetCardMetaProps = Pick<ChangeSetVM, "createdBy" | "createdAt" | "status">;
+type ChangeSetCardMetaProps = Pick<ChangeSetVM, "createdBy" | "approver" | "createdAt" | "status">;
 
 const STATUS_TONE_MAP: Record<ChangeSetVM["status"], "green" | "yellow" | "blue" | "red"> = {
   DRAFT: "yellow",
@@ -19,19 +19,27 @@ const STATUS_TONE_MAP: Record<ChangeSetVM["status"], "green" | "yellow" | "blue"
   REJECTED: "red",
 };
 
-function ChangeSetCardMeta({ createdBy, createdAt, status }: ChangeSetCardMetaProps) {
+function ChangeSetCardMeta({ createdBy, createdAt, status, approver }: ChangeSetCardMetaProps) {
   const tone = STATUS_TONE_MAP[status];
   return (
     <div className={styles.changeSetCardMetaContainer}>
       <div className={styles.changeSetCardMetaTop}>
-        <p className={styles.changeSetCardMetaField}>
-          <strong>Зміна від:</strong> {createdBy.firstName} {createdBy.lastName}
+        <p>
+          <strong>Зміна від: </strong>
+          {createdBy.firstName} {createdBy.lastName}
         </p>
         <Badge tone={tone}>{status}</Badge>
       </div>
       <p className={styles.changeSetCardMetaField}>
-        <strong>Дата внесення:</strong> {formatDateForUA(createdAt, { withYear: true })}
+        <strong>Дата внесення: </strong>
+        {formatDateForUA(createdAt, { withYear: true })}
       </p>
+      {approver && status === "ON_REVIEW" && (
+        <p className={styles.changeSetCardMetaField}>
+          <strong>На розгляді: </strong>
+          {approver.firstName} {approver.lastName}
+        </p>
+      )}
     </div>
   );
 }
@@ -98,14 +106,17 @@ function ChangeSetCardSummary({ diff }: ChangeSetCardSummaryProps) {
 
 function AdminActions() {
   return (
-    <div role="group" aria-label="Admin actions">
-      <button type="button">Approve</button>
-
-      <button type="button">Reject</button>
-
-      <button type="button" aria-label="Delete change set">
-        🗑
-      </button>
+    <div role="group" aria-label="Admin actions" className="adminActions">
+      <Form method="post">
+        <button type="submit" name="intent" value="reject" className="button button--primary button--critical">
+          Відхилити
+        </button>
+      </Form>
+      <Form method="post">
+        <button type="submit" name="intent" value="approve" className="button button--primary">
+          Прийняти
+        </button>
+      </Form>
     </div>
   );
 }
@@ -140,16 +151,20 @@ function CommitterActions({ id }: { id: string }) {
 function ViewerActions() {
   return <div role="group" aria-label="Admin actions"></div>;
 }
+
 type ChangeSetCardActionsProps = {
   role: UserRoleVM;
   id: string;
   status: ChangeSetVM["status"];
+  userId: string;
+  approverId: ChangeSetVM["approverId"];
 };
 
-function ChangeSetCardActions({ role, id, status }: ChangeSetCardActionsProps) {
+function ChangeSetCardActions({ role, id, status, userId, approverId }: ChangeSetCardActionsProps) {
   switch (role) {
     case "ADMIN":
-      return <AdminActions />;
+      const isApprover = Boolean(approverId && approverId === userId);
+      return status === "ON_REVIEW" && isApprover && <AdminActions />;
 
     case "COMMITTER":
       return status === "DRAFT" ? <CommitterActions id={id} /> : null;
@@ -162,13 +177,14 @@ function ChangeSetCardActions({ role, id, status }: ChangeSetCardActionsProps) {
 
 type ChangeSetCardProps = ChangeSetVM & {
   role: UserRoleVM;
+  userId: string;
 };
-export default function ChangeSetCard({ id, status, createdAt, diff, createdBy, role }: ChangeSetCardProps) {
+export default function ChangeSetCard({ id, status, createdAt, diff, createdBy, role, approver, approverId, userId }: ChangeSetCardProps) {
   return (
     <div className={styles.container}>
-      <ChangeSetCardMeta createdBy={createdBy} createdAt={createdAt} status={status} />
+      <ChangeSetCardMeta createdBy={createdBy} createdAt={createdAt} status={status} approver={approver} />
       <ChangeSetCardSummary diff={diff} />
-      <ChangeSetCardActions role={role} id={id} status={status} />
+      <ChangeSetCardActions role={role} id={id} status={status} userId={userId} approverId={approverId} />
     </div>
   );
 }
