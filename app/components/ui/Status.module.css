@@ -1,0 +1,26 @@
+.status {
+  width: 9px;
+  height: 9px;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.default {
+  background-color: #e5e7eb;
+}
+
+.yellow {
+  background-color: #f2c94c;
+}
+
+.red {
+  background-color: #eb5757;
+}
+
+.green {
+  background-color: #27ae60;
+}
+
+.blue {
+  background-color: #2f80ed;
+}

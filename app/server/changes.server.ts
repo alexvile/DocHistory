@@ -91,7 +91,7 @@ export async function rejectChangeSet({
 
 // todo - get the snapshot
 // todo - change last change set draft by product
-// todo - getPOPULATEDCHANGESETS
+// todo - getPopulated for superficial and deep data
 
 export const getFilteredChangeSets = async (
   where: Prisma.ChangeSetWhereInput,
@@ -110,6 +110,12 @@ export const getFilteredChangeSets = async (
           firstName: true,
           lastName: true,
         },
+      },
+      product: {
+        select: {
+          id: true,
+          title: true
+        }
       },
       approver: {
         select: {

@@ -141,11 +141,14 @@ export type NormDiff = {
   }[];
 };
 
-export type ChangeVM = Pick<ChangeSet, "id" | "status"> & {
-  createdAt: string;
+// for table
+export type ChangeVM = Pick<ChangeSet, "id" | "status" | "createdAt"> & {
   createdBy: Pick<User, "firstName" | "lastName">;
+  product: Pick<Product, "id" | "title">;
+  approver: Pick<User, "firstName" | "lastName">;
 };
 
+// for set and individual view
 export type ChangeSetVM = Pick<ChangeSet, "id" | "status" | "approverId"> & {
   createdAt: string;
   diff: NormDiff;
@@ -177,6 +180,7 @@ export type SortAndFilterBarProps = {
   showQueryFilter?: boolean;
   showMyFilter?: boolean;
   showLimit?: boolean;
+  showProductSelect?: boolean;
 };
 
 export type FilterOption = {

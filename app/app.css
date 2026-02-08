@@ -326,3 +326,12 @@ footer {
   column-gap: 12px;
   margin-top: 12px;
 }
+
+
+
+.tableChangeStatus {
+  margin: 0;
+  span {
+    margin-inline-end: 4px;
+  }
+}

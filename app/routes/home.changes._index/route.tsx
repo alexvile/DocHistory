@@ -74,6 +74,7 @@ export default function Changes() {
         sortConfig={changesSortConfig}
         showChangeStatusFilter={true}
         showMyFilter={data.role === "ADMIN" || data.role === "COMMITTER"}
+        showProductSelect={true}
       />
       <div>
         <ChangesTable changes={data?.changes} />
