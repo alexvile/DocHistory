@@ -1,5 +1,4 @@
 import { SortBoxProps } from "~/types";
-import styles from "./SortAndFilterBar.module.css";
 
 export function SortBox({ searchParams, setSearchParams, config }: SortBoxProps) {
   const sort = searchParams.get("sort") ?? "title";

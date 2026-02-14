@@ -1,5 +1,3 @@
-import styles from "./SortAndFilterBar.module.css";
-
 type Props = {
   searchParams: URLSearchParams;
   setSearchParams: (next: URLSearchParams) => void;

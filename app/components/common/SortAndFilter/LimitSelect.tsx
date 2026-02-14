@@ -1,5 +1,3 @@
-import styles from "./SortAndFilterBar.module.css";
-
 export function LimitSelect({
   searchParams,
   setSearchParams,

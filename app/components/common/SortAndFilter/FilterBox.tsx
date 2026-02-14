@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import styles from "./SortAndFilterBar.module.css";
 
 export function FilterBox({
   searchParams,
