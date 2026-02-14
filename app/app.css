@@ -50,19 +50,7 @@ footer {
   text-align: center;
 }
 
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* reset starts */
+/* RESET starts */
 .link-unstyled {
   text-decoration: none;
 }
@@ -72,96 +60,43 @@ footer {
   padding: 0;
   list-style: none;
 }
-/* reset ends */
-.bold {
-  font-weight: 700;
+/* RESET ends */
+
+
+
+/*** base components ***/
+/* Inputs and selects */
+.p-input,
+.p-select {
+  padding: 6px 12px;
+  border: 1px solid #ababab;
+  font-size: 13px;
+  background-color: #fff;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  border-radius: 4px;
 }
-.disabled {
-  pointer-events: none;
-  opacity: 0.4;
-  cursor: default;
+
+.p-input:hover,
+.p-input:focus,
+.p-select:hover,
+.p-select:focus {
+  border-color: #000;
+  background-color: #fafafa;
 }
-/* form */
-.form__field:not(:last-child) {
-  margin-bottom: 12px;
+
+.p-input:focus-visible,
+.p-select:focus-visible {
+  outline-offset: 1px;
+  outline: 2px solid #005bd3;
 }
-.form__field label {
+
+.p-label {
+  font-size: 14px;
   display: block;
-}
-.form {
-  width: fit-content;
-  min-width: 340px;
-}
-
-/* base elements starts */
-.input,
-.select {
-  padding: 6px 8px 6px 12px;
-  width: 100%;
-}
-.select {
-  border-radius: 6px;
-}
-/* base elements ends */
-
-/* modal */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-/* General popup */
-.popup {
-  position: relative;
-}
-.popup__close {
-  /* position: absolute; */
-  top: 0;
-  right: 0;
-}
-/* element popup */
-.new-element__list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-/* new element */
-
-.new-element__button {
-  display: flex;
-  align-items: center;
-  column-gap: 6px;
-  background-color: transparent;
-  padding: 6px 4px;
-  width: 100%;
-  border-radius: 8px;
-  cursor: pointer;
-  border: none;
-  font-size: 16px;
-}
-.new-element__button:hover {
-  background-color: #f1f1f1;
-}
-.new-element__list li:not(:last-child) {
   margin-bottom: 4px;
 }
 
-/* buttons starts */
+/* Buttons */
 .button {
   padding: 6px 12px;
   border-radius: 8px;
@@ -215,8 +150,7 @@ footer {
   outline: 2px solid #005bd3;
 }
 
-/* buttons ends */
-/* links starts */
+/* Links */
 /* todo - add visited and other statuses */
 .link {
   font-size: 1rem;
@@ -238,6 +172,80 @@ footer {
 }
 
 /* links ends */
+
+/*** Utils ***/
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.4;
+  cursor: default;
+}
+
+
+
+/* form */
+.form__field:not(:last-child) {
+  margin-bottom: 12px;
+}
+.form__field label {
+  display: block;
+}
+.form {
+  width: fit-content;
+  min-width: 340px;
+}
+
+
+/* modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* General popup */
+.popup {
+  position: relative;
+}
+.popup__close {
+  /* position: absolute; */
+  top: 0;
+  right: 0;
+}
+
+
+
+
+
 
 /* top bar in dashboard */
 .dashboard-topbar {

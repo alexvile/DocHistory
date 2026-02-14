@@ -62,7 +62,7 @@ export default function Register() {
         <div className="form__field">
           {/* todo - only superadmin can create ADMIN */}
           <label htmlFor="role">Роль</label>
-          <select className="select" name="role" id="role">
+          <select className="p-select" name="role" id="role">
             {Object.values(Role).map((role) => (
               <option key={role} value={role}>
                 {translate("ROLES", role)}

@@ -1,5 +1,3 @@
-import styles from "./TextField.module.css";
-
 type TextFieldProps = {
   name: string;
   label?: string;
@@ -12,9 +10,9 @@ type TextFieldProps = {
 
 export default function TextField({ name, label, placeholder, isRequired, minLength, autoComplete, type = "text" }: TextFieldProps) {
   return (
-    <label className={styles.field}>
+    <label className="">
       {label && (
-        <span className={styles.label}>
+        <span className="p-label">
           {label}
           {isRequired && <span aria-hidden="true">*</span>}
         </span>
@@ -22,7 +20,7 @@ export default function TextField({ name, label, placeholder, isRequired, minLen
 
       <input
         type={type}
-        className={styles.input}
+        className="p-input"
         name={name}
         placeholder={placeholder}
         required={isRequired || undefined}

@@ -15,7 +15,7 @@ export function SortBox({ searchParams, setSearchParams, config }: SortBoxProps)
   return (
     <label>
       <span className="visually-hidden">Сортування</span>
-      <select value={`${sort}:${dir}`} onChange={handleChange} className={styles.sortBox} name="sort">
+      <select value={`${sort}:${dir}`} onChange={handleChange} className="p-select" name="sort">
         {config.options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

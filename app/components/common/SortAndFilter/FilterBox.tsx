@@ -43,7 +43,7 @@ export function FilterBox({
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         placeholder="Пошук за назвою"
-        className={styles.filterBox}
+        className="p-input"
       />
     </label>
   );

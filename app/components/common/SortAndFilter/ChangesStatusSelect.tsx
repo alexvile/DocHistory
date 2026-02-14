@@ -23,7 +23,7 @@ export default function ChangeStatusFilter({ searchParams, setSearchParams }: Pr
   return (
     <label>
       <span className="visually-hidden">Статус змін</span>
-      <select value={value} onChange={handleChange} className={styles.filterSelect} name="change_status">
+      <select value={value} onChange={handleChange} className="p-select" name="change_status">
         <option value="all">Усі</option>
         <option value="DRAFT">Чорновий</option>
         <option value="ON_REVIEW">На розгляді</option>

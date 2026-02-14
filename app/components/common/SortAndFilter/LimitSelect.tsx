@@ -18,7 +18,7 @@ export function LimitSelect({
   return (
     <label>
       <span className="visually-hidden">Кількість</span>
-      <select value={limit} onChange={handleChange} className={styles.limitSelect} name="limit">
+      <select value={limit} onChange={handleChange} className="p-select" name="limit">
         <option value="5">5</option>
         <option value="10">10</option>
         <option value="20">20</option>
