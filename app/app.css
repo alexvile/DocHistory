@@ -60,6 +60,12 @@ footer {
   padding: 0;
   list-style: none;
 }
+
+fieldset {
+  padding: 0;
+  margin: 0;
+  border: none;
+}
 /* RESET ends */
 
 

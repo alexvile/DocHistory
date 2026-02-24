@@ -28,11 +28,25 @@ export const loader: LoaderFunction = async ({ request }) => {
   const productId = url.searchParams.get("productId"); // з комбобокса
   const statusParam = url.searchParams.get("status"); // DRAFT | APPROVED | REJECTED
   const myOnly = url.searchParams.get("my") === "1";
+  const fromParam = url.searchParams.get("from");
+  const toParam = url.searchParams.get("to");
 
+  let createdAtFilter: Prisma.DateTimeFilter | undefined;
+
+  if (fromParam || toParam) {
+    createdAtFilter = {
+      ...(fromParam && { gte: new Date(fromParam) }),
+      ...(toParam && {
+        // щоб включити весь день "to"
+        lte: new Date(new Date(toParam).setHours(23, 59, 59, 999)),
+      }),
+    };
+  }
   // where формується динамічно
   const where: Prisma.ChangeSetWhereInput = {
     ...(productId && { productId }),
     ...(statusParam && { status: statusParam as ChangeSetStatus }),
+     ...(createdAtFilter && { createdAt: createdAtFilter }),
   };
 
   if (myOnly) {
