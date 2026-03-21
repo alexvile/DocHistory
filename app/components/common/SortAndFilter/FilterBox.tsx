@@ -38,7 +38,7 @@ export function FilterBox({
       <span className="visually-hidden">Пошук</span>
       <input
         name="q"
-        type="text"
+        type="search"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         placeholder="Пошук за назвою"

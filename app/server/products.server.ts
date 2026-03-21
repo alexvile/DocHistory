@@ -66,13 +66,18 @@ export const getTotalProductsCount = async (whereFilter: Prisma.ProductWhereInpu
   return await prisma.product.count({ where: whereFilter });
 };
 
-
+export const getAllProducts = async () => {
+  return await prisma.product.findMany({
+    select: { id: true, title: true },
+    take: 300,
+  });
+};
 
 export const getFilteredProducts = async (
   sortFilter: Prisma.ProductOrderByWithRelationInput,
   whereFilter: Prisma.ProductWhereInput,
   skip: number,
-  take: number
+  take: number,
 ) => {
   return await prisma.product.findMany({
     orderBy: {
@@ -224,4 +229,31 @@ export const updateNormById = async ({ id, productName, norm1, norm2 }) => {
 //     },
 //     changes,
 //   },
+// });
+
+// await prisma.$transaction(async (tx) => {
+//   await tx.changeSet.update({
+//     where: { id: changeSetId },
+//     data: {
+//       status: "APPROVED",
+//       decidedAt: new Date(),
+//     },
+//   });
+
+//   await tx.normSnapshot.update({
+//     where: { id: oldSnapshotId },
+//     data: { status: "ARCHIVED" },
+//   });
+
+//   await tx.normSnapshot.update({
+//     where: { id: newSnapshotId },
+//     data: { status: "BASELINE" },
+//   });
+
+//   await tx.product.update({
+//     where: { id: productId },
+//     data: {
+//       currentSnapshotId: newSnapshotId,
+//     },
+//   });
 // });

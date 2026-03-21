@@ -1,58 +1,105 @@
-import { isRouteErrorResponse, useLoaderData, useRouteError } from "@remix-run/react";
+import { isRouteErrorResponse, Outlet, useLoaderData, useRouteError } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import BackLink from "~/components/common/BackLink";
-import { getChangebyId } from "~/server/changes.server";
+import { getPopulatedChangeSetById } from "~/server/changes.server";
 import { formatDateForUA } from "~/utils/formatDateUA";
+import ChangeSetCard from "~/components/route_based/ChangeSetCard";
+import { getUserId, requireUserRole } from "~/server/auth.server";
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+
+
+export const action = async ({ params, request }: ActionFunctionArgs) => {
+  // invariant(params.productId, "Missing contactId param");
+  const userId = await getUserId(request);
+
+  const formData = await request.formData();
+  const intent = formData.get("intent");
+  console.log(intent);
+
+  if (intent === "assign-approver") {
+    const changeSetId = formData.get("changeSetId");
+    const approverId = formData.get("approverId");
+
+    if (!changeSetId || !approverId) return null;
+    if (typeof changeSetId !== "string" || typeof approverId !== "string") return null;
+
+    await assignApproverToChangeSet({
+      changeSetId,
+      approverId,
+    });
+
+    return null;
+    // return redirect(request.url);
+  }
+  // todo validation!!!!!!
+  if (intent === "reject") {
+    const changeSetId = formData.get("changeSetId") as string;
+
+    await rejectChangeSet({
+      changeSetId,
+      decidedById: userId,
+    });
+    return null;
+
+    // return redirect(request.url);
+  }
+  return null;
+};
+
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   invariant(params.changeId, "Missing productId param");
-  const change = await getChangebyId(params.changeId);
-  if (!change) {
+
+  // todo optimize
+
+  const role = await requireUserRole(request);
+  const userId = await getUserId(request);
+
+  const changeSet = await getPopulatedChangeSetById(params.changeId);
+  if (!changeSet) {
     throw new Response(null, {
       status: 404,
       statusText: "Not Found",
     });
   }
-  return change;
+  return { role, userId, changeSet };
 };
 
-export function ErrorBoundary() {
-  const error = useRouteError();
-  if (isRouteErrorResponse(error)) {
-    if (error.status === 404) {
-      return <p>Зміну не знайдено (404)</p>;
-    }
+// export function ErrorBoundary() {
+//   const error = useRouteError();
+//   if (isRouteErrorResponse(error)) {
+//     if (error.status === 404) {
+//       return <p>Зміну не знайдено (404)</p>;
+//     }
 
-    return (
-      <div>
-        <h1>Помилка: {error.status}</h1>
-        <p>{error.statusText}</p>
-      </div>
-    );
-  }
+//     return (
+//       <div>
+//         <h1>Помилка: {error.status}</h1>
+//         <p>{error.statusText}</p>
+//       </div>
+//     );
+//   }
 
-  return <p>Щось пішло не так</p>;
-}
+//   return <p>Щось пішло не так</p>;
+// }
 
-export default function ChangeItem() {
-  const change = useLoaderData<typeof loader>();
+export default function ChangeSet() {
+  const { role, userId, changeSet } = useLoaderData();
+  const { id, status, createdAt, diff, createdBy, approver, approverId, decidedAt } = changeSet;
   return (
     <>
-      <div className="dashboard-topbar">
-        <BackLink />
-        <h3 className="change__page-title">Продукт: {change?.product?.productTitle}</h3>
-      </div>
-      <p className="change__meta change-meta">
-        Змінено: <time dateTime={change?.createdAt}>{formatDateForUA(change?.createdAt)}</time>
-        <span aria-hidden="true" className="change-meta__divider">|</span>
-        Виконавець:{" "}
-        <span className="author">
-          {change?.creator?.firstName} {change?.creator?.lastName}
-        </span>
-      </p>
       <div>
-        <ChangeList diff={change?.diff} />
+        {/* <h1>Product {productId}</h1> */}
+        <div className="dashboard-topbar">
+          <BackLink />
+          <h3 className="1product-details__title">
+            Зміна....від такого
+            {/* {loaderData.product.title}
+              <LastChanged date={loaderData.product.updatedAt} /> */}
+          </h3>
+        </div>
+        <ChangeSetCard {...{ id, status, createdAt, diff, createdBy, role, approver, userId, approverId, decidedAt }} />
+        <Outlet />
       </div>
     </>
   );

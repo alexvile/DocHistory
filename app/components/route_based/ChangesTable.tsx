@@ -21,12 +21,14 @@ const STATUS_TONE_MAP: Record<ChangeSetVM["status"], "green" | "yellow" | "blue"
 
 export default function ChangesTable({ changes }: ChangesTableProps) {
   return (
-    <Table headings={["№", "Продукт", "Статус", "Створено", "Відповідальний", "Дата"]}>
+    <Table headings={["№", "Продукт", "Статус", "Створено", "Відповідальний", "Дата", ""]}>
       {changes.map(({ id, createdAt, status, product, createdBy, approver }, index) => (
         <Table.Row key={id}>
           <Table.Cell>{index + 1}</Table.Cell>
           <Table.Cell>
-            <Link className="link" to={`/home/products/${product.id}`}>{product.title}</Link>
+            <Link className="link" to={`/home/products/${product.id}`}>
+              {product.title}
+            </Link>
           </Table.Cell>
           <Table.Cell>
             <p className="tableChangeStatus">
@@ -43,6 +45,11 @@ export default function ChangesTable({ changes }: ChangesTableProps) {
               : "—"}
           </Table.Cell>
           <Table.Cell>{formatDateShortUA(createdAt)}</Table.Cell>
+          <Table.Cell>
+            <Link className="link" to={`/home/changes/${id}`}>
+              перейти
+            </Link>
+          </Table.Cell>
         </Table.Row>
       ))}
     </Table>

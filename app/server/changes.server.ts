@@ -126,3 +126,30 @@ export const getFilteredChangeSets = async (
     },
   });
 };
+
+
+export const getPopulatedChangeSetById = async (id: string) => {
+  return prisma.changeSet.findUnique({
+    where: { id },
+    include: {
+      createdBy: {
+        select: {
+          firstName: true,
+          lastName: true,
+        },
+      },
+      product: {
+        select: {
+          id: true,
+          title: true,
+        },
+      },
+      approver: {
+        select: {
+          firstName: true,
+          lastName: true,
+        },
+      },
+    },
+  });
+};

@@ -7,6 +7,7 @@ import { SortAndFilterBarProps } from "~/types";
 import ChangeStatusFilter from "./ChangesStatusSelect";
 import MyChangesFilter from "./MyChangesFilter";
 import { DateRange } from "./DateRange";
+import ComboBox from "./Combobox";
 
 export function SortAndFilterBar({
   sortConfig,
@@ -14,7 +15,7 @@ export function SortAndFilterBar({
   showQueryFilter = false,
   showLimit = true,
   showMyFilter = false,
-  showProductSelect = false,
+  productOptions,
   showCalendar = false,
 }: SortAndFilterBarProps) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -36,7 +37,8 @@ export function SortAndFilterBar({
       {sortConfig && <SortBox searchParams={searchParams} setSearchParams={setSearchParams} config={sortConfig} />}
       {showQueryFilter && <FilterBox searchParams={searchParams} setSearchParams={setSearchParams} />}
       {showChangeStatusFilter && <ChangeStatusFilter searchParams={searchParams} setSearchParams={setSearchParams} />}
-      {showProductSelect && "productselect"} {showCalendar && <DateRange searchParams={searchParams} setSearchParams={setSearchParams} />}
+      {productOptions?.length ? <ComboBox searchParams={searchParams} setSearchParams={setSearchParams} name="productId" options={productOptions} placeholder="Оберіть продукт" /> : null}
+      {showCalendar && <DateRange searchParams={searchParams} setSearchParams={setSearchParams} />}
       {showMyFilter && <MyChangesFilter searchParams={searchParams} setSearchParams={setSearchParams} />}
       {showLimit && <LimitSelect searchParams={searchParams} setSearchParams={setSearchParams} />}
       {hasActiveFilters && (

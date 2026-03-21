@@ -7,12 +7,15 @@ import { Pagination } from "~/components/common/Pagination";
 import ChangesTable from "~/components/route_based/ChangesTable";
 import { getFilteredChangeSets, getTotalChangesCount } from "~/server/changes.server";
 import changesSortConfig from "./changesSortConfig";
+import { getAllProducts } from "~/server/products.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const role = await requireUserRole(request);
   const userId = await getUserId(request);
 
   const url = new URL(request.url);
+  // todo - can be optimized in future
+  const products = await getAllProducts();
 
   const page = Math.max(1, Number(url.searchParams.get("page") ?? 1));
   const take = Math.max(1, Number(url.searchParams.get("limit") ?? 10));
@@ -66,6 +69,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const changes = await getFilteredChangeSets(where, orderBy, skip, take);
 
   return {
+    products,
     changes,
     page,
     totalPages,
@@ -82,13 +86,19 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Changes() {
   const data = useLoaderData<typeof loader>();
+  console.log(111, data);
+//   const products = Array.from({ length: 200 }, (_, i) => ({
+//   id: i + 1,
+//   title: `Product ${i + 1}`,
+// }));
   return (
     <>
+    get all product list!
       <SortAndFilterBar
         sortConfig={changesSortConfig}
         showChangeStatusFilter={true}
         showMyFilter={data.role === "ADMIN" || data.role === "COMMITTER"}
-        showProductSelect={true}
+        productOptions={data?.products}
         showCalendar={true}
       />
       <div>

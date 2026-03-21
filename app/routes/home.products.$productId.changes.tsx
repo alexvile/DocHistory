@@ -5,6 +5,7 @@ import { assignApproverToChangeSet, getFilteredChangeSets, getFilteredChangeSets
 import { NormDiff } from "~/types";
 import ChangeSetList from "~/components/route_based/ChangeSetList";
 import { getUserId, requireUserRole } from "~/server/auth.server";
+import ChangesTable from "~/components/route_based/ChangesTable";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   // invariant(params.productId, "Missing contactId param");
@@ -49,20 +50,21 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const role = await requireUserRole(request);
   const userId = await getUserId(request);
 
+
   // todo - depend on role
   // admin - on review + approved
   // commit - draft + approved + onreview
   // viewer - only approved
+
+  // todo - light version. Only link, status, createBy, responsible, date
+
   const lastPendingChanges = await getFilteredChangeSets(
     {
       productId: params.productId,
-      status: {
-        in: ["DRAFT", "ON_REVIEW", "REJECTED"],
-      },
     },
     { createdAt: "desc" },
     0,
-    50,
+    10,
   );
   // todo - tmp solution
   // todo - add try-catch
@@ -85,7 +87,12 @@ export default function NormChanges() {
   // const data = useLoaderData<typeof loader>();
   return (
     <>
-      <ChangeSetList changes={changes} role={role} userId={userId} />
+      <div>Тут лише останні 10 змін</div>
+      <div>
+        {/* todo - fix issue with link */}
+        <ChangesTable changes={changes} />
+      </div>
+      <div>Побачити всі зміни по продукту - лінка на фільтр по змінам</div>
       <Outlet />
     </>
   );

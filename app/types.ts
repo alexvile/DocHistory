@@ -173,6 +173,11 @@ export type SortBoxProps = {
   config: SortConfig;
 };
 
+type ProductOption = {
+  id: string;
+  title: string;
+};
+
 export type SortAndFilterBarProps = {
   sortConfig?: SortConfig;
   showChangeStatusFilter?: boolean;
@@ -180,7 +185,7 @@ export type SortAndFilterBarProps = {
   showQueryFilter?: boolean;
   showMyFilter?: boolean;
   showLimit?: boolean;
-  showProductSelect?: boolean;
+  productOptions?: ProductOption[];
   showCalendar?: boolean;
 };
 
