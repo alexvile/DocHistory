@@ -8,9 +8,11 @@ type AccordionProps = {
 
 function AccordionRoot({ children, defaultOpen = false }: AccordionProps) {
   return (
-    <details className={styles.accordion} open={defaultOpen}>
-      {children}
-    </details>
+    <div className={styles.accordionWrapper}>
+      <details className={styles.accordion} open={defaultOpen}>
+        {children}
+      </details>
+    </div>
   );
 }
 

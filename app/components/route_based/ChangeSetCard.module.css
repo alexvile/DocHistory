@@ -22,7 +22,7 @@
   margin-block: 4px;
 }
 
-.summaryContainer > details:not(:last-child) {
+.summaryContainer > div:not(:last-child) {
   margin-bottom: 4px;
 }
 

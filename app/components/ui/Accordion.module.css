@@ -35,3 +35,48 @@
   color: #4b5563;
   font-size: 14px;
 }
+
+/* animation styles from Horizon */
+
+.accordionWrapper {
+  --animation-speed-slow: 0.2s;
+  --animation-easing: ease-in-out;
+
+  details {
+    &::details-content,
+    .details-content {
+      block-size: 0;
+      overflow-y: clip;
+      opacity: 0;
+      interpolate-size: allow-keywords;
+      transition: content-visibility var(--animation-speed-slow) allow-discrete,
+        padding-block var(--animation-speed-slow) var(--animation-easing), opacity var(--animation-speed-slow) var(--animation-easing),
+        block-size var(--animation-speed-slow) var(--animation-easing);
+    }
+
+    &:not([open]) {
+      &::details-content,
+      .details-content {
+        padding-block: 0;
+      }
+    }
+
+    &[open] {
+      &::details-content,
+      .details-content {
+        opacity: 1;
+        block-size: auto;
+
+        @starting-style {
+          block-size: 0;
+          opacity: 0;
+          overflow-y: clip;
+        }
+
+        &:focus-within {
+          overflow-y: visible;
+        }
+      }
+    }
+  }
+}
