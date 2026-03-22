@@ -1,6 +1,6 @@
 :root {
-  --sidebar-width: 250px;
-  --content-max-width: 1000px;
+  --sidebar-width: 200px;
+  --content-max-width: 1100px;
 }
 
 html {
@@ -156,12 +156,12 @@ fieldset {
     0rem 0.03125rem 0rem 0.09375rem #fff inset;
 }
 
-.button.button--icon,
+.button.button--icon:hover,
 .button.button--secondary:hover {
   background-color: #fafafa;
 }
 
-.button.button--icon,
+.button.button--icon:active,
 .button.button--secondary:active {
   box-shadow: -0.0625rem 0rem 0.0625rem 0rem rgba(26, 26, 26, 0.122) inset, 0.0625rem 0rem 0.0625rem 0rem rgba(26, 26, 26, 0.122) inset,
     0rem 0.125rem 0.0625rem 0rem rgba(26, 26, 26, 0.2) inset;

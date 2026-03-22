@@ -9,6 +9,7 @@ import MyChangesFilter from "./MyChangesFilter";
 import { DateRange } from "./DateRange";
 import ComboBox from "./Combobox";
 import { ProductCombobox } from "./ProductCombobox";
+import { Icon } from "~/components/ui/Icon";
 
 export function SortAndFilterBar({
   sortConfig,
@@ -45,8 +46,8 @@ export function SortAndFilterBar({
       {showMyFilter && <MyChangesFilter searchParams={searchParams} setSearchParams={setSearchParams} />}
       {showLimit && <LimitSelect searchParams={searchParams} setSearchParams={setSearchParams} />}
       {hasActiveFilters && (
-        <button onClick={handleClear} className={styles.clearBtn}>
-          Очистити
+        <button onClick={handleClear} className="button button--icon" aria-label="Очистити фільтра">
+         <Icon name="close" />
         </button>
       )}
     </div>

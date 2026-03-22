@@ -7,7 +7,7 @@ import { FaCircleMinus, FaCirclePlus, FaMagnifyingGlass, FaPencil } from "react-
 import { TbExchange } from "react-icons/tb";
 import { MdManageAccounts, MdLogout, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdChangeCircle } from "react-icons/md";
 import { CgSmartHomeBoiler } from "react-icons/cg";
-import { IoIosCheckmark, IoIosHelpCircleOutline } from "react-icons/io";
+import { IoIosCheckmark, IoIosHelpCircleOutline, IoMdClose } from "react-icons/io";
 import { RxUpdate } from "react-icons/rx";
 import { IoCheckmarkOutline } from "react-icons/io5";
 
@@ -56,6 +56,8 @@ export function Svg({ name }: { name: string }) {
       return <IoCheckmarkOutline />;
     case "magnify":
       return <FaMagnifyingGlass />;
+    case "close":
+      return <IoMdClose />;
     default:
       return <AiOutlineStop />;
   }

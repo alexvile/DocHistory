@@ -6,16 +6,3 @@
   flex-wrap: wrap;
 }
 
-.clearBtn {
-  background: transparent;
-  border: 1px solid #999;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  border-radius: 6px;
-  color: #444;
-}
-
-.clearBtn:hover {
-  background-color: #eee;
-}
-
