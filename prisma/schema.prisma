@@ -111,3 +111,6 @@ model ChangeSet {
 // approver - action buttons!
 //  approver after approve - send to reviewver
 // cancell - if wrnong - when remove change + remove newSnapshot by id
+
+// todo - prevent creating new if at least one in review
+// todo - remove snapshot after rejection

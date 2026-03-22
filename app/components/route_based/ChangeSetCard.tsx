@@ -115,7 +115,6 @@ function AdminActions({ id }: { id: string }) {
   return (
     <div role="group" aria-label="Admin actions" className="adminActions">
       <Form method="post">
-        <input type="hidden" name="changeSetId" value={id} />
         <button type="submit" name="intent" value="reject" className="button button--primary button--critical">
           Відхилити
         </button>
@@ -131,13 +130,11 @@ function AdminActions({ id }: { id: string }) {
 
 function CommitterActions({ id, approvers }: { id: string, approvers: any }) {
   const [approverId, setApproverId] = useState<string | undefined>();
-  console.log(11, approvers);
+  // console.log(11, approvers);
   return (
     <div role="group" className="commiterActions" aria-label="Commiter actions">
       <Form method="post" aria-label="Approve change set" className="commiterActionsSetApprover">
-        <input type="hidden" name="changeSetId" value={id} />
         <input type="hidden" name="intent" value="assign-approver" />
-       
 
 
        <ApproverCombobox approverOptions={approvers} value={approverId} setValue={setApproverId}/>

@@ -13,7 +13,7 @@ function ProductNormsTable({ normRows, isEditable }: ProductNormsTableProps) {
 
   const handleAddRow = useCallback(
     (type: "group" | "detail", insertIndex: number, parentId?: string) => {
-      console.log("parentId", parentId);
+      // console.log("parentId", parentId);
       // todo - use settimeout + block to prevent throttle
       const rowsToAdd = createRows({ type, groupId: parentId });
       setRows((prevRows) => {

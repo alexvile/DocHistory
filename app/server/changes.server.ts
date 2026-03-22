@@ -89,6 +89,88 @@ export async function rejectChangeSet({
   });
 }
 
+type ApproveChangeSetParams = {
+  changeSetId: string;
+  decidedById: string;
+};
+
+// todo - refactor
+export async function approveChangeSet({
+  changeSetId,
+  decidedById,
+}: ApproveChangeSetParams) {
+  return prisma.$transaction(async (tx) => {
+    // 1️⃣ знайти changeSet
+    const changeSet = await tx.changeSet.findFirst({
+      where: {
+        id: changeSetId,
+        approverId: decidedById,
+        status: "ON_REVIEW",
+      },
+      select: {
+        id: true,
+        productId: true,
+        oldSnapshotId: true,
+        newSnapshotId: true,
+      },
+    });
+
+    if (!changeSet) {
+      throw new Error("ChangeSet not found or not allowed");
+    }
+
+    // 2️⃣ (опціонально, але я б залишив) перевірка актуальності
+    const product = await tx.product.findUnique({
+      where: { id: changeSet.productId },
+      select: { currentSnapshotId: true },
+    });
+
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    if (product.currentSnapshotId !== changeSet.oldSnapshotId) {
+      throw new Error("ChangeSet is outdated");
+    }
+
+    // 3️⃣ апрув changeSet (фіксуємо факт)
+    await tx.changeSet.update({
+      where: { id: changeSet.id },
+      data: {
+        status: "APPROVED",
+        decidedAt: new Date(),
+      },
+    });
+
+    // 4️⃣ старий snapshot → ARCHIVED
+    await tx.normSnapshot.update({
+      where: { id: changeSet.oldSnapshotId },
+      data: {
+        status: "ARCHIVED",
+      },
+    });
+
+    // 5️⃣ новий snapshot → BASELINE
+    await tx.normSnapshot.update({
+      where: { id: changeSet.newSnapshotId },
+      data: {
+        status: "BASELINE",
+      },
+    });
+
+    // 6️⃣ перемикаємо продукт
+    await tx.product.update({
+      where: { id: changeSet.productId },
+      data: {
+        currentSnapshotId: changeSet.newSnapshotId,
+      },
+    });
+
+    return { success: true };
+  });
+}
+
+
 // todo - get the snapshot
 // todo - change last change set draft by product
 // todo - getPopulated for superficial and deep data

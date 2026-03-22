@@ -2,13 +2,14 @@ import { isRouteErrorResponse, Outlet, useLoaderData, useRouteError } from "@rem
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import BackLink from "~/components/common/BackLink";
-import { assignApproverToChangeSet, getPopulatedChangeSetById, rejectChangeSet } from "~/server/changes.server";
+import { approveChangeSet, assignApproverToChangeSet, getPopulatedChangeSetById, rejectChangeSet } from "~/server/changes.server";
 import ChangeSetCard from "~/components/route_based/ChangeSetCard";
 import { getUserId, requireUserRole } from "~/server/auth.server";
 import { getApprovers } from "~/server/user.server";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.changeId, "Missing contactId param");
+  const changeSetId = params.changeId;
   const userId = await getUserId(request);
   if (!userId) return null;
 
@@ -17,11 +18,10 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   console.log(intent);
 
   if (intent === "assign-approver") {
-    const changeSetId = formData.get("changeSetId");
     const approverId = formData.get("approverId");
 
-    if (!changeSetId || !approverId) return null;
-    if (typeof changeSetId !== "string" || typeof approverId !== "string") return null;
+    if (!approverId) return null;
+    if (typeof approverId !== "string") return null;
 
     await assignApproverToChangeSet({
       changeSetId,
@@ -33,14 +33,18 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   }
   // todo validation!!!!!!
   if (intent === "reject") {
-    const changeSetId = formData.get("changeSetId") as string;
-
     await rejectChangeSet({
       changeSetId,
       decidedById: userId,
     });
     return null;
     // return redirect(request.url);
+  }
+
+  if (intent === "approve") {
+    const res = await approveChangeSet({ changeSetId, decidedById: userId });
+    console.log("approve", res);
+    return null;
   }
   return null;
 };
@@ -98,7 +102,7 @@ export default function ChangeSet() {
         <div className="dashboard-topbar">
           <BackLink />
           <h3 className="1product-details__title">
-            Зміна....від такого
+            Зміна....від такого для продукта
             {/* {loaderData.product.title}
               <LastChanged date={loaderData.product.updatedAt} /> */}
           </h3>
