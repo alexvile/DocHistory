@@ -8,6 +8,7 @@ import ChangeStatusFilter from "./ChangesStatusSelect";
 import MyChangesFilter from "./MyChangesFilter";
 import { DateRange } from "./DateRange";
 import ComboBox from "./Combobox";
+import { ProductCombobox } from "./ProductCombobox";
 
 export function SortAndFilterBar({
   sortConfig,
@@ -37,7 +38,9 @@ export function SortAndFilterBar({
       {sortConfig && <SortBox searchParams={searchParams} setSearchParams={setSearchParams} config={sortConfig} />}
       {showQueryFilter && <FilterBox searchParams={searchParams} setSearchParams={setSearchParams} />}
       {showChangeStatusFilter && <ChangeStatusFilter searchParams={searchParams} setSearchParams={setSearchParams} />}
-      {productOptions?.length ? <ComboBox searchParams={searchParams} setSearchParams={setSearchParams} name="productId" options={productOptions} placeholder="Оберіть продукт" /> : null}
+        {productOptions?.length && (
+        <ProductCombobox searchParams={searchParams} setSearchParams={setSearchParams} productOptions={productOptions} />
+      )}
       {showCalendar && <DateRange searchParams={searchParams} setSearchParams={setSearchParams} />}
       {showMyFilter && <MyChangesFilter searchParams={searchParams} setSearchParams={setSearchParams} />}
       {showLimit && <LimitSelect searchParams={searchParams} setSearchParams={setSearchParams} />}

@@ -12,6 +12,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@ariakit/react": "^0.4.24",
     "@prisma/client": "^6.12.0",
     "@remix-run/express": "^2.17.0",
     "@remix-run/node": "^2.17.0",
