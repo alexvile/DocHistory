@@ -35,16 +35,19 @@ export function ApproverCombobox({ approverOptions, value, setValue }: Props) {
   }
 
   return (
-    <AKComboBox
-      options={comboboxOptions}
-      searchValue={searchValue}
-      setSearchValue={setSearchValue}
-      onSelect={handleSelect}
-      onClear={handleClear}
-      placeholder="Оберіть особу"
-      label="Оберіть особу"
-      ariaLabel="Оберіть особу"
-      noResultsText="Не знайдено"
-    />
+    <>
+      <input type="hidden" name="approverId" value={value} />
+      <AKComboBox
+        options={comboboxOptions}
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+        onSelect={handleSelect}
+        onClear={handleClear}
+        placeholder="Оберіть особу"
+        label="Оберіть особу"
+        ariaLabel="Оберіть особу"
+        noResultsText="Не знайдено"
+      />
+    </>
   );
 }

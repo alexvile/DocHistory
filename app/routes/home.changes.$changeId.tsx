@@ -1,16 +1,16 @@
 import { isRouteErrorResponse, Outlet, useLoaderData, useRouteError } from "@remix-run/react";
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import BackLink from "~/components/common/BackLink";
-import { getPopulatedChangeSetById } from "~/server/changes.server";
-import { formatDateForUA } from "~/utils/formatDateUA";
+import { assignApproverToChangeSet, getPopulatedChangeSetById, rejectChangeSet } from "~/server/changes.server";
 import ChangeSetCard from "~/components/route_based/ChangeSetCard";
 import { getUserId, requireUserRole } from "~/server/auth.server";
 import { getApprovers } from "~/server/user.server";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
-  // invariant(params.productId, "Missing contactId param");
+  invariant(params.changeId, "Missing contactId param");
   const userId = await getUserId(request);
+  if (!userId) return null;
 
   const formData = await request.formData();
   const intent = formData.get("intent");
@@ -40,7 +40,6 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
       decidedById: userId,
     });
     return null;
-
     // return redirect(request.url);
   }
   return null;

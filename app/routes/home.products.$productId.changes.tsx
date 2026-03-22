@@ -1,9 +1,8 @@
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
-import { assignApproverToChangeSet, getFilteredChangeSets, getFilteredChangeSetsByProduct, rejectChangeSet } from "~/server/changes.server";
+import { assignApproverToChangeSet, getFilteredChangeSets, rejectChangeSet } from "~/server/changes.server";
 import { NormDiff } from "~/types";
-import ChangeSetList from "~/components/route_based/ChangeSetList";
 import { getUserId, requireUserRole } from "~/server/auth.server";
 import ChangesTable from "~/components/route_based/ChangesTable";
 
@@ -22,10 +21,10 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     if (!changeSetId || !approverId) return null;
     if (typeof changeSetId !== "string" || typeof approverId !== "string") return null;
 
-    await assignApproverToChangeSet({
-      changeSetId,
-      approverId,
-    });
+    // await assignApproverToChangeSet({
+    //   changeSetId,
+    //   approverId,
+    // });
 
     return null;
     // return redirect(request.url);
