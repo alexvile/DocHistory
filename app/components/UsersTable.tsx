@@ -5,7 +5,7 @@ import translate from "~/utils/translate";
 
 export default function UsersTable({ users }: UsersListProps) {
   return (
-    <Table headings={["Name", "Surname", "Email", "Role", "Changes"]}>
+    <Table headings={["Ім’я", "Прізвище", "Email", "Роль", "Зміни"]}>
       {users.map(({ id, firstName, lastName, email, role }) => (
         <Table.Row key={id}>
           <Table.Cell>{firstName}</Table.Cell>
@@ -13,7 +13,7 @@ export default function UsersTable({ users }: UsersListProps) {
           <Table.Cell>{email}</Table.Cell>
           <Table.Cell>{translate("ROLES", role)}</Table.Cell>
           <Table.Cell>
-            {role === "VIEWER" ? null : <Link to={id}>show</Link>}
+            {role === "VIEWER" ? "-" : <Link to={id}>show</Link>}
           </Table.Cell>
         </Table.Row>
       ))}

@@ -61,7 +61,7 @@ export default function Register() {
         <TextField type="password" label="Пароль" name="password" isRequired autoComplete="off" />
         <div className="form__field">
           {/* todo - only superadmin can create ADMIN */}
-          <label htmlFor="role">Роль</label>
+          <label htmlFor="role" className="p-label">Роль</label>
           <select className="p-select" name="role" id="role">
             {Object.values(Role).map((role) => (
               <option key={role} value={role}>
