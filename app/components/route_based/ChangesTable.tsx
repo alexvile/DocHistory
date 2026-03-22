@@ -46,8 +46,8 @@ export default function ChangesTable({ changes }: ChangesTableProps) {
           </Table.Cell>
           <Table.Cell>{formatDateShortUA(createdAt)}</Table.Cell>
           <Table.Cell>
-            <Link className="link" to={`/home/changes/${id}`}>
-              перейти
+            <Link className="link" to={`/home/changes/${id}`} aria-label="Оглянути зміну">
+              лінка →
             </Link>
           </Table.Cell>
         </Table.Row>

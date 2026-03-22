@@ -1,4 +1,4 @@
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import { assignApproverToChangeSet, getFilteredChangeSets, getFilteredChangeSetsByProduct, rejectChangeSet } from "~/server/changes.server";
@@ -50,7 +50,6 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const role = await requireUserRole(request);
   const userId = await getUserId(request);
 
-
   // todo - depend on role
   // admin - on review + approved
   // commit - draft + approved + onreview
@@ -78,21 +77,28 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
         ]
       : [],
   );
-  return { changes: changeSetVMs, role, userId: userId };
+  return { changes: changeSetVMs, role, userId: userId, currentProductId: params.productId };
 };
 
 export default function NormChanges() {
-  const { changes, role, userId } = useLoaderData<typeof loader>();
+  const { changes, role, userId, currentProductId } = useLoaderData<typeof loader>();
   console.log(changes);
   // const data = useLoaderData<typeof loader>();
   return (
     <>
-      <div>Тут лише останні 10 змін</div>
       <div>
         {/* todo - fix issue with link */}
         <ChangesTable changes={changes} />
       </div>
-      <div>Побачити всі зміни по продукту - лінка на фільтр по змінам</div>
+
+      <div style={{ marginBlockStart: '20px' }}>
+        <p className="italic text-sm">* Показано лише останні 10 змін.</p>
+        <p className="italic text-sm">Щоб переглянути повну історію змін по цьому продукту, перейдіть за посиланням нижче.</p>
+        <Link className="link text-sm" to={`/home/changes?productId=${currentProductId}&page=1`} aria-label="Переглянути всі зміни по продукту">
+          Переглянути всі →
+        </Link>
+      </div>
+
       <Outlet />
     </>
   );
