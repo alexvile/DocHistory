@@ -22,7 +22,7 @@ export default function MyChangesFilter({
   };
 
   return (
-    <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+    <label className="p-checkbox-card">
       <input
         type="checkbox"
         checked={checked}

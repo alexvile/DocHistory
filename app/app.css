@@ -70,6 +70,7 @@ fieldset {
 
 /*** base components ***/
 /* Inputs and selects */
+.p-checkbox-card,
 .p-input,
 .p-select {
   padding: 6px 12px;
@@ -78,6 +79,7 @@ fieldset {
   background-color: #fff;
   transition: border-color 0.3s ease, background-color 0.3s ease;
   border-radius: 4px;
+  height: 32px;
 }
 
 .p-select {
@@ -92,6 +94,7 @@ fieldset {
   padding-right: 30px;
 }
 
+.p-checkbox-card:hover,
 .p-input:hover,
 .p-input:focus,
 .p-select:hover,
@@ -112,6 +115,22 @@ fieldset {
   margin-bottom: 4px;
 }
 
+/* checkbox */
+.p-checkbox {
+  width: 16px;
+  height: 16px;
+}
+
+.p-checkbox-card {
+  border: 1px solid #ababab;
+  display: flex;
+  align-items: center;
+  column-gap: 4px;
+  cursor: pointer;
+  &:has(input:checked) {
+    border-color: #000;
+  }
+}
 /* Buttons */
 .button {
   padding: 6px 12px;
