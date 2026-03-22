@@ -6,8 +6,7 @@ import { getPopulatedChangeSetById } from "~/server/changes.server";
 import { formatDateForUA } from "~/utils/formatDateUA";
 import ChangeSetCard from "~/components/route_based/ChangeSetCard";
 import { getUserId, requireUserRole } from "~/server/auth.server";
-
-
+import { getApprovers } from "~/server/user.server";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   // invariant(params.productId, "Missing contactId param");
@@ -55,6 +54,13 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const role = await requireUserRole(request);
   const userId = await getUserId(request);
 
+  if (typeof userId !== "string") return null;
+
+  let approvers = [];
+  if (role === "COMMITTER") {
+    approvers = await getApprovers(userId);
+  }
+
   const changeSet = await getPopulatedChangeSetById(params.changeId);
   if (!changeSet) {
     throw new Response(null, {
@@ -62,7 +68,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
       statusText: "Not Found",
     });
   }
-  return { role, userId, changeSet };
+  return { role, userId, changeSet, approvers };
 };
 
 // export function ErrorBoundary() {
@@ -84,7 +90,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 // }
 
 export default function ChangeSet() {
-  const { role, userId, changeSet } = useLoaderData();
+  const { role, userId, changeSet, approvers } = useLoaderData();
   const { id, status, createdAt, diff, createdBy, approver, approverId, decidedAt } = changeSet;
   return (
     <>
@@ -98,7 +104,7 @@ export default function ChangeSet() {
               <LastChanged date={loaderData.product.updatedAt} /> */}
           </h3>
         </div>
-        <ChangeSetCard {...{ id, status, createdAt, diff, createdBy, role, approver, userId, approverId, decidedAt }} />
+        <ChangeSetCard {...{ id, status, createdAt, diff, createdBy, role, approver, userId, approverId, decidedAt, approvers }} />
         <Outlet />
       </div>
     </>

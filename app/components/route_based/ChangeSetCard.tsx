@@ -6,7 +6,7 @@ import { Accordion } from "../ui/Accordion";
 import NormsTable from "../NormsTable";
 import NormsTableWithChanges from "../NormsTableWithChanges";
 import { Icon } from "../ui/Icon";
-import { ApproverCombobox } from "./ApproverCombobox";
+import {  ApproverCombobox, LegacyApproverCombobox } from "./ApproverCombobox";
 import { useState } from "react";
 import { Form } from "@remix-run/react";
 import translate from "~/utils/translate";
@@ -129,20 +129,25 @@ function AdminActions({ id }: { id: string }) {
   );
 }
 
-function CommitterActions({ id }: { id: string }) {
+function CommitterActions({ id, approvers }: { id: string, approvers: any }) {
   const [approverId, setApproverId] = useState<string | undefined>();
-
+  console.log(11, approvers);
   return (
     <div role="group" className="commiterActions" aria-label="Commiter actions">
       <Form method="post" aria-label="Approve change set" className="commiterActionsSetApprover">
         <input type="hidden" name="changeSetId" value={id} />
         <input type="hidden" name="intent" value="assign-approver" />
-        <ApproverCombobox
+       
+
+
+       <ApproverCombobox approverOptions={approvers} value={approverId} setValue={setApproverId}/>
+        {/* <LegacyApproverCombobox
           value={approverId}
           onChange={(id) => {
             setApproverId(id || undefined);
           }}
-        />
+        /> */}
+
         <button type="submit" disabled={!approverId} className="button button--primary">
           Надіслати
         </button>
@@ -166,16 +171,17 @@ type ChangeSetCardActionsProps = {
   status: ChangeSetVM["status"];
   userId: string;
   approverId: ChangeSetVM["approverId"];
+  approvers: any;
 };
 
-function ChangeSetCardActions({ role, id, status, userId, approverId }: ChangeSetCardActionsProps) {
+function ChangeSetCardActions({ role, id, status, userId, approverId, approvers }: ChangeSetCardActionsProps) {
   switch (role) {
     case "ADMIN":
       const isApprover = Boolean(approverId && approverId === userId);
       return status === "ON_REVIEW" && isApprover && <AdminActions id={id} />;
 
     case "COMMITTER":
-      return status === "DRAFT" ? <CommitterActions id={id} /> : null;
+      return status === "DRAFT" ? <CommitterActions id={id} approvers={approvers} /> : null;
 
     case "VIEWER":
     default:
@@ -198,12 +204,13 @@ export default function ChangeSetCard({
   approverId,
   userId,
   decidedAt,
+  approvers
 }: ChangeSetCardProps) {
   return (
     <div className={styles.container}>
       <ChangeSetCardMeta createdBy={createdBy} createdAt={createdAt} status={status} approver={approver} decidedAt={decidedAt} />
       <ChangeSetCardSummary diff={diff} />
-      <ChangeSetCardActions role={role} id={id} status={status} userId={userId} approverId={approverId} />
+      <ChangeSetCardActions role={role} id={id} status={status} userId={userId} approverId={approverId} approvers={approvers}/>
     </div>
   );
 }
