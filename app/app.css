@@ -68,8 +68,6 @@ fieldset {
 }
 /* RESET ends */
 
-
-
 /*** base components ***/
 /* Inputs and selects */
 .p-input,
@@ -80,6 +78,18 @@ fieldset {
   background-color: #fff;
   transition: border-color 0.3s ease, background-color 0.3s ease;
   border-radius: 4px;
+}
+
+.p-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  /* 🔥 твоя іконка */
+  background-image: url("data:image/svg+xml;utf8,\<svg viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>\<path d='M10.884 4.323a1.25 1.25 0 0 0-1.768 0l-2.646 2.647a.75.75 0 0 0 1.06 1.06l2.47-2.47 2.47 2.47a.75.75 0 1 0 1.06-1.06l-2.646-2.647Z' fill='%236b7280'/>\<path d='m13.53 13.03-2.646 2.647a1.25 1.25 0 0 1-1.768 0l-2.646-2.647a.75.75 0 0 1 1.06-1.06l2.47 2.47 2.47-2.47a.75.75 0 0 1 1.06 1.06Z' fill='%236b7280'/>\</svg>");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+  background-size: 20px;
+  padding-right: 30px;
 }
 
 .p-input:hover,
@@ -110,6 +120,16 @@ fieldset {
   border: none;
 }
 
+.button.button--icon {
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button.button--icon,
 .button.button--secondary {
   color: #303030;
   background-color: #fff;
@@ -117,10 +137,12 @@ fieldset {
     0rem 0.03125rem 0rem 0.09375rem #fff inset;
 }
 
+.button.button--icon,
 .button.button--secondary:hover {
   background-color: #fafafa;
 }
 
+.button.button--icon,
 .button.button--secondary:active {
   box-shadow: -0.0625rem 0rem 0.0625rem 0rem rgba(26, 26, 26, 0.122) inset, 0.0625rem 0rem 0.0625rem 0rem rgba(26, 26, 26, 0.122) inset,
     0rem 0.125rem 0.0625rem 0rem rgba(26, 26, 26, 0.2) inset;
@@ -203,8 +225,6 @@ fieldset {
   cursor: default;
 }
 
-
-
 /* form */
 .form__field:not(:last-child) {
   margin-bottom: 12px;
@@ -216,7 +236,6 @@ fieldset {
   width: fit-content;
   min-width: 340px;
 }
-
 
 /* modal */
 .modal-overlay {
@@ -247,11 +266,6 @@ fieldset {
   top: 0;
   right: 0;
 }
-
-
-
-
-
 
 /* top bar in dashboard */
 .dashboard-topbar {
@@ -341,8 +355,6 @@ fieldset {
   column-gap: 12px;
   margin-top: 12px;
 }
-
-
 
 .tableChangeStatus {
   margin: 0;

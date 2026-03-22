@@ -40,17 +40,20 @@ export default function AKComboBox({
       }}
     >
       <Ariakit.ComboboxLabel className="visually-hidden">{label}</Ariakit.ComboboxLabel>
-      <Ariakit.Combobox placeholder={placeholder} aria-label={ariaLabel} className={styles.combobox} />
+      <div className={styles.comboboxWrapper}>
+        <Ariakit.Combobox placeholder={placeholder} aria-label={ariaLabel} className="p-input" />
+        <Ariakit.ComboboxCancel className={styles.comboboxCancel} onClick={onClear} />
+      </div>
+
       <Ariakit.ComboboxPopover gutter={8} sameWidth className={styles.popover}>
         {matches.length ? (
           matches.map((option) => (
-            <Ariakit.ComboboxItem key={option.value} value={option.label} className={styles.item} onClick={() => onSelect(option.value)} />
+            <Ariakit.ComboboxItem key={option.value} value={option.label} className={styles.comboboxItem} onClick={() => onSelect(option.value)} />
           ))
         ) : (
           <div className={styles.empty}>{noResultsText}</div>
         )}
       </Ariakit.ComboboxPopover>
-      <Ariakit.ComboboxCancel className="button secondary combobox-cancel" onClick={onClear} />
     </Ariakit.ComboboxProvider>
   );
 }

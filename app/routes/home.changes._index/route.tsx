@@ -86,14 +86,10 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Changes() {
   const data = useLoaderData<typeof loader>();
-  console.log(111, data);
-//   const products = Array.from({ length: 200 }, (_, i) => ({
-//   id: i + 1,
-//   title: `Product ${i + 1}`,
-// }));
+  // console.log(111, data);
+
   return (
     <>
-    get all product list!
       <SortAndFilterBar
         sortConfig={changesSortConfig}
         showChangeStatusFilter={true}

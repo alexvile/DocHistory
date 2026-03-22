@@ -18,9 +18,7 @@
   outline-width: 1px;
   outline-offset: -1px;
   outline-color: hsl(204 100% 40%);
-  box-shadow:
-    inset 0 0 0 1px rgba(0 0 0/0.15),
-    inset 0 2px 5px 0 rgba(0 0 0/0.08);
+  box-shadow: inset 0 0 0 1px rgba(0 0 0/0.15), inset 0 2px 5px 0 rgba(0 0 0/0.08);
 }
 
 .combobox::placeholder {
@@ -42,10 +40,7 @@
 .combobox:where(.dark, .dark *) {
   background-color: hsl(204 4% 8%);
   color: white;
-  box-shadow:
-    inset 0 0 0 1px rgba(255 255 255/0.15),
-    inset 0 -1px 0 0 rgba(255 255 255/0.05),
-    inset 0 2px 5px 0 rgba(0 0 0/0.15);
+  box-shadow: inset 0 0 0 1px rgba(255 255 255/0.15), inset 0 -1px 0 0 rgba(255 255 255/0.05), inset 0 2px 5px 0 rgba(0 0 0/0.15);
 }
 
 .combobox:where(.dark, .dark *)::placeholder {
@@ -73,21 +68,17 @@
   color: black;
   outline: 2px solid transparent;
   outline-offset: 2px;
-  box-shadow:
-    0 10px 15px -3px rgb(0 0 0 / 0.1),
-    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
 .popover:where(.dark, .dark *) {
   border-color: hsl(204 4% 24%);
   background-color: hsl(204 4% 16%);
   color: white;
-  box-shadow:
-    0 10px 15px -3px rgb(0 0 0 / 0.25),
-    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.25), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
-.combobox-item {
+.comboboxItem {
   display: flex;
   cursor: default;
   scroll-margin: 0.5rem;
@@ -96,27 +87,44 @@
   border-radius: 0.25rem;
   padding: 0.5rem;
   outline: none !important;
+  font-size: 13px;
 }
 
-.combobox-item:hover {
+.comboboxItem:hover {
   background-color: hsl(204 100% 80% / 0.4);
 }
 
-.combobox-item[data-active-item] {
+.comboboxItem[data-active-item] {
   background-color: hsl(204 100% 40%);
   color: white;
 }
 
-.combobox-item:active,
-.combobox-item[data-active] {
+.comboboxItem:active,
+.comboboxItem[data-active] {
   padding-top: 9px;
   padding-bottom: 7px;
 }
 
-.combobox-item:hover:where(.dark, .dark *) {
+.comboboxItem:hover:where(.dark, .dark *) {
   background-color: hsl(204 100% 40% / 0.25);
 }
 
-.combobox-item:where(.dark, .dark *)[data-active-item] {
+.comboboxItem:where(.dark, .dark *)[data-active-item] {
   background-color: hsl(204 100% 40%);
+}
+
+.comboboxWrapper {
+  position: relative;
+}
+
+.comboboxCancel {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 0;
+  cursor: pointer;
+  border: none;
+  width: 28px;
+  height: 28px;
+  background-color: transparent;
 }
