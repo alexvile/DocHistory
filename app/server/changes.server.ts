@@ -72,10 +72,7 @@ type RejectChangeSetParams = {
   decidedById: string;
 };
 
-export async function rejectChangeSet({
-  changeSetId,
-  decidedById,
-}: RejectChangeSetParams) {
+export async function rejectChangeSet({ changeSetId, decidedById }: RejectChangeSetParams) {
   return prisma.changeSet.update({
     where: {
       id: changeSetId,
@@ -95,10 +92,7 @@ type ApproveChangeSetParams = {
 };
 
 // todo - refactor
-export async function approveChangeSet({
-  changeSetId,
-  decidedById,
-}: ApproveChangeSetParams) {
+export async function approveChangeSet({ changeSetId, decidedById }: ApproveChangeSetParams) {
   return prisma.$transaction(async (tx) => {
     // 1️⃣ знайти changeSet
     const changeSet = await tx.changeSet.findFirst({
@@ -170,7 +164,6 @@ export async function approveChangeSet({
   });
 }
 
-
 // todo - get the snapshot
 // todo - change last change set draft by product
 // todo - getPopulated for superficial and deep data
@@ -196,19 +189,18 @@ export const getFilteredChangeSets = async (
       product: {
         select: {
           id: true,
-          title: true
-        }
+          title: true,
+        },
       },
       approver: {
         select: {
           firstName: true,
           lastName: true,
-        }
-      }
+        },
+      },
     },
   });
 };
-
 
 export const getPopulatedChangeSetById = async (id: string) => {
   return prisma.changeSet.findUnique({
@@ -232,6 +224,18 @@ export const getPopulatedChangeSetById = async (id: string) => {
           lastName: true,
         },
       },
+    },
+  });
+};
+
+export const getArchivedSnapshots = async (productId: string) => {
+  return await prisma.normSnapshot.findMany({
+    where: {
+      productId,
+      status: "ARCHIVED",
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 };

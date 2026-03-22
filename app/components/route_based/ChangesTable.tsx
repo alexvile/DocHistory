@@ -21,8 +21,8 @@ const STATUS_TONE_MAP: Record<ChangeSetVM["status"], "green" | "yellow" | "blue"
 
 export default function ChangesTable({ changes }: ChangesTableProps) {
   return (
-    <Table headings={["№", "Продукт", "Статус", "Створено", "Відповідальний", "Дата", ""]}>
-      {changes.map(({ id, createdAt, status, product, createdBy, approver }, index) => (
+    <Table headings={["№", "Продукт", "Статус", "Створено", "Відповідальний", "Дата", "Дата рішення", "Посилання"]}>
+      {changes.map(({ id, createdAt, status, product, createdBy, approver, decidedAt }, index) => (
         <Table.Row key={id}>
           <Table.Cell>{index + 1}</Table.Cell>
           <Table.Cell>
@@ -40,11 +40,12 @@ export default function ChangesTable({ changes }: ChangesTableProps) {
             {shortenFirstName(createdBy.firstName)} {createdBy.lastName}
           </Table.Cell>
           <Table.Cell>
-            {(status === "ON_REVIEW" || status === "REJECTED") && approver
+            {(status === "ON_REVIEW" || status === "REJECTED" || status === "APPROVED") && approver
               ? `${shortenFirstName(approver.firstName)} ${approver.lastName}`
               : "—"}
           </Table.Cell>
           <Table.Cell>{formatDateShortUA(createdAt)}</Table.Cell>
+          <Table.Cell>{decidedAt && formatDateShortUA(decidedAt)}</Table.Cell>
           <Table.Cell>
             <Link className="link" to={`/home/changes/${id}`} aria-label="Оглянути зміну">
               лінка →

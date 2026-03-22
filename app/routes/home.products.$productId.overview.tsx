@@ -3,7 +3,7 @@ import { useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import { getProductWithNormsById } from "~/server/products.server";
-import { getUserId } from "~/server/auth.server";
+import { getUserId, requireUserRole } from "~/server/auth.server";
 import { LastChanged } from "~/components/LastChangedTooltip";
 import BackLink from "~/components/common/BackLink";
 import { buildDynamicTitleValidators, validateFields } from "~/utils/validation";
@@ -99,13 +99,15 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   return null;
 };
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   invariant(params.productId, "Missing productId param");
+  const role = await requireUserRole(request);
   try {
     const { product, currentSnapshot } = await getProductWithNormsById(params.productId);
     return {
       product,
       norms: currentSnapshot.rows,
+      role,
     };
   } catch (error) {
     mapProductErrorToResponse(error);
@@ -189,32 +191,34 @@ export default function ProductNorm() {
 
   return (
     <>
-      <div className="edit-button__wrapper">
-        {isEditable ? (
-          <>
-            <button type="button" className="button button--secondary" onClick={discardChanges}>
-              Відмінити
-            </button>
-            <Form method="post">
-              <input type="hidden" name="norms" value={rows ? JSON.stringify(rows) : ""} />
-
-              <button
-                className="button button--primary"
-                aria-label="Збрегети зміни"
-                disabled={!rows || rows.length === 0}
-                aria-disabled={!rows || rows.length === 0}
-                type="submit"
-              >
-                Зберегти
+      {loaderData.role === "COMMITTER" && (
+        <div className="edit-button__wrapper">
+          {isEditable ? (
+            <>
+              <button type="button" className="button button--secondary" onClick={discardChanges}>
+                Відмінити
               </button>
-            </Form>
-          </>
-        ) : (
-          <button type="button" onClick={enableEdit} className="button button--primary">
-            Змінити
-          </button>
-        )}
-      </div>
+              <Form method="post">
+                <input type="hidden" name="norms" value={rows ? JSON.stringify(rows) : ""} />
+
+                <button
+                  className="button button--primary"
+                  aria-label="Збрегети зміни"
+                  disabled={!rows || rows.length === 0}
+                  aria-disabled={!rows || rows.length === 0}
+                  type="submit"
+                >
+                  Зберегти
+                </button>
+              </Form>
+            </>
+          ) : (
+            <button type="button" onClick={enableEdit} className="button button--primary">
+              Змінити
+            </button>
+          )}
+        </div>
+      )}
       {actionData?.message && <div className="alert alert-warning">{actionData.message}</div>}
 
       {loaderData.product.code && (

@@ -9,7 +9,7 @@ export const DICTIONARY_UA = {
   CHANGE_STATUS: {
     DRAFT: "Чорновий",
     ON_REVIEW: "На розгляді",
-    APPROVED: "Схвалено(активний/або б.а)",
+    APPROVED: "Схвалено",
     REJECTED: "Відхилено",
   },
 };
