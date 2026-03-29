@@ -143,7 +143,7 @@ fieldset {
   padding: 0;
   width: 28px;
   height: 28px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 }
@@ -176,6 +176,12 @@ fieldset {
   background-color: rgba(26, 26, 26, 1);
 }
 
+.button.button--primary:active {
+  padding-block-start: 7px;
+  padding-block-end: 5px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
 .button.button--primary.button--critical {
   background-color: rgba(199, 10, 36, 1);
   &:hover {
@@ -197,10 +203,11 @@ fieldset {
   outline: 2px solid #005bd3;
 }
 
+
 /* Links */
 /* todo - add visited and other statuses */
 .link {
-  font-size: 1rem;
+  font-size: 14px;
   line-height: 1.25rem;
   color: #005bd3;
   text-decoration: none;

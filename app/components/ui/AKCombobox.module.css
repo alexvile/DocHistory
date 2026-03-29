@@ -115,6 +115,7 @@
 
 .comboboxWrapper {
   position: relative;
+  width: fit-content;
 }
 
 .comboboxCancel {
