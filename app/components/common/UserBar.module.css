@@ -9,6 +9,10 @@
   border: none;
   background-color: transparent;
   width: 22px;
+  transition: color 0.2s ease;
+  &:hover {
+    color: #005bd3;
+  }
 }
 
 .logout > span {

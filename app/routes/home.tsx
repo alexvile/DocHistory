@@ -1,6 +1,6 @@
-import { json, LoaderFunction, redirect } from "@remix-run/node";
+import { LoaderFunction, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { getUser, requireUserRole } from "~/server/auth.server";
+import { getUser } from "~/server/auth.server";
 
 import { ModalProvider } from "~/components/ModalProvider";
 import SideMenu from "~/components/common/SideMenu";
@@ -32,7 +32,7 @@ export default function Home() {
           <Outlet />
         </main>
         <footer>
-          <p>&copy; 2025 Your Company</p>
+          <p style={{ marginBlock: "6px"}}>&copy; 2026 Your Company</p>
         </footer>
         <div id="modal-root"></div>
       </ModalProvider>
