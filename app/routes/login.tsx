@@ -1,23 +1,24 @@
-import {
-  ActionFunctionArgs,
-  json,
-  LoaderFunction,
-  LoaderFunctionArgs,
-  redirect,
-} from "@remix-run/node";
+import { ActionFunctionArgs, json, LoaderFunction, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { Form } from "@remix-run/react";
+import TextField from "~/components/ui/TextField";
 import { getUserId, login } from "~/server/auth.server";
 import { LoginForm } from "~/server/types.server";
 import { validateEmail, validatePassword } from "~/server/validators.server";
 
-export const loader: LoaderFunction = async ({
-  request,
-}: LoaderFunctionArgs) => {
+import loginStyles from "~/styles/login.css?url";
+
+export function links() {
+  return [{ rel: "stylesheet", href: loginStyles }];
+}
+
+export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
   const userIdFromSession = await getUserId(request);
   if (userIdFromSession) {
     return redirect("/home");
   }
   return null;
 };
+
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
@@ -39,7 +40,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         fields: { email, password },
         form: action,
       },
-      { status: 400 }
+      { status: 400 },
     );
   // todo - ts check
   await login({ email, password });
@@ -61,19 +62,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function Login() {
   return (
     <>
-      <h2>Login Route</h2>
-      <form method="post" className="form">
-        <div className="form__field">
-          <label htmlFor="email">Email</label>
-          <input type="text" id="email" name="email" />
-        </div>
-        <div className="form__field">
-          <label htmlFor="password">Password</label>
-          <input type="password" id="password" name="password" />
-        </div>
-
-        <button>Submit</button>
-      </form>
+      <h1 className="text-center">Логін</h1>
+      <main>
+        <Form method="post" className="form form--vertical">
+          <TextField label="Email" type="email" name="email" autoComplete="username" isRequired fullWidth />
+          <TextField label="Пароль" type="password" name="password" autoComplete="current-password" isRequired fullWidth />
+          <button className="button button--primary">Відправити</button>
+        </Form>
+      </main>
     </>
   );
 }

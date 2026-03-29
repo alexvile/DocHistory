@@ -114,6 +114,26 @@ fieldset {
   display: block;
   margin-bottom: 4px;
 }
+/* password */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .p-input {
+    padding-right: 32px;
+  }
+}
+
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  height: 100%;
+  width: 32px;
+}
 
 /* checkbox */
 .p-checkbox {
@@ -137,6 +157,7 @@ fieldset {
   border-radius: 8px;
   cursor: pointer;
   border: none;
+  width: fit-content;
 }
 
 .button.button--icon {
@@ -203,7 +224,6 @@ fieldset {
   outline: 2px solid #005bd3;
 }
 
-
 /* Links */
 /* todo - add visited and other statuses */
 .link {
@@ -253,22 +273,31 @@ fieldset {
   font-size: 12px;
 }
 
+.text-center {
+  text-align: center;
+}
+
 .disabled {
   pointer-events: none;
   opacity: 0.4;
   cursor: default;
 }
 
+.full-width {
+  width: 100%;
+}
+
 /* form */
-.form__field:not(:last-child) {
-  margin-bottom: 12px;
-}
-.form__field label {
-  display: block;
-}
 .form {
   width: fit-content;
-  min-width: 340px;
+  min-width: 240px;
+}
+
+.form--vertical {
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+  align-items: center;
 }
 
 /* modal */
