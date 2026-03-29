@@ -1,4 +1,3 @@
-import { Link } from "@remix-run/react";
 import { UsersListProps } from "~/types";
 import Table from "./ui/Table";
 import translate from "~/utils/translate";
@@ -12,9 +11,7 @@ export default function UsersTable({ users }: UsersListProps) {
           <Table.Cell>{lastName}</Table.Cell>
           <Table.Cell>{email}</Table.Cell>
           <Table.Cell>{translate("ROLES", role)}</Table.Cell>
-          <Table.Cell>
-            {role === "VIEWER" ? "-" : <Link to={id}>show</Link>}
-          </Table.Cell>
+          <Table.Cell>{role === "VIEWER" ? "-" : "show"}</Table.Cell>
         </Table.Row>
       ))}
     </Table>

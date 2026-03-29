@@ -425,3 +425,7 @@ fieldset {
     margin-inline-end: 4px;
   }
 }
+
+a.active {
+  font-weight: 700;
+}
