@@ -29,13 +29,20 @@ export default function SideMenu({ role }: { role: UserRoleVM }) {
           </li>
           <li className={styles.sideMenuItem}>
             <NavLink className={({ isActive, isPending }) => (isActive ? "active" : isPending ? "pending" : "")} to={"changes"}>
-              <Icon name="changes" />Всі зміни
+              <Icon name="changes" />
+              Всі зміни
             </NavLink>
           </li>
           <li className={styles.sideMenuItem}>
             <NavLink className={({ isActive, isPending }) => (isActive ? "active" : isPending ? "pending" : "")} to={"help"}>
               <Icon name="help" />
               Допомога
+            </NavLink>
+          </li>
+          <li className={styles.sideMenuItem}>
+            <NavLink className={({ isActive, isPending }) => (isActive ? "active" : isPending ? "pending" : "")} to={"uikit"}>
+              <Icon name="no-icon" />
+              UI kit
             </NavLink>
           </li>
         </ul>
