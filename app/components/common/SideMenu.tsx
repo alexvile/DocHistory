@@ -1,9 +1,9 @@
-import { NavLink } from "@remix-run/react";
+import { Link, NavLink } from "@remix-run/react";
 import { Icon } from "../ui/Icon";
 import styles from "./SideMenu.module.css";
 import { UserRoleVM } from "~/types";
 
-export default function SideMenu({ role }: { role: UserRoleVM }) {
+export default function SideMenu({ role, count }: { role: UserRoleVM; count: number }) {
   return (
     <aside>
       <nav aria-label="Main navigation">
@@ -28,10 +28,15 @@ export default function SideMenu({ role }: { role: UserRoleVM }) {
             </NavLink>
           </li>
           <li className={styles.sideMenuItem}>
-            <NavLink className={({ isActive, isPending }) => (isActive ? "active" : isPending ? "pending" : "")} to={"changes"}>
-              <Icon name="changes" />
-              Всі зміни
-            </NavLink>
+            <div className={styles.changesLinkWrapper}>
+              <NavLink className={({ isActive, isPending }) => (isActive ? "active" : isPending ? "pending" : "")} to={"changes"}>
+                <Icon name="changes" />
+                Всі зміни
+              </NavLink>
+              <Link to="changes?unread=1&status=APPROVED" className={styles.linkForViewer}>
+                <span className={styles.viewerCircle}>{count}</span>
+              </Link>
+            </div>
           </li>
           <li className={styles.sideMenuItem}>
             <NavLink className={({ isActive, isPending }) => (isActive ? "active" : isPending ? "pending" : "")} to={"help"}>

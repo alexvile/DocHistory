@@ -1,25 +1,36 @@
 import { LoaderFunction, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { getUser } from "~/server/auth.server";
+import { getUser, requireUserRole } from "~/server/auth.server";
 
 import { ModalProvider } from "~/components/ModalProvider";
 import SideMenu from "~/components/common/SideMenu";
 import UserBar from "~/components/common/UserBar";
+import { getUnreadCount } from "~/server/changes.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  // const role = await requireUserRole(request);
+  const role = await requireUserRole(request);
   const user = await getUser(request);
+
   if (!user) {
     throw redirect("/login");
   }
+  let count = 0;
+  if (role === "VIEWER") {
+    const id = user.id;
+    count = await getUnreadCount(id);
+  }
   // console.log('fetch in index')
-  return { user: user };
+  return { user, role, count };
 };
 
 // todo - structure
 
 export default function Home() {
-  const { user } = useLoaderData<typeof loader>();
+  const { user, role, count } = useLoaderData<typeof loader>();
+  // if(role === "VIEWER") {
+
+  // }
+  console.log('cc', count);
   // ts check
   return (
     <>
@@ -27,12 +38,12 @@ export default function Home() {
         <header>
           <UserBar user={user} />
         </header>
-        <SideMenu role={user.role} />
+        <SideMenu role={user.role} count={count}/>
         <main>
           <Outlet />
         </main>
         <footer>
-          <p style={{ marginBlock: "6px"}}>&copy; 2026 Your Company</p>
+          {/* <p style={{ marginBlock: "6px" }}>&copy; 2026 Your Company</p> */}
         </footer>
         <div id="modal-root"></div>
       </ModalProvider>

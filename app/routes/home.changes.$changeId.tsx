@@ -64,6 +64,23 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     approvers = await getApprovers(userId);
   }
 
+
+  if(role === 'VIEWER') {
+    //  await prisma.changeSetView.upsert({
+    //   where: {
+    //     changeSetId_userId: {
+    //       changeSetId,
+    //       userId: user.id,
+    //     },
+    //   },
+    //   update: {},
+    //   create: {
+    //     changeSetId,
+    //     userId: user.id,
+    //   },
+    // });
+  }
+
   const changeSet = await getPopulatedChangeSetById(params.changeId);
   if (!changeSet) {
     throw new Response(null, {

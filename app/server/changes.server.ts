@@ -5,6 +5,22 @@ export const getTotalChangesCount = async (whereFilter: Prisma.ChangeSetWhereInp
   return await prisma.changeSet.count({ where: whereFilter });
 };
 
+export const getViewerChangesCount = async ({ where, userId, onlyUnread = false }: any) => {
+  return prisma.changeSet.count({
+    where: {
+      ...where,
+
+      ...(onlyUnread && {
+        views: {
+          none: {
+            userId,
+          },
+        },
+      }),
+    },
+  });
+};
+
 type CreateChangeSetParams = {
   productId: string;
   createdById: string;
@@ -202,6 +218,58 @@ export const getFilteredChangeSets = async (
   });
 };
 
+// only for viewers
+export const getViewerChangeSets = async ({
+  where,
+  orderBy,
+  skip,
+  take,
+  userId,
+}: {
+  where: Prisma.ChangeSetWhereInput;
+  orderBy: Prisma.ChangeSetOrderByWithRelationInput;
+  skip?: number;
+  take?: number;
+  userId: string;
+}) => {
+  return prisma.changeSet.findMany({
+    where,
+    orderBy,
+    skip,
+    take,
+    include: {
+      createdBy: {
+        select: {
+          firstName: true,
+          lastName: true,
+        },
+      },
+      product: {
+        select: {
+          id: true,
+          title: true,
+        },
+      },
+      approver: {
+        select: {
+          firstName: true,
+          lastName: true,
+        },
+      },
+
+      // 🔥 КРИТИЧНО
+      views: {
+        where: {
+          userId,
+        },
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+};
+
 export const getPopulatedChangeSetById = async (id: string) => {
   return prisma.changeSet.findUnique({
     where: { id },
@@ -255,3 +323,16 @@ export const getSnapshotById = async (id: string) => {
     },
   });
 };
+
+export async function getUnreadCount(userId: string) {
+  return prisma.changeSet.count({
+    where: {
+      status: "APPROVED",
+      views: {
+        none: {
+          userId,
+        },
+      },
+    },
+  });
+}
