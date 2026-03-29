@@ -11,7 +11,7 @@ export default function ProductSnapshotsTable({ snapshots }: any) {
           <Table.Cell>{formatDateShortUA(createdAt)}</Table.Cell>
           <Table.Cell>
             <Link className="link" to={id}>
-              kss
+              лінка →
             </Link>
           </Table.Cell>
         </Table.Row>

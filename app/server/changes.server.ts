@@ -239,3 +239,19 @@ export const getArchivedSnapshots = async (productId: string) => {
     },
   });
 };
+
+export const getSnapshotById = async (id: string) => {
+  return prisma.normSnapshot.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      rows: true,
+      createdAt: true,
+      product: {
+        select: {
+          title: true,
+        },
+      },
+    },
+  });
+};
