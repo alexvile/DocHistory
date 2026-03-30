@@ -6,7 +6,7 @@ import { Accordion } from "../ui/Accordion";
 import NormsTable from "../NormsTable";
 import NormsTableWithChanges from "../NormsTableWithChanges";
 import { Icon } from "../ui/Icon";
-import { ApproverCombobox, LegacyApproverCombobox } from "./ApproverCombobox";
+import { ApproverCombobox } from "./ApproverCombobox";
 import { useState } from "react";
 import { Form } from "@remix-run/react";
 import translate from "~/utils/translate";
@@ -42,11 +42,17 @@ function ChangeSetCardMeta({ createdBy, createdAt, status, approver, decidedAt }
         </p>
       )}
       {(status === "APPROVED" || status === "REJECTED") && decidedAt && (
-        <p className={styles.changeSetCardMetaField}>
-          <strong>Рішення прийнято: </strong>
-          {formatDateForUA(decidedAt, { withYear: true })}
-          {/* todo - add who approved */}
-        </p>
+        <>
+          <p className={styles.changeSetCardMetaField}>
+            <strong>Рішення прийнято: </strong>
+            {formatDateForUA(decidedAt, { withYear: true })}
+            {/* todo - add who approved */}
+          </p>
+          <p className={styles.changeSetCardMetaField}>
+            <strong>Ким: </strong>
+            {approver.firstName} {approver.lastName}
+          </p>
+        </>
       )}
       {/* todo - who viewed  + styling*/}
     </div>

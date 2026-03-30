@@ -75,6 +75,11 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     // await viewChange(userId, changeId);
   }
 
+  // todo
+  // const viewersCount = await prisma.changeSetView.count({
+  //   where: { changeSetId: id },
+  // });
+
   const changeSet = await getPopulatedChangeSetById(params.changeId);
   if (!changeSet) {
     throw new Response(null, {
@@ -104,8 +109,10 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 // }
 
 export default function ChangeSet() {
-  const { role, userId, changeSet, approvers } = useLoaderData();
-  const { id, status, createdAt, diff, createdBy, approver, approverId, decidedAt } = changeSet;
+  const data = useLoaderData();
+  console.log(121212, data);
+  const { role, userId, changeSet, approvers } = data;
+  const { id, status, createdAt, diff, createdBy, approver, approverId, decidedAt, product } = changeSet;
   return (
     <>
       <div>
@@ -113,7 +120,7 @@ export default function ChangeSet() {
         <div className="dashboard-topbar">
           <BackLink />
           <h3 className="1product-details__title">
-            Зміна....від такого для продукта
+            Зміна по продукту: {product.title}
             {/* {loaderData.product.title}
               <LastChanged date={loaderData.product.updatedAt} /> */}
           </h3>

@@ -22,6 +22,7 @@ const STATUS_TONE_MAP: Record<ChangeSetVM["status"], "green" | "yellow" | "blue"
 
 export default function ChangesTable({ changes, from }: ChangesTableProps) {
   return (
+    // todo - icons checked or not fot viewers
     <Table headings={["№", "Продукт", "Статус", "Створено", "Відповідальний", "Дата", "Дата рішення", "Посилання"]}>
       {changes.map(({ id, createdAt, status, product, createdBy, approver, decidedAt }, index) => (
         <Table.Row key={id}>

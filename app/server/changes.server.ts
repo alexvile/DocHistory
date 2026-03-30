@@ -280,6 +280,26 @@ export const getPopulatedChangeSetById = async (id: string) => {
           lastName: true,
         },
       },
+      _count: {
+        select: {
+          views: true,
+        },
+      },
+
+      views: {
+        take: 25,
+        orderBy: {
+          viewedAt: "desc",
+        },
+        include: {
+          user: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      },
       product: {
         select: {
           id: true,
