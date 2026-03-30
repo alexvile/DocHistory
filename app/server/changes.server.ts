@@ -257,7 +257,7 @@ export const getViewerChangeSets = async ({
         },
       },
 
-      // 🔥 КРИТИЧНО
+      // 🔥 тільки для визначення read/unread в UI
       views: {
         where: {
           userId,
@@ -333,6 +333,22 @@ export async function getUnreadCount(userId: string) {
           userId,
         },
       },
+    },
+  });
+}
+
+export async function viewChange(userId: string, changeSetId: string) {
+  return prisma.changeSetView.upsert({
+    where: {
+      changeSetId_userId: {
+        changeSetId,
+        userId,
+      },
+    },
+    update: {},
+    create: {
+      changeSetId,
+      userId,
     },
   });
 }

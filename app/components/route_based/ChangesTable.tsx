@@ -7,6 +7,7 @@ import { Link } from "@remix-run/react";
 
 type ChangesTableProps = {
   changes: Pick<ChangeVM, "id" | "createdAt" | "status" | "product" | "createdBy" | "approver">[];
+  from: number;
 };
 
 function shortenFirstName(firstName?: string) {
@@ -19,12 +20,12 @@ const STATUS_TONE_MAP: Record<ChangeSetVM["status"], "green" | "yellow" | "blue"
   REJECTED: "red",
 };
 
-export default function ChangesTable({ changes }: ChangesTableProps) {
+export default function ChangesTable({ changes, from }: ChangesTableProps) {
   return (
     <Table headings={["№", "Продукт", "Статус", "Створено", "Відповідальний", "Дата", "Дата рішення", "Посилання"]}>
       {changes.map(({ id, createdAt, status, product, createdBy, approver, decidedAt }, index) => (
         <Table.Row key={id}>
-          <Table.Cell>{index + 1}</Table.Cell>
+          <Table.Cell>{from + index}</Table.Cell>
           <Table.Cell>
             <Link className="link" to={`/home/products/${product.id}`}>
               {product.title}

@@ -9,7 +9,7 @@ export { loader };
 
 export default function Changes() {
   const data = useLoaderData<typeof loader>();
-  console.log(111, data);
+  // console.log(111, data);
 
   return (
     <>
@@ -21,7 +21,7 @@ export default function Changes() {
         showCalendar={true}
       />
       <div>
-        <ChangesTable changes={data?.changes} />
+        <ChangesTable changes={data?.changes} from={data.fromPagination}/>
       </div>
       {data?.changes?.length > 0 && (
         <Pagination

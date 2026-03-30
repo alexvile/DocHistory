@@ -2,7 +2,13 @@ import { isRouteErrorResponse, Outlet, useLoaderData, useRouteError } from "@rem
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import BackLink from "~/components/common/BackLink";
-import { approveChangeSet, assignApproverToChangeSet, getPopulatedChangeSetById, rejectChangeSet } from "~/server/changes.server";
+import {
+  approveChangeSet,
+  assignApproverToChangeSet,
+  getPopulatedChangeSetById,
+  rejectChangeSet,
+  viewChange,
+} from "~/server/changes.server";
 import ChangeSetCard from "~/components/route_based/ChangeSetCard";
 import { getUserId, requireUserRole } from "~/server/auth.server";
 import { getApprovers } from "~/server/user.server";
@@ -64,21 +70,9 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     approvers = await getApprovers(userId);
   }
 
-
-  if(role === 'VIEWER') {
-    //  await prisma.changeSetView.upsert({
-    //   where: {
-    //     changeSetId_userId: {
-    //       changeSetId,
-    //       userId: user.id,
-    //     },
-    //   },
-    //   update: {},
-    //   create: {
-    //     changeSetId,
-    //     userId: user.id,
-    //   },
-    // });
+  const changeId = params.changeId;
+  if (role === "VIEWER") {
+    // await viewChange(userId, changeId);
   }
 
   const changeSet = await getPopulatedChangeSetById(params.changeId);

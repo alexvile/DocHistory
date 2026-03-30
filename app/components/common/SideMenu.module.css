@@ -31,16 +31,31 @@
 
 
 .changesLinkWrapper {
-  display: flex;
-  align-items: center;
+  position: relative;
 }
 
 .linkForViewer {
+  position: absolute;
+  top: 0;
+  right: 0;
   width: fit-content !important;
+  &:hover {
+    .viewerCircle {
+      background-color: rgb(179, 6, 6);
+    }
+  }
+  &:active {
+    .viewerCircle {
+      padding-block-start: 3px;
+      padding-block-end: 1px;
+    }
+  }
 }
+
 .viewerCircle {
+  transition: background-color 0.25s ease;
   border-radius: 100px;
-  background-color: red;
+  background-color: rgb(214, 12, 12);
   color: #fff;
   font-size: 12px;
   padding: 2px 5px;

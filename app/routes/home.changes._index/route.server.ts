@@ -42,15 +42,16 @@ export const loader: LoaderFunction = async ({ request }) => {
       }),
     };
   }
-  // where формується динамічно
+
+  // 🔥 базовий where
   const where: Prisma.ChangeSetWhereInput = {
     ...(productId && { productId }),
     ...(statusParam && { status: statusParam as ChangeSetStatus }),
     ...(createdAtFilter && { createdAt: createdAtFilter }),
   };
 
+  // 🔥 myOnly
   if (myOnly) {
-    // todo - fix warning
     if (role === "ADMIN") {
       where.approverId = userId;
     }
@@ -60,17 +61,16 @@ export const loader: LoaderFunction = async ({ request }) => {
     }
   }
 
-  let totalCount;
-
-  if (role === "VIEWER") {
-    totalCount = await getViewerChangesCount({
-      where,
-      userId,
-      onlyUnread,
-    });
-  } else {
-    totalCount = await getTotalChangesCount(where);
+  // 🔥 ВАЖЛИВО: onlyUnread прямо в where
+  if (role === "VIEWER" && onlyUnread) {
+    where.views = {
+      none: {
+        userId,
+      },
+    };
   }
+
+  const totalCount = await getTotalChangesCount(where);
   const totalPages = Math.ceil(totalCount / take);
 
   let changes;
@@ -81,7 +81,6 @@ export const loader: LoaderFunction = async ({ request }) => {
       skip,
       take,
       userId,
-      onlyUnread,
     });
   } else {
     changes = await getFilteredChangeSets(where, orderBy, skip, take);

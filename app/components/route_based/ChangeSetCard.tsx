@@ -6,7 +6,7 @@ import { Accordion } from "../ui/Accordion";
 import NormsTable from "../NormsTable";
 import NormsTableWithChanges from "../NormsTableWithChanges";
 import { Icon } from "../ui/Icon";
-import {  ApproverCombobox, LegacyApproverCombobox } from "./ApproverCombobox";
+import { ApproverCombobox, LegacyApproverCombobox } from "./ApproverCombobox";
 import { useState } from "react";
 import { Form } from "@remix-run/react";
 import translate from "~/utils/translate";
@@ -45,8 +45,10 @@ function ChangeSetCardMeta({ createdBy, createdAt, status, approver, decidedAt }
         <p className={styles.changeSetCardMetaField}>
           <strong>Рішення прийнято: </strong>
           {formatDateForUA(decidedAt, { withYear: true })}
+          {/* todo - add who approved */}
         </p>
       )}
+      {/* todo - who viewed  + styling*/}
     </div>
   );
 }
@@ -128,7 +130,7 @@ function AdminActions({ id }: { id: string }) {
   );
 }
 
-function CommitterActions({ id, approvers }: { id: string, approvers: any }) {
+function CommitterActions({ id, approvers }: { id: string; approvers: any }) {
   const [approverId, setApproverId] = useState<string | undefined>();
   // console.log(11, approvers);
   return (
@@ -136,8 +138,7 @@ function CommitterActions({ id, approvers }: { id: string, approvers: any }) {
       <Form method="post" aria-label="Approve change set" className="commiterActionsSetApprover">
         <input type="hidden" name="intent" value="assign-approver" />
 
-
-       <ApproverCombobox approverOptions={approvers} value={approverId} setValue={setApproverId}/>
+        <ApproverCombobox approverOptions={approvers} value={approverId} setValue={setApproverId} />
         {/* <LegacyApproverCombobox
           value={approverId}
           onChange={(id) => {
@@ -201,13 +202,13 @@ export default function ChangeSetCard({
   approverId,
   userId,
   decidedAt,
-  approvers
+  approvers,
 }: ChangeSetCardProps) {
   return (
     <div className={styles.container}>
       <ChangeSetCardMeta createdBy={createdBy} createdAt={createdAt} status={status} approver={approver} decidedAt={decidedAt} />
       <ChangeSetCardSummary diff={diff} />
-      <ChangeSetCardActions role={role} id={id} status={status} userId={userId} approverId={approverId} approvers={approvers}/>
+      <ChangeSetCardActions role={role} id={id} status={status} userId={userId} approverId={approverId} approvers={approvers} />
     </div>
   );
 }

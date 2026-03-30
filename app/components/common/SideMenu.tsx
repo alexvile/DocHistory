@@ -33,9 +33,9 @@ export default function SideMenu({ role, count }: { role: UserRoleVM; count: num
                 <Icon name="changes" />
                 Всі зміни
               </NavLink>
-              <Link to="changes?unread=1&status=APPROVED" className={styles.linkForViewer}>
+              {role === 'VIEWER' && count > 0 && <Link to="changes?unread=1&status=APPROVED" className={styles.linkForViewer}>
                 <span className={styles.viewerCircle}>{count}</span>
-              </Link>
+              </Link>}
             </div>
           </li>
           <li className={styles.sideMenuItem}>
