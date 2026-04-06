@@ -1,0 +1,19 @@
+.page {
+  position: relative;
+}
+
+/* loading state */
+.page.is-loading {
+  cursor: progress;
+}
+
+/* children wrapper */
+.content {
+  transition: opacity 0.2s ease;
+}
+
+/* коли loading */
+.page.is-loading .content {
+  opacity: 0.5;
+  pointer-events: none;
+}

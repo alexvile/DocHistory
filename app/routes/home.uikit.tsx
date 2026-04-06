@@ -1,6 +1,6 @@
 import { Button } from "@ariakit/react";
 import { LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { Outlet } from "@remix-run/react";
+import { Link, Outlet } from "@remix-run/react";
 import { useState } from "react";
 import AKComboBox from "~/components/ui/AKCombobox";
 import { Icon } from "~/components/ui/Icon";
@@ -32,7 +32,7 @@ export default function UIKit() {
           Primary Critical
         </button>
       </div>
-      <div className="flex gap-8 mt-8">
+      <div className="flex gap-8 mt-8 items-center">
         <button disabled className="button button--primary">
           Primary
         </button>
@@ -46,7 +46,7 @@ export default function UIKit() {
           Primary Critical
         </button>
       </div>
-      <div className="flex gap-8 mt-8">
+      <div className="flex gap-8 mt-8 items-center">
         <button disabled className="button button--primary is-loading">
           Primary
         </button>
@@ -59,6 +59,14 @@ export default function UIKit() {
         <button disabled type="submit" name="intent" value="reject" className="button button--primary button--critical is-loading">
           Primary Critical
         </button>
+      </div>
+      <div className="flex gap-8 mt-8 items-center">
+        <Link to={"#"} className="link" aria-label="Додати продукт">
+          Link
+        </Link>
+        {/* <Link to={"#"} className="link-unstyled button button--primary is-loading" aria-label="Додати продукт">
+          Link-button
+        </Link> */}
       </div>
       <div className="mt-8">
         <select className="p-select">

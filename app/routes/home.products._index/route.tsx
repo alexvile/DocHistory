@@ -1,4 +1,4 @@
-import { json, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
+import { LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { requireUserRole } from "~/server/auth.server";
 import { getFilteredProducts, getTotalProductsCount } from "~/server/products.server";
@@ -52,6 +52,7 @@ export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) =>
 
 export default function Products() {
   const data = useLoaderData<typeof loader>();
+
   return (
     <>
       <SortAndFilterBar sortConfig={productSortConfig} showQueryFilter={true} />

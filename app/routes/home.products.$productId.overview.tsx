@@ -1,7 +1,7 @@
+import invariant from "tiny-invariant"; 
 import { lazy, Suspense, useState } from "react";
 import { Form, isRouteErrorResponse, Outlet, useActionData, useLoaderData, useRouteError } from "@remix-run/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import invariant from "tiny-invariant";
 import { getProductWithNormsById } from "~/server/products.server";
 import { getUserId, requireUserRole } from "~/server/auth.server";
 import NormsTable from "~/components/NormsTable";

@@ -1,16 +1,14 @@
 import { ActionFunction, ActionFunctionArgs, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, Link, useActionData, useParams } from "@remix-run/react";
+import { Form, useActionData } from "@remix-run/react";
 import { getUserId, requireUserRole } from "~/server/auth.server";
 import { createProduct } from "~/server/products.server";
-import { useEffect, useMemo, useState } from "react";
-import { filterStringEntries, shortId } from "~/utils/main";
-import { parseFormData } from "~/utils/rowHandlers";
+import { useState, lazy, Suspense } from "react";
 import { Icon } from "~/components/ui/Icon";
-import { buildDynamicTitleValidators, validateFields } from "~/utils/validation";
-import BackLink from "~/components/common/BackLink";
-import { ExcelUploadContainer } from "~/components/ExcelUploadContainer";
 import TextField from "~/components/ui/TextField";
 import { validateProductForm } from "~/utils/vanildateNewProduct.server";
+import BackControls from "~/components/common/BackControls";
+
+const ExcelUploadContainer = lazy(() => import("~/components/ExcelUploadContainer"));
 
 // todo use _new !!!!
 export const action: ActionFunction = async ({ request }: ActionFunctionArgs) => {
@@ -29,7 +27,7 @@ export const action: ActionFunction = async ({ request }: ActionFunctionArgs) =>
       headers: { "Content-Type": "application/json" },
     });
   }
-  
+
   try {
     const { product } = await createProduct({
       title: data.title,
@@ -49,7 +47,7 @@ export const action: ActionFunction = async ({ request }: ActionFunctionArgs) =>
           "Content-Type": "application/json",
           Location: `/products/${product.id}`,
         },
-      }
+      },
     );
   } catch (error) {
     console.error("Create product failed", error);
@@ -64,7 +62,7 @@ export const action: ActionFunction = async ({ request }: ActionFunctionArgs) =>
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
   }
 };
@@ -89,13 +87,12 @@ export default function NewProduct() {
   const actionData = useActionData<typeof action>();
   const errors = actionData?.errors;
   const hasErrors = errors && Object.keys(errors).length > 0;
-
   const [rows, setRows] = useState<any[] | null>(null);
 
   return (
     <>
       <div className="dashboard-topbar">
-        <BackLink />
+        <BackControls />
         <h3 className="products-new__title">
           Створення нового продукту
           <Icon name="pencil" />
@@ -113,8 +110,9 @@ export default function NewProduct() {
           </ul>
         </div>
       )}
-
-      <ExcelUploadContainer onChange={setRows} />
+      <Suspense fallback={<div>Завантаження...</div>}>
+        <ExcelUploadContainer onChange={setRows} />
+      </Suspense>
       <Form method="post">
         <input type="hidden" name="norms" value={rows ? JSON.stringify(rows) : ""} />
         <div className="products-new__top-form">

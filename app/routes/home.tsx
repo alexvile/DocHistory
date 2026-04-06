@@ -6,6 +6,7 @@ import { ModalProvider } from "~/components/ModalProvider";
 import SideMenu from "~/components/common/SideMenu";
 import UserBar from "~/components/common/UserBar";
 import { getUnreadCount } from "~/server/changes.server";
+import Page from "~/components/ui/Page";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const role = await requireUserRole(request);
@@ -30,7 +31,7 @@ export default function Home() {
   // if(role === "VIEWER") {
 
   // }
-  console.log('cc', count);
+  console.log("cc", count);
   // ts check
   return (
     <>
@@ -38,13 +39,13 @@ export default function Home() {
         <header>
           <UserBar user={user} />
         </header>
-        <SideMenu role={user.role} count={count}/>
+        <SideMenu role={user.role} count={count} />
         <main>
-          <Outlet />
+          <Page>
+            <Outlet />
+          </Page>
         </main>
-        <footer>
-          {/* <p style={{ marginBlock: "6px" }}>&copy; 2026 Your Company</p> */}
-        </footer>
+        <footer>{/* <p style={{ marginBlock: "6px" }}>&copy; 2026 Your Company</p> */}</footer>
         <div id="modal-root"></div>
       </ModalProvider>
     </>

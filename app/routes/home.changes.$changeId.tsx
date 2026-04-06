@@ -1,7 +1,7 @@
-import { isRouteErrorResponse, Outlet, redirect, useLoaderData, useRouteError } from "@remix-run/react";
+import { isRouteErrorResponse, Outlet, redirect, useLoaderData, useNavigation, useRouteError } from "@remix-run/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
-import BackLink from "~/components/common/BackLink";
+import BackLink from "~/components/common/BackControls";
 import {
   approveChangeSet,
   assignApproverToChangeSet,
@@ -157,6 +157,19 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
 export default function ChangeSet() {
   const data = useLoaderData();
+  const navigation = useNavigation()
+  const isLoading = navigation.state === "loading"
+  console.log(isLoading);
+// skeleton
+// fade
+// overlay
+//   const navigation = useNavigation()
+// navigation.state === "submitting"
+{/* <button disabled={isSubmitting}>
+  {isSubmitting ? "Saving..." : "Save"}
+</button> */}
+
+// const fetcher = useFetcher()
   console.log(121212, data);
   const { role, userId, changeSet, approvers } = data;
   const { id, status, createdAt, diff, createdBy, approver, approverId, decidedAt, product } = changeSet;

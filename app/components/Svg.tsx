@@ -5,7 +5,7 @@ import { GoHeading } from "react-icons/go";
 import { FaLayerGroup, FaUsers, FaRegClock, FaPlus, FaMinus, FaPlusSquare, FaMinusSquare, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FaCircleMinus, FaCirclePlus, FaMagnifyingGlass, FaPencil } from "react-icons/fa6";
 import { TbExchange } from "react-icons/tb";
-import { MdManageAccounts, MdLogout, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdChangeCircle } from "react-icons/md";
+import { MdManageAccounts, MdLogout, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdChangeCircle, MdArrowUpward } from "react-icons/md";
 import { CgSmartHomeBoiler } from "react-icons/cg";
 import { IoIosCheckmark, IoIosHelpCircleOutline, IoMdClose } from "react-icons/io";
 import { RxUpdate } from "react-icons/rx";
@@ -62,6 +62,9 @@ export function Svg({ name }: { name: string }) {
       return <FaEye />;
     case "eye-closed":
       return <FaEyeSlash />;
+      case "arrow-up":
+        return <MdArrowUpward />
+
     default:
       return <AiOutlineStop />;
   }
