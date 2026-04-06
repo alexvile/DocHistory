@@ -91,6 +91,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     // // 3. delete
     await deleteChangeSetWithSnapshot(changeSet);
     // todo - ADD TRY-CAtch
+    // todo - if possible - show toast
     return redirect("/home/changes");
   }
 

@@ -8,9 +8,10 @@ import NormsTableWithChanges from "../NormsTableWithChanges";
 import { Icon } from "../ui/Icon";
 import { ApproverCombobox } from "./ApproverCombobox";
 import { useState } from "react";
-import { Form } from "@remix-run/react";
+import { Form, useNavigation } from "@remix-run/react";
 import translate from "~/utils/translate";
 import * as Ariakit from "@ariakit/react";
+import clsx from "clsx";
 
 type ChangeSetCardMetaProps = Pick<ChangeSetVM, "createdBy" | "approver" | "createdAt" | "status" | "decidedAt">;
 
@@ -140,6 +141,8 @@ function AdminActions({ id }: { id: string }) {
 function CommitterActions({ id, approvers }: { id: string; approvers: any }) {
   const [approverId, setApproverId] = useState<string | undefined>();
   const dialog = Ariakit.useDialogStore();
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
   // console.log(11, approvers);
   return (
     <div role="group" className="commiterActions" aria-label="Commiter actions">
@@ -161,11 +164,18 @@ function CommitterActions({ id, approvers }: { id: string; approvers: any }) {
           Ви впевнені, що хочете видалити цю зміну? Після видалення буде втрачено саму зміну, а також чорновий снапшот продукту, пов’язаний
           із нею. Цю дію неможливо скасувати.
         </p>
+
         <div className="flex justify-end gap-12">
-          <Ariakit.DialogDismiss className="button button--secondary">Cкасувати</Ariakit.DialogDismiss>
+          <Ariakit.DialogDismiss disabled={isSubmitting} className={clsx("button button--secondary", isSubmitting && "is-loading")}>
+            Cкасувати
+          </Ariakit.DialogDismiss>
           <Form method="post">
             <input type="hidden" name="intent" value="remove" />
-            <button className="button button--primary button--critical" aria-label="Видалити зміну">
+            <button
+              disabled={isSubmitting}
+              className={clsx("button button--primary button--critical", isSubmitting && "is-loading")}
+              aria-label="Видалити зміну"
+            >
               Підтвердити
             </button>
           </Form>
