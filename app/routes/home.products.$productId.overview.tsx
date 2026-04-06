@@ -1,16 +1,17 @@
+import { lazy, Suspense, useState } from "react";
 import { Form, isRouteErrorResponse, Outlet, useActionData, useLoaderData, useRouteError } from "@remix-run/react";
-import { useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import { getProductWithNormsById } from "~/server/products.server";
 import { getUserId, requireUserRole } from "~/server/auth.server";
 import NormsTable from "~/components/NormsTable";
 import { CanonicalRow } from "~/types";
-import { ExcelUploadContainer } from "~/components/ExcelUploadContainer";
 import { validateProductNorms } from "~/utils/vanildateNewProduct.server";
 import { mapProductErrorToResponse } from "~/server/products.http.server";
 import { diffNorms, hasChanges } from "~/utils/comparison";
 import { createChangeSet } from "~/server/changes.server";
+
+const ExcelUploadContainer = lazy(() => import("~/components/ExcelUploadContainer"));
 
 type ActionResponse = {
   success: boolean;
@@ -222,7 +223,7 @@ export default function ProductNorm() {
           {loaderData.product.code}
         </p>
       )}
-      {isEditable && <ExcelUploadContainer onChange={setRows} preview={false} />}
+      <Suspense fallback={<div>Завантаження...</div>}>{isEditable && <ExcelUploadContainer onChange={setRows} preview={false} />}</Suspense>
       <div className="products-details__main-form">
         {rows && (
           <button type="button" onClick={toggleComparison}>

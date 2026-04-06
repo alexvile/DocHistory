@@ -10,7 +10,7 @@ type ExcelUploadContainerProps = {
   onChange?: (rows: ExcelRow[]) => void;
   preview?: boolean;
 };
-export function ExcelUploadContainer({ onChange, preview = true }: ExcelUploadContainerProps) {
+export default function ExcelUploadContainer({ onChange, preview = true }: ExcelUploadContainerProps) {
   const [rows, setRows] = useState<any[] | null>(null);
   const [showPreview, setShowPreview] = useState(true);
 

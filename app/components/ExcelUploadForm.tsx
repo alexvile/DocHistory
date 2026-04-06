@@ -2,6 +2,7 @@ import { useFetcher } from "@remix-run/react";
 import { useEffect, useId, useRef, useState } from "react";
 import styles from "./ExcelUploadForm.module.css";
 import { Icon } from "./ui/Icon";
+import clsx from "clsx";
 
 type ExcelUploadFormProps<T = unknown> = {
   onParsed: (rows: T[]) => void;
@@ -15,6 +16,8 @@ export function ExcelUploadForm({ onParsed, onClear, isParsed }: ExcelUploadForm
   const handledRef = useRef(false);
   const [hasFile, setHasFile] = useState(false);
   const id = useId();
+
+  const isSubmitting = fetcher.state === "submitting";
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data?.rows && !handledRef.current) {
@@ -59,10 +62,19 @@ export function ExcelUploadForm({ onParsed, onClear, isParsed }: ExcelUploadForm
         </div>
         {hasFile && (
           <div className={styles.fileUploadButtons}>
-            <button type="submit" disabled={isParsed} className="button button--primary">
+            <button
+              type="submit"
+              disabled={isParsed || isSubmitting}
+              className={clsx("button button--primary", isSubmitting && "is-loading")}
+            >
               Завантажити
             </button>
-            <button type="button" onClick={handleClear} className="button button--secondary">
+            <button
+              type="button"
+              disabled={isSubmitting}
+              onClick={handleClear}
+              className={clsx("button button--secondary full-width", isSubmitting && "is-loading")}
+            >
               Очистити
             </button>
           </div>
