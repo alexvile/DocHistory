@@ -49,7 +49,7 @@ export default function NormChanges() {
     <>
       <div>
         {/* todo - fix issue with link */}
-        <ChangesTable changes={changes} />
+        <ChangesTable changes={changes} from={1} role={role} />
       </div>
 
       <div style={{ marginBlockStart: '20px' }}>
