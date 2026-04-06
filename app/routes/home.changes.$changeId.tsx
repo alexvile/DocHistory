@@ -1,10 +1,12 @@
-import { isRouteErrorResponse, Outlet, useLoaderData, useRouteError } from "@remix-run/react";
+import { isRouteErrorResponse, Outlet, redirect, useLoaderData, useRouteError } from "@remix-run/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import BackLink from "~/components/common/BackLink";
 import {
   approveChangeSet,
   assignApproverToChangeSet,
+  deleteChangeSetWithSnapshot,
+  getLightChangeById,
   getPopulatedChangeSetById,
   rejectChangeSet,
   viewChange,
@@ -45,6 +47,51 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     });
     return null;
     // return redirect(request.url);
+  }
+
+  // if role === commiter - status == draft and intent === 'remove'
+
+  if (intent === "remove") {
+    console.log("remove");
+    // todo remove changset
+    // todo remove connected product snapshot
+    // todo redirect to home/changes
+  }
+
+  if (intent === "remove") {
+    const changeSet = await getLightChangeById(changeSetId);
+
+    if (!changeSet) {
+      throw new Error("ChangeSet not found");
+    }
+
+    // // ❌ не даємо видаляти підтверджені
+    // if (changeSet.status === "APPROVED") {
+    //   throw new Error("Cannot delete approved ChangeSet");
+    // }
+
+    //   if (!changeSet) {
+    //   return {
+    //     error: "Зміну не знайдено",
+    //   };
+    // }
+
+    // // 2. бізнес-логіка
+    // if (changeSet.status === "APPROVED") {
+    //   return {
+    //     error: "Не можна видалити підтверджену зміну",
+    //   };
+    // }
+
+    // // (опціонально)
+    // // if (changeSet.status === "ON_REVIEW") {
+    // //   return { error: "Зміна вже на перевірці" };
+    // // }
+
+    // // 3. delete
+    await deleteChangeSetWithSnapshot(changeSet);
+    // todo - ADD TRY-CAtch
+    return redirect("/home/changes");
   }
 
   if (intent === "approve") {

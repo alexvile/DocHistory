@@ -372,3 +372,38 @@ export async function viewChange(userId: string, changeSetId: string) {
     },
   });
 }
+
+type LightChangeSet = {
+  id: string;
+  status: ChangeSetStatus;
+  newSnapshotId: string;
+  createdById: string;
+};
+
+export async function getLightChangeById(changeSetId: string): Promise<LightChangeSet | null> {
+  return prisma.changeSet.findUnique({
+    where: { id: changeSetId },
+    select: {
+      id: true,
+      status: true,
+      newSnapshotId: true,
+      createdById: true,
+    },
+  });
+}
+
+export async function deleteChangeSetWithSnapshot(changeSet: { id: string; newSnapshotId: string }): Promise<void> {
+  await prisma.$transaction([
+    prisma.changeSetView.deleteMany({
+      where: { changeSetId: changeSet.id },
+    }),
+
+    prisma.changeSet.delete({
+      where: { id: changeSet.id },
+    }),
+
+    prisma.normSnapshot.delete({
+      where: { id: changeSet.newSnapshotId },
+    }),
+  ]);
+}

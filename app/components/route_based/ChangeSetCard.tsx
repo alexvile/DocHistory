@@ -164,7 +164,8 @@ function CommitterActions({ id, approvers }: { id: string; approvers: any }) {
         <div className="flex justify-end gap-12">
           <Ariakit.DialogDismiss className="button button--secondary">Cкасувати</Ariakit.DialogDismiss>
           <Form method="post">
-            <button className="button button--primary button--critical" aria-label="Delete change set">
+            <input type="hidden" name="intent" value="remove" />
+            <button className="button button--primary button--critical" aria-label="Видалити зміну">
               Підтвердити
             </button>
           </Form>
