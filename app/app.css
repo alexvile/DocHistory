@@ -711,3 +711,40 @@ a.active {
   opacity: 1;
   transform: scale(1);
 }
+
+
+
+/* tmp */
+.excelUploaderSkeleton {
+  width: 300px;
+  height: 160px;
+
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+
+  background: #f3f3f3;
+}
+
+/* shimmer */
+.excelUploaderSkeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%
+  );
+
+  transform: translateX(-100%);
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}

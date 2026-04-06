@@ -110,7 +110,7 @@ export default function NewProduct() {
           </ul>
         </div>
       )}
-      <Suspense fallback={<div>Завантаження...</div>}>
+      <Suspense fallback={<div className="excelUploaderSkeleton" />}>
         <ExcelUploadContainer onChange={setRows} />
       </Suspense>
       <Form method="post">

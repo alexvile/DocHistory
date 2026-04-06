@@ -190,7 +190,7 @@ export default function ProductNorm() {
     <>
       {loaderData.role === "COMMITTER" && (
         <div className="flex justify-between mb-8">
-          <Suspense fallback={<div>Завантаження...</div>}>
+          <Suspense fallback={<div className="excelUploaderSkeleton" />}>
             {isEditable && <ExcelUploadContainer onChange={setRows} preview={false} />}
           </Suspense>
 
