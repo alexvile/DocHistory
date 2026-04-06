@@ -145,13 +145,6 @@ function CommitterActions({ id, approvers }: { id: string; approvers: any }) {
         <input type="hidden" name="intent" value="assign-approver" />
 
         <ApproverCombobox approverOptions={approvers} value={approverId} setValue={setApproverId} />
-        {/* <LegacyApproverCombobox
-          value={approverId}
-          onChange={(id) => {
-            setApproverId(id || undefined);
-          }}
-        /> */}
-
         <button type="submit" disabled={!approverId} className="button button--primary">
           Надіслати
         </button>

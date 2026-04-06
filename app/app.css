@@ -320,15 +320,6 @@ fieldset {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* General popup */
-.popup {
-  position: relative;
-}
-.popup__close {
-  /* position: absolute; */
-  top: 0;
-  right: 0;
-}
 
 /* top bar in dashboard */
 .dashboard-topbar {
