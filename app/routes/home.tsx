@@ -31,7 +31,7 @@ export default function Home() {
   // if(role === "VIEWER") {
 
   // }
-  console.log("cc", count);
+  // console.log("cc", count);
   // ts check
   return (
     <>

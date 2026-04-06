@@ -69,7 +69,7 @@ export const action: ActionFunction = async ({ request }: ActionFunctionArgs) =>
 
 export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
   const role = await requireUserRole(request);
-  console.log(1212, role);
+  // console.log(1212, role);
   // return null;
   return null;
 };
@@ -82,6 +82,7 @@ export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) =>
 // todo - errors + disabled state
 // todo - when try to exit - show warning !!!
 // todo - mark inputs with red color
+// todo - loaders and blockers to change actions!
 
 export default function NewProduct() {
   const actionData = useActionData<typeof action>();
@@ -110,27 +111,26 @@ export default function NewProduct() {
           </ul>
         </div>
       )}
-      <Suspense fallback={<div className="excelUploaderSkeleton" />}>
-        <ExcelUploadContainer onChange={setRows} />
-      </Suspense>
-      <Form method="post">
+      <Form method="post" className="flex justify-between items-start mb-16">
         <input type="hidden" name="norms" value={rows ? JSON.stringify(rows) : ""} />
         <div className="products-new__top-form">
           <TextField label="Назва" name="title" placeholder="КС-Г(В)-010 СН" minLength={4} isRequired />
           <TextField label="Код" name="code" placeholder="070.00.00.000" />
         </div>
-        <div className="products-new__main-form">
-          <button
-            className="button button--primary"
-            aria-label="Збрегети зміни"
-            disabled={!rows || rows.length === 0}
-            aria-disabled={!rows || rows.length === 0}
-            type="submit"
-          >
-            Зберегти
-          </button>
-        </div>
+        <button
+          className="button button--primary"
+          aria-label="Збрегети зміни"
+          disabled={!rows || rows.length === 0}
+          aria-disabled={!rows || rows.length === 0}
+          type="submit"
+        >
+          Зберегти
+        </button>
       </Form>
+
+      <Suspense fallback={<div className="excelUploaderSkeleton" />}>
+        <ExcelUploadContainer onChange={setRows} />
+      </Suspense>
     </>
   );
 }

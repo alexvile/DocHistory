@@ -46,7 +46,7 @@ export function Pagination({ page, totalPages, fromPagination, toPagination, tot
       <span className={styles.paginationInfo}>
         Сторінка: {page} з {totalPages}
       </span>
-      <span>
+      <span className={styles.paginationShownItems}>
         &nbsp; Показано: {fromPagination}–{toPagination} з {totalCount}
       </span>
     </div>

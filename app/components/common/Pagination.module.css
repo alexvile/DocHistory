@@ -49,3 +49,8 @@
   font-weight: bold;
   color: #555;
 }
+
+.paginationInfo,
+.paginationShownItems {
+  font-size: 14px;
+}
