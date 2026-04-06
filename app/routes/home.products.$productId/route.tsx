@@ -36,10 +36,13 @@ export default function ProductLayout() {
       {/* <h1>Product {productId}</h1> */}
       <div className="dashboard-topbar">
         <BackLink />
-        <h3 className="product-details__title">
-          {loaderData.product.title}
-          <LastChanged date={loaderData.product.updatedAt} />
-        </h3>
+        <div>
+          <div className="flex items-center gap-8">
+            <h3 className="margin-0">{loaderData.product.title}</h3>
+            <LastChanged date={loaderData.product.updatedAt} />
+          </div>
+          {loaderData.product.code && <p className="margin-0 text-sm italic">{loaderData.product.code}</p>}
+        </div>
       </div>
       <ProductNavigation />
       <Outlet />

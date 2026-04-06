@@ -93,10 +93,10 @@ export default function NewProduct() {
     <>
       <div className="dashboard-topbar">
         <BackControls />
-        <h3 className="products-new__title">
-          Створення нового продукту
+        <div className="flex gap-8">
+          <h3 className="margin-0 ">Створення нового продукту</h3>
           <Icon name="pencil" />
-        </h3>
+        </div>
       </div>
 
       {hasErrors && (

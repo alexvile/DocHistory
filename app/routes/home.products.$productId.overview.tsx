@@ -214,12 +214,7 @@ export default function ProductNorm() {
       )}
       {actionData?.message && <div className="alert alert-warning">{actionData.message}</div>}
 
-      {loaderData.product.code && (
-        <p className="product-details__code">
-          <span className="bold">Код: </span>
-          {loaderData.product.code}
-        </p>
-      )}
+ 
       <Suspense fallback={<div>Завантаження...</div>}>{isEditable && <ExcelUploadContainer onChange={setRows} preview={false} />}</Suspense>
       <div className="products-details__main-form">
         {rows && (

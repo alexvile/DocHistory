@@ -26,13 +26,6 @@
     }
   }
 }
-/* products styles */
-.product-details__title,
-.products-new__title {
-  display: flex;
-  column-gap: 6px;
-  margin: 0;
-}
 
 .products-all__top {
   display: flex;
