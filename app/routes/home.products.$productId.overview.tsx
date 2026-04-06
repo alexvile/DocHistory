@@ -1,6 +1,6 @@
-import invariant from "tiny-invariant"; 
+import invariant from "tiny-invariant";
 import { lazy, Suspense, useState } from "react";
-import { Form, isRouteErrorResponse, Outlet, useActionData, useLoaderData, useRouteError } from "@remix-run/react";
+import { Form, isRouteErrorResponse, Outlet, redirect, useActionData, useLoaderData, useRouteError } from "@remix-run/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { getProductWithNormsById } from "~/server/products.server";
 import { getUserId, requireUserRole } from "~/server/auth.server";
@@ -70,7 +70,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
   console.log("diff", diff);
 
-  await createChangeSet({
+  const { changeSetId } = await createChangeSet({
     productId: params.productId,
     createdById: userId,
     oldSnapshotId: currentSnapshot.id,
@@ -78,10 +78,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     diff,
   });
 
-  return new Response(JSON.stringify({ status: "change_created" }), {
-    status: 201,
-    headers: { "Content-Type": "application/json" },
-  });
+  return redirect(`/home/changes/${changeSetId}`);
   // const userId = await getUserId(request);
   // if (!userId) {
   //   const res: ActionResponse = {
@@ -184,7 +181,7 @@ export default function ProductNorm() {
   // todo - recently uploda check
   // todo - changes show - edit
   // todo - check if not the same (can use hash or checking by keys)
-
+  // todo - compare - show 2 tables in modal and mark changes in norms!
   return (
     <>
       {loaderData.role === "COMMITTER" && (
