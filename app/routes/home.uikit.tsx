@@ -22,7 +22,7 @@ export default function UIKit() {
   return (
     <>
       UI Kit
-      <div style={{ display: "flex", gap: "20px", marginBlockEnd: "20px" }}>
+      <div className="flex gap-8">
         <button className="button button--primary">Primary</button>
         <button className="button button--secondary">Secondary</button>
         <button className="button button--icon">
@@ -32,7 +32,17 @@ export default function UIKit() {
           Primary Critical
         </button>
       </div>
-      <div>
+      <div className="flex gap-8 mt-8">
+        <button disabled className="button button--primary">Primary</button>
+        <button disabled className="button button--secondary">Secondary</button>
+        <button disabled className="button button--icon">
+          <Icon name="close" />
+        </button>
+        <button disabled type="submit" name="intent" value="reject" className="button button--primary button--critical">
+          Primary Critical
+        </button>
+      </div>
+      <div className="mt-8">
         <select className="p-select">
           <option value="option1">Option1</option>
           <option value="option2">Option2</option>
@@ -40,30 +50,36 @@ export default function UIKit() {
           <option value="option4">Option4</option>
           <option value="option5">Option5</option>
         </select>
-        <TextField label="Назва" name="title" placeholder="КС-Г(В)-010 СН" minLength={4} isRequired />
-        <AKComboBox
-          options={comboboxOptions}
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-          onSelect={() => {}}
-          onClear={() => {}}
-          placeholder="Оберіть продукт"
-          label="Оберіть продукт"
-          ariaLabel="Оберіть продукт"
-          noResultsText="Продуктів не знайдено"
-        />
+        <div className="mt-8">
+          <TextField label="Назва" name="title" placeholder="КС-Г(В)-010 СН" minLength={4} isRequired />
+        </div>
+        <div className="mt-8">
+          <AKComboBox
+            options={comboboxOptions}
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+            onSelect={() => {}}
+            onClear={() => {}}
+            placeholder="Оберіть продукт"
+            label="Оберіть продукт"
+            ariaLabel="Оберіть продукт"
+            noResultsText="Продуктів не знайдено"
+          />
+        </div>
       </div>
       {/* modal */}
-      <Ariakit.Button onClick={dialog.show} className="button">
-        Show modal
-      </Ariakit.Button>
-      <Ariakit.Dialog store={dialog} backdrop={<div className="backdrop" />} className="dialog">
-        <Ariakit.DialogHeading className="heading">Success</Ariakit.DialogHeading>
-        <p className="description">Your payment has been successfully processed. We have emailed your receipt.</p>
-        <div>
-          <Ariakit.DialogDismiss className="button">OK</Ariakit.DialogDismiss>
-        </div>
-      </Ariakit.Dialog>
+      <div className="mt-8">
+        <Ariakit.Button onClick={dialog.show} className="button button--primary">
+          Show modal
+        </Ariakit.Button>
+        <Ariakit.Dialog store={dialog} backdrop={<div className="backdrop" />} className="dialog">
+          <Ariakit.DialogHeading className="heading">Success</Ariakit.DialogHeading>
+          <p className="description">Your payment has been successfully processed. We have emailed your receipt.</p>
+          <div>
+            <Ariakit.DialogDismiss className="button">OK</Ariakit.DialogDismiss>
+          </div>
+        </Ariakit.Dialog>
+      </div>
       Table Link Text
       <Outlet />
     </>

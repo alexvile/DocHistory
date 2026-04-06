@@ -151,6 +151,7 @@ fieldset {
     border-color: #000;
   }
 }
+
 /* Buttons */
 .button {
   padding: 6px 12px;
@@ -158,70 +159,74 @@ fieldset {
   cursor: pointer;
   border: none;
   width: fit-content;
-}
 
-.button.button--icon {
-  padding: 0;
-  width: 28px;
-  height: 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.button.button--icon,
-.button.button--secondary {
-  color: #303030;
-  background-color: #fff;
-  box-shadow: 0rem -0.0625rem 0rem 0rem #b5b5b5 inset, 0rem 0rem 0rem 0.0625rem rgba(0, 0, 0, 0.1) inset,
-    0rem 0.03125rem 0rem 0.09375rem #fff inset;
-}
-
-.button.button--icon:hover,
-.button.button--secondary:hover {
-  background-color: #fafafa;
-}
-
-.button.button--icon:active,
-.button.button--secondary:active {
-  box-shadow: -0.0625rem 0rem 0.0625rem 0rem rgba(26, 26, 26, 0.122) inset, 0.0625rem 0rem 0.0625rem 0rem rgba(26, 26, 26, 0.122) inset,
-    0rem 0.125rem 0.0625rem 0rem rgba(26, 26, 26, 0.2) inset;
-}
-
-.button.button--primary {
-  background-color: rgb(48, 48, 48);
-  color: #fff;
-}
-
-.button.button--primary:hover {
-  background-color: rgba(26, 26, 26, 1);
-}
-
-.button.button--primary:active {
-  padding-block-start: 7px;
-  padding-block-end: 5px;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-}
-
-.button.button--primary.button--critical {
-  background-color: rgba(199, 10, 36, 1);
-  &:hover {
-    background-color: rgba(163, 10, 36, 1);
+  &:focus-visible {
+    outline: 2px solid #005bd3;
+    outline-offset: 1px;
   }
-  &:active {
-    background-color: rgba(142, 11, 31, 1);
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
-}
 
-.button.button--primary:disabled,
-.button.button--secondary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+  /* ICON */
+  &.button--icon {
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-.button:focus-visible {
-  outline-offset: 1px;
-  outline: 2px solid #005bd3;
+  /* SECONDARY + ICON shared */
+  &:is(.button--icon, .button--secondary) {
+    color: #303030;
+    background-color: #fff;
+    box-shadow:
+      0 -0.0625rem 0 0 #b5b5b5 inset,
+      0 0 0 0.0625rem rgba(0, 0, 0, 0.1) inset,
+      0 0.03125rem 0 0.09375rem #fff inset;
+
+    &:not(:disabled):hover {
+      background-color: #fafafa;
+    }
+
+    &:not(:disabled):active {
+      box-shadow:
+        -0.0625rem 0 0.0625rem rgba(26, 26, 26, 0.122) inset,
+        0.0625rem 0 0.0625rem rgba(26, 26, 26, 0.122) inset,
+        0 0.125rem 0.0625rem rgba(26, 26, 26, 0.2) inset;
+    }
+  }
+
+  /* PRIMARY */
+  &.button--primary {
+    background-color: rgb(48, 48, 48);
+    color: #fff;
+
+    &:not(:disabled):hover {
+      background-color: rgb(26, 26, 26);
+    }
+
+    &:not(:disabled):active {
+      padding-block: 7px 5px;
+      box-shadow: rgba(0, 0, 0, 0.16) 0 1px 4px;
+    }
+
+    &.button--critical {
+      background-color: rgb(199, 10, 36);
+
+      &:not(:disabled):hover {
+        background-color: rgb(163, 10, 36);
+      }
+
+      &:not(:disabled):active {
+        background-color: rgb(142, 11, 31);
+      }
+    }
+  }
 }
 
 /* Links */
