@@ -33,12 +33,30 @@ export default function UIKit() {
         </button>
       </div>
       <div className="flex gap-8 mt-8">
-        <button disabled className="button button--primary">Primary</button>
-        <button disabled className="button button--secondary">Secondary</button>
+        <button disabled className="button button--primary">
+          Primary
+        </button>
+        <button disabled className="button button--secondary">
+          Secondary
+        </button>
         <button disabled className="button button--icon">
           <Icon name="close" />
         </button>
         <button disabled type="submit" name="intent" value="reject" className="button button--primary button--critical">
+          Primary Critical
+        </button>
+      </div>
+      <div className="flex gap-8 mt-8">
+        <button disabled className="button button--primary is-loading">
+          Primary
+        </button>
+        <button disabled className="button button--secondary is-loading">
+          Secondary
+        </button>
+        <button disabled className="button button--icon is-loading">
+          <Icon name="close" />
+        </button>
+        <button disabled type="submit" name="intent" value="reject" className="button button--primary button--critical is-loading">
           Primary Critical
         </button>
       </div>

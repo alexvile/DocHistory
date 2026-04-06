@@ -170,6 +170,31 @@ fieldset {
     cursor: not-allowed;
   }
 
+  &:disabled.is-loading {
+    pointer-events: none;
+    position: relative;
+    color: transparent;
+    background-color: #e5e5e5 !important;
+    box-shadow: none;
+
+    &::after {
+      color: #ccc;
+      content: "";
+      position: absolute;
+      inset: 0;
+      margin: auto;
+
+      width: 16px;
+      height: 16px;
+
+      border: 3px solid currentColor;
+      border-top-color: transparent;
+      border-radius: 50%;
+
+      animation: spin 0.6s linear infinite;
+    }
+  }
+
   /* ICON */
   &.button--icon {
     padding: 0;
@@ -184,19 +209,14 @@ fieldset {
   &:is(.button--icon, .button--secondary) {
     color: #303030;
     background-color: #fff;
-    box-shadow:
-      0 -0.0625rem 0 0 #b5b5b5 inset,
-      0 0 0 0.0625rem rgba(0, 0, 0, 0.1) inset,
-      0 0.03125rem 0 0.09375rem #fff inset;
+    box-shadow: 0 -0.0625rem 0 0 #b5b5b5 inset, 0 0 0 0.0625rem rgba(0, 0, 0, 0.1) inset, 0 0.03125rem 0 0.09375rem #fff inset;
 
     &:not(:disabled):hover {
       background-color: #fafafa;
     }
 
     &:not(:disabled):active {
-      box-shadow:
-        -0.0625rem 0 0.0625rem rgba(26, 26, 26, 0.122) inset,
-        0.0625rem 0 0.0625rem rgba(26, 26, 26, 0.122) inset,
+      box-shadow: -0.0625rem 0 0.0625rem rgba(26, 26, 26, 0.122) inset, 0.0625rem 0 0.0625rem rgba(26, 26, 26, 0.122) inset,
         0 0.125rem 0.0625rem rgba(26, 26, 26, 0.2) inset;
     }
   }
@@ -226,6 +246,12 @@ fieldset {
         background-color: rgb(142, 11, 31);
       }
     }
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -343,7 +369,6 @@ fieldset {
   justify-content: flex-end;
 }
 
-
 .gap-4 {
   gap: 4px;
 }
@@ -420,7 +445,6 @@ fieldset {
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
-
 
 /* top bar in dashboard */
 .dashboard-topbar {
