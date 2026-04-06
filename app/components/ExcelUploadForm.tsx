@@ -44,11 +44,20 @@ export function ExcelUploadForm({ onParsed, onClear, isParsed }: ExcelUploadForm
         <label htmlFor={id} className={styles.label}>
           Завантажте Excel-файл з нормами
         </label>
-        {isParsed && <Icon name={"checkmark"} color="#0b6623" />}
+        <div className="flex flex-col gap-4 mt-8">
+          <div className="flex gap-4 items-center">
+            <p className="text-sm margin-0 italic">Завантажено файл</p>{" "}
+            {hasFile ? <Icon name={"checkmark"} color="#0b6623" /> : <Icon name="close" color="#ac1616" />}
+          </div>
+          <div className="flex gap-4 items-center">
+            <p className="text-sm margin-0 italic">Парсинг в JSON</p>{" "}
+            {isParsed ? <Icon name={"checkmark"} color="#0b6623" /> : <Icon name="close" color="#ac1616" />}
+          </div>
+        </div>
       </div>
 
       <div className={styles.fileUploadGroup}>
-        <div className={styles.fileUploadContainer}>
+        <div className={`${styles.fileUploadContainer} ${hasFile ? styles.hasFile : ""}`}>
           <input
             id={id}
             ref={fileInputRef}
@@ -67,7 +76,7 @@ export function ExcelUploadForm({ onParsed, onClear, isParsed }: ExcelUploadForm
               disabled={isParsed || isSubmitting}
               className={clsx("button button--primary", isSubmitting && "is-loading")}
             >
-              Завантажити
+              Парсинг
             </button>
             <button
               type="button"
@@ -75,7 +84,7 @@ export function ExcelUploadForm({ onParsed, onClear, isParsed }: ExcelUploadForm
               onClick={handleClear}
               className={clsx("button button--secondary full-width", isSubmitting && "is-loading")}
             >
-              Очистити
+              Відміна
             </button>
           </div>
         )}

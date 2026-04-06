@@ -1,6 +1,6 @@
 import invariant from "tiny-invariant";
 import { lazy, Suspense, useState } from "react";
-import { Form, isRouteErrorResponse, Outlet, redirect, useActionData, useLoaderData, useRouteError } from "@remix-run/react";
+import { Form, isRouteErrorResponse, Outlet, redirect, useActionData, useLoaderData, useNavigation, useRouteError } from "@remix-run/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { getProductWithNormsById } from "~/server/products.server";
 import { getUserId, requireUserRole } from "~/server/auth.server";
@@ -10,6 +10,7 @@ import { validateProductNorms } from "~/utils/vanildateNewProduct.server";
 import { mapProductErrorToResponse } from "~/server/products.http.server";
 import { diffNorms, hasChanges } from "~/utils/comparison";
 import { createChangeSet } from "~/server/changes.server";
+import clsx from "clsx";
 
 const ExcelUploadContainer = lazy(() => import("~/components/ExcelUploadContainer"));
 
@@ -155,7 +156,10 @@ export function ErrorBoundary() {
 export default function ProductNorm() {
   const loaderData = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
-  console.log("actionData", actionData);
+  // console.log("actionData", actionData);
+
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
 
   const [rows, setRows] = useState<any[] | null>(null);
 
@@ -185,37 +189,45 @@ export default function ProductNorm() {
   return (
     <>
       {loaderData.role === "COMMITTER" && (
-        <div className="edit-button__wrapper">
-          {isEditable ? (
-            <>
-              <button type="button" className="button button--secondary" onClick={discardChanges}>
-                Відмінити
-              </button>
-              <Form method="post">
-                <input type="hidden" name="norms" value={rows ? JSON.stringify(rows) : ""} />
+        <div className="flex justify-between mb-8">
+          <Suspense fallback={<div>Завантаження...</div>}>
+            {isEditable && <ExcelUploadContainer onChange={setRows} preview={false} />}
+          </Suspense>
 
+          <div className="flex items-start gap-8" style={{ marginInlineStart: "auto" }}>
+            {isEditable ? (
+              <>
                 <button
-                  className="button button--primary"
-                  aria-label="Збрегети зміни"
-                  disabled={!rows || rows.length === 0}
-                  aria-disabled={!rows || rows.length === 0}
-                  type="submit"
+                  type="button"
+                  disabled={isSubmitting}
+                  className={clsx("button button--secondary", isSubmitting && "is-loading")}
+                  onClick={discardChanges}
                 >
-                  Зберегти
+                  Відмінити
                 </button>
-              </Form>
-            </>
-          ) : (
-            <button type="button" onClick={enableEdit} className="button button--primary">
-              Змінити
-            </button>
-          )}
+                <Form method="post">
+                  <input type="hidden" name="norms" value={rows ? JSON.stringify(rows) : ""} />
+
+                  <button
+                    className={clsx("button button--primary", isSubmitting && "is-loading")}
+                    aria-label="Збрегети зміни"
+                    disabled={!rows || rows.length === 0 || isSubmitting}
+                    type="submit"
+                  >
+                    Зберегти
+                  </button>
+                </Form>
+              </>
+            ) : (
+              <button type="button" onClick={enableEdit} className="button button--primary">
+                Змінити
+              </button>
+            )}
+          </div>
         </div>
       )}
       {actionData?.message && <div className="alert alert-warning">{actionData.message}</div>}
 
- 
-      <Suspense fallback={<div>Завантаження...</div>}>{isEditable && <ExcelUploadContainer onChange={setRows} preview={false} />}</Suspense>
       <div className="products-details__main-form">
         {rows && (
           <button type="button" onClick={toggleComparison}>

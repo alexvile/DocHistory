@@ -42,12 +42,7 @@
 }
 
 /* edit button group */
-.edit-button__wrapper {
-  display: flex;
-  justify-content: flex-end;
-  column-gap: 8px;
-  margin-bottom: 12px;
-}
+
 
 .edit-button__edit-container .button:first-of-type {
   margin-right: 6px;

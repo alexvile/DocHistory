@@ -3,9 +3,6 @@
 }
 .heading {
   margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  column-gap: 4px;
 }
 .label {
   font-size: 14px;
@@ -24,6 +21,10 @@
   background-color: #f9fbfc;
   display: flex;
   align-items: center;
+}
+
+.fileUploadContainer.hasFile {
+  border-color: #16a34a;
 }
 
 .fileUploadInput {
@@ -51,7 +52,6 @@
 }
 
 /* .fileUploadInput::-webkit-file-upload-button */
-
 
 .fileUploadButtons {
   display: flex;
