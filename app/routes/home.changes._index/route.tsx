@@ -21,7 +21,7 @@ export default function Changes() {
         showCalendar={true}
       />
       <div>
-        <ChangesTable changes={data?.changes} from={data.fromPagination}/>
+        <ChangesTable changes={data?.changes} from={data.fromPagination} role={data.role}/>
       </div>
       {data?.changes?.length > 0 && (
         <Pagination

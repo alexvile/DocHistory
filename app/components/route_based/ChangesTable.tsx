@@ -8,6 +8,7 @@ import { Link } from "@remix-run/react";
 type ChangesTableProps = {
   changes: Pick<ChangeVM, "id" | "createdAt" | "status" | "product" | "createdBy" | "approver">[];
   from: number;
+  role: any;
 };
 
 function shortenFirstName(firstName?: string) {
@@ -20,11 +21,24 @@ const STATUS_TONE_MAP: Record<ChangeSetVM["status"], "green" | "yellow" | "blue"
   REJECTED: "red",
 };
 
-export default function ChangesTable({ changes, from }: ChangesTableProps) {
+export default function ChangesTable({ changes, from, role }: ChangesTableProps) {
+  console.log("changes", changes);
   return (
     // todo - icons checked or not fot viewers
-    <Table headings={["№", "Продукт", "Статус", "Створено", "Відповідальний", "Дата", "Дата рішення", "Посилання"]}>
-      {changes.map(({ id, createdAt, status, product, createdBy, approver, decidedAt }, index) => (
+    <Table
+      headings={[
+        "№",
+        "Продукт",
+        "Статус",
+        "Створено",
+        "Відповідальний",
+        "Дата",
+        "Дата рішення",
+        "Посилання",
+        ...(role === "VIEWER" ? ["Перегляд"] : []),
+      ]}
+    >
+      {changes.map(({ id, createdAt, status, product, createdBy, approver, decidedAt, views }, index) => (
         <Table.Row key={id}>
           <Table.Cell>{from + index}</Table.Cell>
           <Table.Cell>
@@ -53,6 +67,7 @@ export default function ChangesTable({ changes, from }: ChangesTableProps) {
               лінка →
             </Link>
           </Table.Cell>
+          {role === "VIEWER" ? <Table.Cell>{views.length > 0 ? "👁️" : "🔴"}</Table.Cell> : null}
         </Table.Row>
       ))}
     </Table>
