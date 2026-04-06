@@ -122,7 +122,6 @@ export default function NewProduct() {
           <TextField label="Код" name="code" placeholder="070.00.00.000" />
         </div>
         <div className="products-new__main-form">
-          {/* <ProductNormsTable normRows={initialData} isEditable={true} /> */}
           <button
             className="button button--primary"
             aria-label="Збрегети зміни"
