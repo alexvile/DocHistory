@@ -5,6 +5,7 @@ import { useState } from "react";
 import AKComboBox from "~/components/ui/AKCombobox";
 import { Icon } from "~/components/ui/Icon";
 import TextField from "~/components/ui/TextField";
+import * as Ariakit from "@ariakit/react";
 
 export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
   return null;
@@ -16,15 +17,19 @@ export default function UIKit() {
     label: `Label ${i + 1}`,
   }));
   const [searchValue, setSearchValue] = useState("");
+  const dialog = Ariakit.useDialogStore();
 
   return (
     <>
       UI Kit
-      <div style={{ display: "flex", gap: "20px", marginBlockEnd: "20px"}}>
+      <div style={{ display: "flex", gap: "20px", marginBlockEnd: "20px" }}>
         <button className="button button--primary">Primary</button>
         <button className="button button--secondary">Secondary</button>
         <button className="button button--icon">
           <Icon name="close" />
+        </button>
+        <button type="submit" name="intent" value="reject" className="button button--primary button--critical">
+          Primary Critical
         </button>
       </div>
       <div>
@@ -48,6 +53,17 @@ export default function UIKit() {
           noResultsText="Продуктів не знайдено"
         />
       </div>
+      {/* modal */}
+      <Ariakit.Button onClick={dialog.show} className="button">
+        Show modal
+      </Ariakit.Button>
+      <Ariakit.Dialog store={dialog} backdrop={<div className="backdrop" />} className="dialog">
+        <Ariakit.DialogHeading className="heading">Success</Ariakit.DialogHeading>
+        <p className="description">Your payment has been successfully processed. We have emailed your receipt.</p>
+        <div>
+          <Ariakit.DialogDismiss className="button">OK</Ariakit.DialogDismiss>
+        </div>
+      </Ariakit.Dialog>
       Table Link Text
       <Outlet />
     </>
