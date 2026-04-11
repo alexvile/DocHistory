@@ -4,6 +4,7 @@ import { ChangeSetVM, ChangeVM } from "~/types";
 import translate from "~/utils/translate";
 import Status from "../ui/Status";
 import { Link } from "@remix-run/react";
+import { Icon } from "../ui/Icon";
 
 type ChangesTableProps = {
   changes: Pick<ChangeVM, "id" | "createdAt" | "status" | "product" | "createdBy" | "approver">[];
@@ -67,7 +68,9 @@ export default function ChangesTable({ changes, from, role }: ChangesTableProps)
               лінка →
             </Link>
           </Table.Cell>
-          {role === "VIEWER" ? <Table.Cell>{views.length > 0 ? "👁️" : "🔴"}</Table.Cell> : null}
+          {role === "VIEWER" ? (
+            <Table.Cell>{views.length > 0 ? <Icon name="checkmark" color="green" /> : <Icon name="close" color="red" />}</Table.Cell>
+          ) : null}
         </Table.Row>
       ))}
     </Table>
