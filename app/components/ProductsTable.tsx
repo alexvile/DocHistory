@@ -5,8 +5,8 @@ import { formatDateForUA } from "~/utils/formatDateUA";
 
 export default function ProductsTable({ products }: ProductsListProps) {
   return (
-    <Table headings={["№", "Назва", "Остання зміна"]}>
-      {products.map(({ id, title, updatedAt }, index) => (
+    <Table headings={["№", "Назва", "Код", "Остання зміна"]}>
+      {products.map(({ id, title, updatedAt, code }, index) => (
         <Table.Row key={id}>
           <Table.Cell>{index + 1}</Table.Cell>
           <Table.Cell>
@@ -14,6 +14,7 @@ export default function ProductsTable({ products }: ProductsListProps) {
               {title}
             </Link>
           </Table.Cell>
+          <Table.Cell>{code ? code : "-"}</Table.Cell>
           <Table.Cell>{formatDateForUA(updatedAt, { withYear: true })}</Table.Cell>
         </Table.Row>
       ))}

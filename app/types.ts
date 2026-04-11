@@ -10,7 +10,7 @@ export type UsersListProps = {
   users: UserVM[];
 };
 
-export type FilteredProduct = Pick<Product, "id" | "title" | "updatedAt">;
+export type FilteredProduct = Pick<Product, "id" | "title" | "code" | "updatedAt">;
 
 export type ProductsListProps = {
   products: FilteredProduct[];
