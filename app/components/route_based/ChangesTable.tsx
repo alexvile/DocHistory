@@ -64,8 +64,8 @@ export default function ChangesTable({ changes, from, role }: ChangesTableProps)
           <Table.Cell>{formatDateShortUA(createdAt)}</Table.Cell>
           <Table.Cell>{decidedAt && formatDateShortUA(decidedAt)}</Table.Cell>
           <Table.Cell>
-            <Link className="link" to={`/home/changes/${id}`} aria-label="Оглянути зміну">
-              лінка →
+            <Link className="link link--with-icon" to={`/home/changes/${id}`} aria-label="Оглянути зміну">
+              лінка <Icon name="link" />
             </Link>
           </Table.Cell>
           {role === "VIEWER" ? (

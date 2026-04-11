@@ -277,6 +277,12 @@ fieldset {
   color: #002e6a;
 }
 
+.link.link--with-icon {
+  display: inline-flex;
+  column-gap: 4px;
+  align-items: center;
+}
+
 /* links ends */
 
 /*** Utils ***/
@@ -929,4 +935,28 @@ a.active {
 .views-list__name {
 }
 .views-list__date {
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+}
+
+.logoutForm {
+  margin-top: auto;
+}
+
+.logout {
+  padding: 0;
+  cursor: pointer;
+  border: none;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  column-gap: 12px;
+  background-color: transparent;
+  transition: color 0.2s ease;
+  &:hover {
+    color: #005bd3;
+  }
 }

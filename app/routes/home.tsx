@@ -4,7 +4,6 @@ import { getUser, requireUserRole } from "~/server/auth.server";
 
 import { ModalProvider } from "~/components/ModalProvider";
 import SideMenu from "~/components/common/SideMenu";
-import UserBar from "~/components/common/UserBar";
 import { getUnreadCount } from "~/server/changes.server";
 import Page from "~/components/ui/Page";
 
@@ -36,16 +35,16 @@ export default function Home() {
   return (
     <>
       <ModalProvider>
-        <header>
+        {/* <header>
           <UserBar user={user} />
-        </header>
-        <SideMenu role={user.role} count={count} />
+        </header> */}
+        <SideMenu user={user} count={count} />
         <main>
           <Page>
             <Outlet />
           </Page>
         </main>
-        <footer>{/* <p style={{ marginBlock: "6px" }}>&copy; 2026 Your Company</p> */}</footer>
+        {/* <footer><p style={{ marginBlock: "6px" }}>&copy; 2026 Your Company</p></footer> */}
         <div id="modal-root"></div>
       </ModalProvider>
     </>

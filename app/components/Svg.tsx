@@ -1,13 +1,13 @@
 import { AiOutlineStop } from "react-icons/ai";
 import { HiMagnifyingGlassCircle } from "react-icons/hi2";
-import { VscIndent } from "react-icons/vsc";
+import { VscAccount, VscIndent } from "react-icons/vsc";
 import { GoHeading } from "react-icons/go";
 import { FaLayerGroup, FaUsers, FaRegClock, FaPlus, FaMinus, FaPlusSquare, FaMinusSquare, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FaCircleMinus, FaCirclePlus, FaMagnifyingGlass, FaPencil } from "react-icons/fa6";
 import { TbExchange } from "react-icons/tb";
 import { MdManageAccounts, MdLogout, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdChangeCircle, MdArrowUpward } from "react-icons/md";
 import { CgSmartHomeBoiler } from "react-icons/cg";
-import { IoIosCheckmark, IoIosHelpCircleOutline, IoMdClose } from "react-icons/io";
+import { IoIosCheckmark, IoIosHelpCircleOutline, IoMdClose, IoMdLink } from "react-icons/io";
 import { RxUpdate } from "react-icons/rx";
 import { IoCheckmarkOutline } from "react-icons/io5";
 
@@ -62,9 +62,12 @@ export function Svg({ name }: { name: string }) {
       return <FaEye />;
     case "eye-closed":
       return <FaEyeSlash />;
-      case "arrow-up":
-        return <MdArrowUpward />
-
+    case "arrow-up":
+      return <MdArrowUpward />;
+    case "link":
+      return <IoMdLink />;
+    case "account":
+      return <VscAccount />;
     default:
       return <AiOutlineStop />;
   }

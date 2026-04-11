@@ -11,18 +11,17 @@ type UserBarProps = {
 export default function UserBar({ user }: UserBarProps) {
   return (
     <div className={styles.container}>
+      {/* add gravatar */}
+      <Icon name="account" />
       <div>
-        Роль:
-        {translate("ROLES", user.role)}
+        <p className={styles.name}>
+          {user.firstName} {user.lastName}
+        </p>
+        <p className={styles.role}>
+          <span className="visually-hidden">Роль:</span>
+          {translate("ROLES", user.role)}
+        </p>
       </div>
-      <div>
-        Вітаю, {user.firstName} {user.lastName}
-      </div>
-      <Form action="/logout" method="post">
-        <button type="submit" aria-label="Logout" className={styles.logout}>
-          <Icon name="logout" />
-        </button>
-      </Form>
     </div>
   );
 }

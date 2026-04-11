@@ -1,14 +1,15 @@
-import { Link, NavLink } from "@remix-run/react";
+import { Form, Link, NavLink } from "@remix-run/react";
 import { Icon } from "../ui/Icon";
 import styles from "./SideMenu.module.css";
-import { UserRoleVM } from "~/types";
+import UserBar from "./UserBar";
 
-export default function SideMenu({ role, count }: { role: UserRoleVM; count: number }) {
+export default function SideMenu({ user, count }: { user: any; count: number }) {
   return (
-    <aside>
+    <aside className="aside">
+      <UserBar user={user} />
       <nav aria-label="Main navigation">
         <ul className={styles.sideMenuList}>
-          {role === "ADMIN" ? (
+          {user.role === "ADMIN" ? (
             <>
               <li className={styles.sideMenuItem}>
                 <NavLink className={({ isActive, isPending }) => (isActive ? "active" : isPending ? "pending" : "")} to={"register"}>
@@ -33,9 +34,11 @@ export default function SideMenu({ role, count }: { role: UserRoleVM; count: num
                 <Icon name="changes" />
                 Всі зміни
               </NavLink>
-              {role === 'VIEWER' && count > 0 && <Link to="changes?unread=1&status=APPROVED" className={styles.linkForViewer}>
-                <span className={styles.viewerCircle}>{count}</span>
-              </Link>}
+              {user.role === "VIEWER" && count > 0 && (
+                <Link to="changes?unread=1&status=APPROVED" className={styles.linkForViewer}>
+                  <span className={styles.viewerCircle}>{count}</span>
+                </Link>
+              )}
             </div>
           </li>
           <li className={styles.sideMenuItem}>
@@ -52,6 +55,11 @@ export default function SideMenu({ role, count }: { role: UserRoleVM; count: num
           </li>
         </ul>
       </nav>
+      <Form className="logoutForm" action="/logout" method="post">
+        <button type="submit" aria-label="Logout" className="logout">
+          Логаут <Icon name="logout" />
+        </button>
+      </Form>
     </aside>
   );
 }
