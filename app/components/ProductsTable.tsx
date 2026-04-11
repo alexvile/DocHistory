@@ -3,12 +3,12 @@ import { ProductsListProps } from "~/types";
 import Table from "./ui/Table";
 import { formatDateForUA } from "~/utils/formatDateUA";
 
-export default function ProductsTable({ products }: ProductsListProps) {
+export default function ProductsTable({ products, from }: ProductsListProps) {
   return (
     <Table headings={["№", "Назва", "Код", "Остання зміна"]}>
       {products.map(({ id, title, updatedAt, code }, index) => (
         <Table.Row key={id}>
-          <Table.Cell>{index + 1}</Table.Cell>
+          <Table.Cell>{from + index}</Table.Cell>
           <Table.Cell>
             <Link className="link" to={id} aria-label={`Переглянути продукт: ${title}`}>
               {title}

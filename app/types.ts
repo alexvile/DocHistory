@@ -14,6 +14,7 @@ export type FilteredProduct = Pick<Product, "id" | "title" | "code" | "updatedAt
 
 export type ProductsListProps = {
   products: FilteredProduct[];
+  from: number;
 };
 
 // export type FilteredChanges = Pick<Change, "id"  | "createdAt">;

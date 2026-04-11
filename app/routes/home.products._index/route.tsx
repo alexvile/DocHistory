@@ -66,7 +66,7 @@ export default function Products() {
       </div>
 
       <div className="products-table__wrapper">
-        <ProductsTable products={data?.products} />
+        <ProductsTable from={data.fromPagination} products={data?.products} />
       </div>
       {data?.products?.length > 0 && (
         <Pagination
