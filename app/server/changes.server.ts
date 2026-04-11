@@ -285,9 +285,8 @@ export const getPopulatedChangeSetById = async (id: string) => {
           views: true,
         },
       },
-
       views: {
-        take: 25,
+        take: 10,
         orderBy: {
           viewedAt: "desc",
         },

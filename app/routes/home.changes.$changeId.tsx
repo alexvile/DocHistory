@@ -17,7 +17,7 @@ import { ChangeSetVM } from "~/types";
 import styles from "~/components/route_based/ChangeSetCard.module.css";
 import Badge from "~/components/ui/Badge";
 import translate from "~/utils/translate";
-import { formatDateForUA } from "~/utils/formatDateUA";
+import { formatDateForUA, formatDateShortUA } from "~/utils/formatDateUA";
 import { Icon } from "~/components/ui/Icon";
 import NormsTable from "~/components/NormsTable";
 import NormsTableWithChanges from "~/components/NormsTableWithChanges";
@@ -167,6 +167,55 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
 //   return <p>Щось пішло не так</p>;
 // }
+const chevronDown = (
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor">
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+    />
+  </svg>
+);
+function shortenFirstName(firstName?: string) {
+  return firstName ? `${firstName.charAt(0)}.` : "";
+}
+function ViewsPopover({ views, viewsCount }: any) {
+  return (
+    <span className="hovercard-wrapper">
+      <Ariakit.HovercardProvider>
+        <Ariakit.HovercardAnchor className="anchor">({viewsCount})</Ariakit.HovercardAnchor>
+        <Ariakit.HovercardDisclosure className="disclosure">
+          <Ariakit.VisuallyHidden>Інфа про перегляди</Ariakit.VisuallyHidden>
+          {chevronDown}
+        </Ariakit.HovercardDisclosure>
+        <Ariakit.Hovercard portal gutter={16} className="hovercard">
+          {/* <ul class="views-list">
+  <li class="views-list__item">
+    <span class="views-list__name">Олександр Бухгалтер</span>
+    <time dateTime="2026-03-30T17:54:54.487Z" class="views-list__time">
+      2 год тому
+    </time>
+  </li>
+</ul> */}
+          <ul className="viewes-list">
+            {views.map((v) => (
+              <li className="viewes-list__item" key={v.id}>
+                <span className="views-list__name">
+                  {shortenFirstName(v.user.firstName)}
+                  {v.user.lastName} -
+                </span>
+                <time className="views-list__date" dateTime={new Date(v.viewedAt).toISOString()}>
+                  &nbsp;{formatDateShortUA(v.viewedAt)}
+                </time>
+              </li>
+            ))}
+          </ul>
+          {/* if > 25 - button fecth all!! */}
+        </Ariakit.Hovercard>
+      </Ariakit.HovercardProvider>
+    </span>
+  );
+}
 
 type ChangeSetCardMetaProps = Pick<ChangeSetVM, "createdBy" | "approver" | "createdAt" | "status" | "decidedAt">;
 
@@ -177,7 +226,7 @@ const STATUS_TONE_MAP: Record<ChangeSetVM["status"], "green" | "yellow" | "blue"
   REJECTED: "red",
 };
 
-function ChangeSetCardMeta({ createdBy, createdAt, status, approver, decidedAt }: ChangeSetCardMetaProps) {
+function ChangeSetCardMeta({ createdBy, createdAt, status, approver, decidedAt, views, viewsCount }: ChangeSetCardMetaProps) {
   const tone = STATUS_TONE_MAP[status];
   return (
     <div className={styles.changeSetCardMetaContainer}>
@@ -213,7 +262,11 @@ function ChangeSetCardMeta({ createdBy, createdAt, status, approver, decidedAt }
         </div>
         <div>
           <Badge tone={tone}>{translate("CHANGE_STATUS", status)}</Badge>
-          <div>viewed</div>
+          <div>
+            {/* lazy popover ???????? or regular popover???? use loading to additional and use just count fecth or not */}
+            <p className="views-block">Переглянули бух. {viewsCount > 0 ? <ViewsPopover viewsCount={viewsCount} views={views} /> : '(0)'}</p>
+            {/* {viewsCount > 0 ? <ViewsPopover viewsCount={viewsCount} views={views} /> : "ще ніхто не переглянув"} */}
+          </div>
         </div>
       </div>
     </div>
@@ -376,7 +429,6 @@ export default function ChangeSet() {
   const data = useLoaderData();
   const navigation = useNavigation();
   const isLoading = navigation.state === "loading";
-  console.log(111222, data);
   // skeleton
   // fade
   // overlay
@@ -389,7 +441,7 @@ export default function ChangeSet() {
   // const fetcher = useFetcher()
   // console.log(121212, data);
   const { role, userId, changeSet, approvers } = data;
-  const { id, status, createdAt, diff, createdBy, approver, approverId, decidedAt, product } = changeSet;
+  const { id, status, createdAt, diff, createdBy, approver, approverId, decidedAt, product, _count } = changeSet;
   return (
     <>
       <div>
@@ -403,7 +455,16 @@ export default function ChangeSet() {
           </h3>
         </div>
         <div className={styles.container}>
-          <ChangeSetCardMeta createdBy={createdBy} createdAt={createdAt} status={status} approver={approver} decidedAt={decidedAt} />
+          {/* viewes = [] or empty [] */}
+          <ChangeSetCardMeta
+            views={changeSet.views}
+            viewsCount={_count?.views}
+            createdBy={createdBy}
+            createdAt={createdAt}
+            status={status}
+            approver={approver}
+            decidedAt={decidedAt}
+          />
           <ChangeSetCardSummary diff={diff} />
           <ChangeSetCardActions role={role} id={id} status={status} userId={userId} approverId={approverId} approvers={approvers} />
         </div>

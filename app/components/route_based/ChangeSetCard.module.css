@@ -1,21 +1,11 @@
 .container {
-  border: 1px dashed;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
 .changeSetCardMetaContainer {
   margin-bottom: 12px;
-}
-
-.changeSetCardMetaTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.changeSetCardMetaTop > p {
-  margin: 0;
 }
 
 .changeSetCardMetaField {
