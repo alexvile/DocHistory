@@ -159,14 +159,26 @@ export type ChangeSetVM = Pick<ChangeSet, "id" | "status" | "approverId" | "deci
 
 // sort and filterbar
 export type SortOption = {
-  label: string;
   value: string;
+  label: string;
 };
 
-export type SortConfig = {
-  default: string;
+export type SortGroup = {
+  label: string;
   options: SortOption[];
 };
+
+export type SortConfig =
+  | {
+      default: string;
+      options: SortOption[];
+      groups?: never;
+    }
+  | {
+      default: string;
+      groups: SortGroup[];
+      options?: never;
+    };
 
 export type SortBoxProps = {
   searchParams: URLSearchParams;

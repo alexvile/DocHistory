@@ -19,9 +19,16 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const defaultSort = changesSortConfig.default;
   const dir = url.searchParams.get("dir") ?? defaultSort.split(":")[1];
+  const sort = url.searchParams.get("sort") ?? "createdAt";
   const direction: Prisma.SortOrder = dir === "asc" ? "asc" : "desc";
+
+  const allowedSortFields = ["createdAt", "decidedAt"] as const;
+  type SortField = (typeof allowedSortFields)[number];
+
+  const safeSort: SortField = allowedSortFields.includes(sort as SortField) ? (sort as SortField) : "createdAt";
+
   const orderBy: Prisma.ChangeSetOrderByWithRelationInput = {
-    createdAt: direction,
+    [safeSort]: direction,
   };
   // фільтри
   const productId = url.searchParams.get("productId"); // з комбобокса

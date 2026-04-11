@@ -1,15 +1,21 @@
 import { SortConfig } from "~/types";
-// todo - add decided AT and 
+
 const changesSortConfig: SortConfig = {
-  default: "created:desc",
-  options: [
+  default: "createdAt:desc",
+  groups: [
     {
-      label: "Спочатку нові",
-      value: "created:desc",
+      label: "Дата створення",
+      options: [
+        { value: "createdAt:desc", label: "Нові спочатку" },
+        { value: "createdAt:asc", label: "Старі спочатку" },
+      ],
     },
     {
-      label: "Спочатку старі",
-      value: "created:asc",
+      label: "Дата рішення",
+      options: [
+        { value: "decidedAt:desc", label: "Нові спочатку" },
+        { value: "decidedAt:asc", label: "Старі спочатку" },
+      ],
     },
   ],
 };

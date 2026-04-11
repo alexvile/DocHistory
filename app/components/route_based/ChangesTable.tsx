@@ -22,7 +22,7 @@ const STATUS_TONE_MAP: Record<ChangeSetVM["status"], "green" | "yellow" | "blue"
 };
 
 export default function ChangesTable({ changes, from, role }: ChangesTableProps) {
-  console.log("changes", changes);
+  // console.log("changes", changes);
   return (
     // todo - icons checked or not fot viewers
     <Table
