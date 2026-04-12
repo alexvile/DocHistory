@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Form, isRouteErrorResponse, Outlet, redirect, useActionData, useLoaderData, useNavigation, useRouteError } from "@remix-run/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { getProductWithNormsById } from "~/server/products.server";
@@ -11,6 +11,8 @@ import { mapProductErrorToResponse } from "~/server/products.http.server";
 import { diffNorms, hasChanges } from "~/utils/comparison";
 import { createChangeSet } from "~/server/changes.server";
 import clsx from "clsx";
+import * as Ariakit from "@ariakit/react";
+import Comparison from "~/components/route_based/NormsComparison/Comparison";
 
 const ExcelUploadContainer = lazy(() => import("~/components/ExcelUploadContainer"));
 
@@ -153,6 +155,34 @@ export function ErrorBoundary() {
   return <h1>Unknown error</h1>;
 }
 
+const test2 = [
+  {
+    name: "Базальтове волокно",
+    unit: "м2",
+    consumption: 0.4,
+    consumptionPerUnit: 0.5,
+    businessKey: "NAME:БАЗАЛЬТОВЕ ВОЛОКНО|DSTU:|UNIT:М2",
+  },
+  {
+    name: "Гвинт з головкою",
+    assortment: "4,2X14",
+    dstu: "21321",
+    unit: "м2",
+    consumption: 0.6,
+    consumptionPerUnit: 0.06,
+    notes: "Нотатка 2",
+    businessKey: "NAME:ГВИНТ З ГОЛОВКОЮ|DSTU:21321|UNIT:М2",
+  },
+  {
+    name: "Солідол",
+    dstu: "4366-76",
+    unit: "кг",
+    consumption: 0.005,
+    consumptionPerUnit: 0.005,
+    businessKey: "NAME:СОЛІДОЛ|DSTU:4366-76|UNIT:КГ",
+  },
+];
+
 export default function ProductNorm() {
   const loaderData = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
@@ -162,6 +192,7 @@ export default function ProductNorm() {
   const isSubmitting = navigation.state === "submitting";
 
   const [rows, setRows] = useState<any[] | null>(null);
+  // const [rows, setRows] = useState<any[] | null>(test2);
 
   const [isEditable, setIsEditable] = useState(false);
   const [comparison, setComparison] = useState(false);
@@ -171,9 +202,6 @@ export default function ProductNorm() {
     setIsEditable(true);
   };
 
-  const toggleComparison = () => {
-    setComparison((prev) => !prev);
-  };
 
   const discardChanges = () => {
     // TODO: confirm discard / clear child
@@ -186,6 +214,8 @@ export default function ProductNorm() {
   // todo - changes show - edit
   // todo - check if not the same (can use hash or checking by keys)
   // todo - compare - show 2 tables in modal and mark changes in norms!
+
+  const dialog = Ariakit.useDialogStore();
   return (
     <>
       {loaderData.role === "COMMITTER" && (
@@ -230,18 +260,29 @@ export default function ProductNorm() {
 
       <div className="products-details__main-form">
         {rows && (
-          <button type="button" onClick={toggleComparison}>
-            Порівняти
-          </button>
+          <>
+            <button type="button" className="button button--secondary" onClick={dialog.show}>
+              Порівняти
+            </button>
+            <Ariakit.Dialog store={dialog} backdrop={<div className="backdrop" />} className="dialog dialog--comparison">
+              <div className="flex justify-between">
+                <Ariakit.DialogHeading className="heading">Порівняння норм</Ariakit.DialogHeading>
+                <Ariakit.DialogDismiss className="button">Х</Ariakit.DialogDismiss>
+              </div>
+              {/* todo - fix ts */}
+              <Comparison currentNorms={loaderData.norms as CanonicalRow[]} newNorms={rows as CanonicalRow[]} />
+            </Ariakit.Dialog>
+          </>
         )}
         <div className={`columns ${comparison ? "columns--side-by-side" : ""}`}>
           {rows && (
             <div>
               {!comparison && <p>Перевірте правильність сформованих даних</p>}
+              Нові дані
               <NormsTable normsJson={rows} />{" "}
             </div>
           )}
-
+          {rows && "Поточні дані"}
           <NormsTable normsJson={loaderData.norms as CanonicalRow[]} />
         </div>
       </div>

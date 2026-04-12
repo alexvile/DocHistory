@@ -41,6 +41,7 @@ export default function Home() {
         <SideMenu user={user} count={count} />
         <main>
           <Page>
+            {/* Nav */}
             <Outlet />
           </Page>
         </main>

@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import styles from "./Table.module.css";
 import { Icon } from "./Icon";
+import clsx from "clsx";
 
 type TableProps = {
   headings: string[];
@@ -58,24 +59,25 @@ function Table({ children, headings, layout }: TableProps) {
 
 type TableRowProps = {
   children: ReactNode;
+  className?: string;
 };
-
-function TableRow({ children }: TableRowProps) {
+function TableRow({ children, className }: TableRowProps) {
   //   Children.forEach(children, (child) => {
   //     if (!isValidElement(child) || child.type !== Table.Cell) {
   //       throw new Error("Table.Row accepts only Table.Cell as children.");
   //     }
   //   });
 
-  return <tr className={styles.tableRow}>{children}</tr>;
+  return <tr className={clsx(styles.tableRow, className)}>{children}</tr>;
 }
 
 type TableCellProps = {
   children: ReactNode;
+  className?: string;
 };
 
-function TableCell({ children }: TableCellProps) {
-  return <td className={styles.tableCell}>{children}</td>;
+function TableCell({ children, className }: TableCellProps) {
+  return <td className={clsx(styles.tableCell, className)}>{children}</td>;
 }
 
 Table.Row = TableRow;

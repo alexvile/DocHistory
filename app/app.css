@@ -960,3 +960,23 @@ a.active {
     color: #005bd3;
   }
 }
+
+.dialog.dialog--comparison {
+  top: 4vh;
+  width: 90%;
+}
+
+.configurableGroup {
+  flex: 1 1 49%;
+}
+.yellow {
+  color: rgb(177, 177, 21);
+  font-weight: 700;
+}
+.line-through {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+.bg-green-100 {
+  color: green;
+}

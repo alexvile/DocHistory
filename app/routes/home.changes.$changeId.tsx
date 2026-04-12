@@ -132,7 +132,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
   const changeId = params.changeId;
   if (role === "VIEWER") {
-    // await viewChange(userId, changeId);
+    await viewChange(userId, changeId);
   }
 
   // todo
