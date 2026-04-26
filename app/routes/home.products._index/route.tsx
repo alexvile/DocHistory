@@ -7,16 +7,13 @@ import { Prisma } from "@prisma/client";
 import { SortAndFilterBar } from "~/components/common/SortAndFilter/SortAndFilterBar";
 import { Pagination } from "~/components/common/Pagination";
 import productSortConfig from "./productSortConfig";
+import { parsePaginationParams } from "~/utils/pagination.server";
 
 export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
   const role = await requireUserRole(request);
 
   const url = new URL(request.url);
-  const pageParam = url.searchParams.get("page") ?? "1";
-  const limitParam = url.searchParams.get("limit") ?? "10";
-  const page = Math.max(1, parseInt(pageParam));
-  const take = Math.max(1, parseInt(limitParam));
-  const skip = (page - 1) * take;
+  const { page, take, skip } = parsePaginationParams(url.searchParams);
 
   const defaultSort = productSortConfig.default;
   const sort = url.searchParams.get("sort") ?? defaultSort.split(":")[0];

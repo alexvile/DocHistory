@@ -4,6 +4,7 @@ import { ChangeSetStatus, Prisma } from "@prisma/client";
 import { getFilteredChangeSets, getTotalChangesCount, getViewerChangesCount, getViewerChangeSets } from "~/server/changes.server";
 import changesSortConfig from "./changesSortConfig";
 import { getAllProducts } from "~/server/products.server";
+import { parsePaginationParams } from "~/utils/pagination.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const role = await requireUserRole(request);
@@ -13,9 +14,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   // todo - can be optimized in future
   const products = await getAllProducts();
 
-  const page = Math.max(1, Number(url.searchParams.get("page") ?? 1));
-  const take = Math.max(1, Number(url.searchParams.get("limit") ?? 10));
-  const skip = (page - 1) * take;
+  const { page, take, skip } = parsePaginationParams(url.searchParams);
 
   const defaultSort = changesSortConfig.default;
   const dir = url.searchParams.get("dir") ?? defaultSort.split(":")[1];
