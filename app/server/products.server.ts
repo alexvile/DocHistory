@@ -1,7 +1,7 @@
 // todo - do we need to connect creator of norm ???
 import { ProductInvalidStateError, ProductNotFoundError } from "~/utils/domain-errors";
 import { prisma } from "./prisma.server";
-import { Product, Prisma, SnapshotStatus } from "@prisma/client";
+import { Prisma, SnapshotStatus } from "@prisma/client";
 
 type CreateProductInput = {
   title: string;
@@ -48,20 +48,6 @@ export async function createProduct(input: CreateProductInput) {
   });
 }
 
-// export const createProduct = async ({ creatorId, productTitle, code }: Pick<Product, "productTitle" | "code" | "creatorId">) => {
-//   await prisma.product.create({
-//     data: {
-//       productTitle,
-//       code,
-//       creator: {
-//         connect: {
-//           id: creatorId,
-//         },
-//       },
-//     },
-//   });
-// };
-
 export const getTotalProductsCount = async (whereFilter: Prisma.ProductWhereInput) => {
   return await prisma.product.count({ where: whereFilter });
 };
@@ -84,52 +70,13 @@ export const getFilteredProducts = async (
       ...sortFilter,
     },
     where: {
-      // ownerId: userId,
       ...whereFilter,
     },
     skip,
     take,
-    // include: {
-    //   owner: true,
-    //   records: true,
-    // },
   });
 };
 
-export const getAllFilteredProducts = async () => {
-  // todo - pagination !!!!
-  return await prisma.product.findMany({
-    // select: {
-    //   id: true,
-    //   createdAt: true,
-    //   updatedAt: true,
-    //   creatorId: true,
-    //   todo - incomment if we want user credentials
-    //   creator: {
-    //     select: {
-    //       firstName: true,
-    //     },
-    //   },
-    // },
-  });
-};
-
-// export const getProductbyId = async (id: string) => {
-//   // todo - get Last 50 changes with creator
-//   //  add Link for filter all changes by this norm
-//   return await prisma.product.findUnique({
-//     where: {
-//       id: id,
-//     },
-//     select: {
-//       id: true,
-//       title: true,
-//       code: true,
-//       createdAt: true,
-//       updatedAt: true,
-//     },
-//   });
-// };
 
 export async function getProductWithNormsById(productId: string) {
   // 1️⃣ fetch product (only what we need)
@@ -172,19 +119,6 @@ export async function getProductWithNormsById(productId: string) {
 }
 
 // todo - need refactor
-
-export const updateNormById = async ({ id, productName, norm1, norm2 }) => {
-  return await prisma.norm.update({
-    where: {
-      id,
-    },
-    data: {
-      productName,
-      norm1,
-      norm2,
-    },
-  });
-};
 
 // await prisma.object.update({
 //   where: { id: objectId },

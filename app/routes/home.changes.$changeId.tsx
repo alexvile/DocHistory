@@ -1,4 +1,4 @@
-import { Form, isRouteErrorResponse, Outlet, redirect, useLoaderData, useNavigation, useRouteError } from "@remix-run/react";
+import { Form, Outlet, redirect, useLoaderData, useNavigation } from "@remix-run/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import BackLink from "~/components/common/BackControls";
@@ -189,15 +189,7 @@ function ViewsPopover({ views, viewsCount }: any) {
           {chevronDown}
         </Ariakit.HovercardDisclosure>
         <Ariakit.Hovercard portal gutter={16} className="hovercard">
-          {/* <ul class="views-list">
-  <li class="views-list__item">
-    <span class="views-list__name">Олександр Бухгалтер</span>
-    <time dateTime="2026-03-30T17:54:54.487Z" class="views-list__time">
-      2 год тому
-    </time>
-  </li>
-</ul> */}
-          <ul className="viewes-list">
+          <ul className="list-unstyled viewes-list">
             {views.map((v) => (
               <li className="viewes-list__item" key={v.id}>
                 <span className="views-list__name">
