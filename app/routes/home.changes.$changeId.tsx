@@ -185,7 +185,7 @@ function ViewsPopover({ views, viewsCount }: any) {
       <Ariakit.HovercardProvider>
         <Ariakit.HovercardAnchor className="anchor">({viewsCount})</Ariakit.HovercardAnchor>
         <Ariakit.HovercardDisclosure className="disclosure">
-          <Ariakit.VisuallyHidden>Інфа про перегляди</Ariakit.VisuallyHidden>
+          <Ariakit.VisuallyHidden>Інформація про перегляди</Ariakit.VisuallyHidden>
           {chevronDown}
         </Ariakit.HovercardDisclosure>
         <Ariakit.Hovercard portal gutter={16} className="hovercard">

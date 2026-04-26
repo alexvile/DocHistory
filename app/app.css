@@ -880,7 +880,7 @@ a.active {
   position: relative;
   z-index: 50;
   display: flex;
-  width: 300px;
+  width: fit-content;
   flex-direction: column;
   gap: 0.5rem;
   border-radius: 0.5rem;
