@@ -2,8 +2,14 @@ import { Form, Link, NavLink } from "@remix-run/react";
 import { Icon } from "../ui/Icon";
 import styles from "./SideMenu.module.css";
 import UserBar from "./UserBar";
+import { UserVM } from "~/types";
 
-export default function SideMenu({ user, count }: { user: any; count: number }) {
+type SideMenuProps = {
+  user: UserVM;
+  count: number;
+};
+
+export default function SideMenu({ user, count }: SideMenuProps) {
   return (
     <aside className="aside">
       <UserBar user={user} />

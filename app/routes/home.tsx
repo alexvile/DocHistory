@@ -1,4 +1,4 @@
-import { LoaderFunction, redirect } from "@remix-run/node";
+import { LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { getUser, requireUserRole } from "~/server/auth.server";
 
@@ -8,7 +8,7 @@ import { getUnreadCount } from "~/server/changes.server";
 import Page from "~/components/ui/Page";
 import Breadcrumbs from "~/components/common/Breadcrumbs";
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const role = await requireUserRole(request);
   const user = await getUser(request);
 
@@ -27,7 +27,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 // todo - structure
 
 export default function Home() {
-  const { user, role, count } = useLoaderData<typeof loader>();
+  const { user, count } = useLoaderData<typeof loader>();
   // if(role === "VIEWER") {
 
   // }
