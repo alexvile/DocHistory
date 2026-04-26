@@ -29,19 +29,25 @@ export default function ChangesTable({ changes, from, role }: ChangesTableProps)
     <Table
       headings={[
         "№",
+        "Посилання",
         "Продукт",
         "Статус",
         "Створено",
         "Відповідальний",
         "Дата",
         "Дата рішення",
-        "Посилання",
+
         ...(role === "VIEWER" ? ["Перегляд"] : []),
       ]}
     >
       {changes.map(({ id, createdAt, status, product, createdBy, approver, decidedAt, views }, index) => (
         <Table.Row key={id}>
           <Table.Cell>{from + index}</Table.Cell>
+          <Table.Cell>
+            <Link className="link link--with-icon" to={`/home/changes/${id}`} aria-label="Оглянути зміну">
+              лінка <Icon name="link" />
+            </Link>
+          </Table.Cell>
           <Table.Cell>
             <Link className="link" to={`/home/products/${product.id}`}>
               {product.title}
@@ -63,11 +69,7 @@ export default function ChangesTable({ changes, from, role }: ChangesTableProps)
           </Table.Cell>
           <Table.Cell>{formatDateShortUA(createdAt)}</Table.Cell>
           <Table.Cell>{decidedAt && formatDateShortUA(decidedAt)}</Table.Cell>
-          <Table.Cell>
-            <Link className="link link--with-icon" to={`/home/changes/${id}`} aria-label="Оглянути зміну">
-              лінка <Icon name="link" />
-            </Link>
-          </Table.Cell>
+
           {role === "VIEWER" ? (
             <Table.Cell>{views.length > 0 ? <Icon name="checkmark" color="green" /> : <Icon name="close" color="red" />}</Table.Cell>
           ) : null}

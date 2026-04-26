@@ -6,6 +6,7 @@ import { ModalProvider } from "~/components/ModalProvider";
 import SideMenu from "~/components/common/SideMenu";
 import { getUnreadCount } from "~/server/changes.server";
 import Page from "~/components/ui/Page";
+import Breadcrumbs from "~/components/common/Breadcrumbs";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const role = await requireUserRole(request);
@@ -41,7 +42,7 @@ export default function Home() {
         <SideMenu user={user} count={count} />
         <main>
           <Page>
-            {/* Nav */}
+            <Breadcrumbs />
             <Outlet />
           </Page>
         </main>
