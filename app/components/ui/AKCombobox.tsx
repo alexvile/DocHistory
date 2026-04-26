@@ -32,6 +32,8 @@ export default function AKComboBox({
   onClear,
 }: AKComboBoxProps) {
   const matches = useMemo(() => matchSorter(options, searchValue, { keys: ["label"] }), [searchValue, options]);
+  const hasSearchValue = searchValue.trim().length > 0;
+
   return (
     <Ariakit.ComboboxProvider
       value={searchValue}
@@ -42,7 +44,7 @@ export default function AKComboBox({
       <Ariakit.ComboboxLabel className="visually-hidden">{label}</Ariakit.ComboboxLabel>
       <div className={styles.comboboxWrapper}>
         <Ariakit.Combobox placeholder={placeholder} aria-label={ariaLabel} className="p-input" />
-        <Ariakit.ComboboxCancel className={styles.comboboxCancel} onClick={onClear} />
+        {hasSearchValue && <Ariakit.ComboboxCancel className={styles.comboboxCancel} onClick={onClear} />}
       </div>
 
       <Ariakit.ComboboxPopover gutter={8} sameWidth className={styles.popover}>
