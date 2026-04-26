@@ -57,7 +57,7 @@ export default function TextField({
 
           <button
             type="button"
-            className="password-toggle"
+            className="password-toggle inline-flex items-center justify-center"
             onClick={() => setShowPassword((prev) => !prev)}
             aria-label={showPassword ? "Hide password" : "Show password"}
             aria-pressed={showPassword}
