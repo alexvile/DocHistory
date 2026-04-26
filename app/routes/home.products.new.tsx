@@ -1,12 +1,13 @@
-import { ActionFunction, ActionFunctionArgs, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
+import { ActionFunction, ActionFunctionArgs, LoaderFunction, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { Form, useActionData, useNavigation } from "@remix-run/react";
 import { getUserId, requireUserRole } from "~/server/auth.server";
 import { createProduct } from "~/server/products.server";
-import { useState, lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Icon } from "~/components/ui/Icon";
 import TextField from "~/components/ui/TextField";
 import { validateProductForm } from "~/utils/vanildateNewProduct.server";
 import BackControls from "~/components/common/BackControls";
+import clsx from "clsx";
 
 const ExcelUploadContainer = lazy(() => import("~/components/ExcelUploadContainer"));
 
@@ -29,26 +30,14 @@ export const action: ActionFunction = async ({ request }: ActionFunctionArgs) =>
   }
 
   try {
-    const { product } = await createProduct({
+    await createProduct({
       title: data.title,
+      code: data.code,
       norms: data.norms,
       creatorId: userId,
     });
 
-    return new Response(
-      JSON.stringify({
-        status: "created",
-        resource: "product",
-        id: product.id,
-      }),
-      {
-        status: 201,
-        headers: {
-          "Content-Type": "application/json",
-          Location: `/products/${product.id}`,
-        },
-      },
-    );
+    return redirect("/home/products");
   } catch (error) {
     console.error("Create product failed", error);
 
@@ -66,6 +55,7 @@ export const action: ActionFunction = async ({ request }: ActionFunctionArgs) =>
     );
   }
 };
+// todo - if no changes --- it can be removed
 
 export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
   const role = await requireUserRole(request);
@@ -74,9 +64,7 @@ export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) =>
   return null;
 };
 
-// todo - back buttons
 // todo - create can commiter or ADMIN
-// todo - show all norms
 // todo - show errors in the frontend ?
 // todo - show warning if try to quit
 // todo - errors + disabled state
@@ -85,10 +73,13 @@ export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) =>
 // todo - loaders and blockers to change actions!
 
 export default function NewProduct() {
-  const actionData = useActionData<typeof action>();
+  const actionData = useActionData() as { errors?: Record<string, string> } | undefined;
   const errors = actionData?.errors;
   const hasErrors = errors && Object.keys(errors).length > 0;
   const [rows, setRows] = useState<any[] | null>(null);
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
+  const isSaveDisabled = !rows || rows.length === 0 || isSubmitting;
 
   return (
     <>
@@ -118,10 +109,10 @@ export default function NewProduct() {
           <TextField label="Код" name="code" placeholder="070.00.00.000" />
         </div>
         <button
-          className="button button--primary"
+          className={clsx("button button--primary", isSubmitting && "is-loading")}
           aria-label="Збрегети зміни"
-          disabled={!rows || rows.length === 0}
-          aria-disabled={!rows || rows.length === 0}
+          disabled={isSaveDisabled}
+          aria-disabled={isSaveDisabled}
           type="submit"
         >
           Зберегти
