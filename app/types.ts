@@ -1,4 +1,4 @@
-import type { User, Product, ChangeSet, Prisma } from "@prisma/client";
+import type { User, Product, ChangeSet, Prisma, ChangeSetView } from "@prisma/client";
 
 // todo - USE DTO - for DB and backend
 // todo - use VM (view model) for frontend

@@ -56,8 +56,8 @@ export default function SideMenu({ user, count }: { user: any; count: number }) 
         </ul>
       </nav>
       <Form className="logoutForm" action="/logout" method="post">
-        <button type="submit" aria-label="Logout" className="logout">
-          Логаут <Icon name="logout" />
+        <button type="submit" aria-label="Вийти" className="logout">
+          <Icon name="logout" /> Вийти
         </button>
       </Form>
     </aside>
