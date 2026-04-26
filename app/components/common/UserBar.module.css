@@ -2,8 +2,10 @@
   display: flex;
   align-items: center;
   padding-inline-start: 8px;
+  padding-block-end: 16px;
+  margin-block-end: 16px;
+  border-bottom: 1px solid #303030;
   column-gap: 12px;
-  margin-bottom: 32px;
   & > span {
     flex-shrink: 0;
   }
