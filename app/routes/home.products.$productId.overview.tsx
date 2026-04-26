@@ -13,6 +13,7 @@ import { createChangeSet } from "~/server/changes.server";
 import clsx from "clsx";
 import * as Ariakit from "@ariakit/react";
 import Comparison from "~/components/route_based/NormsComparison/Comparison";
+import { Icon } from "~/components/ui/Icon";
 
 const ExcelUploadContainer = lazy(() => import("~/components/ExcelUploadContainer"));
 
@@ -272,7 +273,9 @@ export default function ProductNorm() {
                       <Ariakit.Dialog store={dialog} backdrop={<div className="backdrop" />} className="dialog dialog--comparison">
                         <div className="flex justify-between">
                           <Ariakit.DialogHeading className="heading">Порівняння норм</Ariakit.DialogHeading>
-                          <Ariakit.DialogDismiss className="button">Х</Ariakit.DialogDismiss>
+                          <Ariakit.DialogDismiss className="button button--icon">
+                            <Icon name="close" />
+                          </Ariakit.DialogDismiss>
                         </div>
                         {/* todo - fix ts */}
                         <Comparison currentNorms={loaderData.norms as CanonicalRow[]} newNorms={rows as CanonicalRow[]} />
@@ -283,7 +286,7 @@ export default function ProductNorm() {
                 <p className="margin-0 mb-8 bold">Нові дані</p>
                 <NormsTable normsJson={rows} />{" "}
               </div>
-              <hr className="full-width"/>
+              <hr className="full-width" />
             </>
           )}
           {rows && <p className="margin-0 mb-8 bold">Поточні дані</p>}

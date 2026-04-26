@@ -13,7 +13,7 @@ import {
 } from "~/server/changes.server";
 import { getUserId, requireUserRole } from "~/server/auth.server";
 import { getApprovers } from "~/server/user.server";
-import { ChangeSetVM } from "~/types";
+import { ChangeSetVM, NormDiff, UserRoleVM } from "~/types";
 import styles from "~/components/route_based/ChangeSetCard.module.css";
 import Badge from "~/components/ui/Badge";
 import translate from "~/utils/translate";
@@ -125,7 +125,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
   if (typeof userId !== "string") return null;
 
-  let approvers = [];
+  let approvers: Awaited<ReturnType<typeof getApprovers>> = [];
   if (role === "COMMITTER") {
     approvers = await getApprovers(userId);
   }
@@ -167,26 +167,22 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
 //   return <p>Щось пішло не так</p>;
 // }
-const chevronDown = (
-  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor">
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-    />
-  </svg>
-);
+
 function shortenFirstName(firstName?: string) {
   return firstName ? `${firstName.charAt(0)}.` : "";
 }
-function ViewsPopover({ views, viewsCount }: any) {
+type ChangeSetRouteData = ReturnType<typeof useLoaderData<typeof loader>>;
+type SerializedChangeSet = NonNullable<ChangeSetRouteData>["changeSet"];
+type ChangeSetView = SerializedChangeSet["views"][number];
+
+function ViewsPopover({ views, viewsCount }: { views: ChangeSetView[]; viewsCount: number }) {
   return (
     <span className="hovercard-wrapper">
       <Ariakit.HovercardProvider>
         <Ariakit.HovercardAnchor className="anchor">({viewsCount})</Ariakit.HovercardAnchor>
         <Ariakit.HovercardDisclosure className="disclosure">
           <Ariakit.VisuallyHidden>Інформація про перегляди</Ariakit.VisuallyHidden>
-          {chevronDown}
+          <Icon name="asda"/>
         </Ariakit.HovercardDisclosure>
         <Ariakit.Hovercard portal gutter={16} className="hovercard">
           <ul className="list-unstyled viewes-list">
@@ -209,7 +205,9 @@ function ViewsPopover({ views, viewsCount }: any) {
   );
 }
 
-type ChangeSetCardMetaProps = Pick<ChangeSetVM, "createdBy" | "approver" | "createdAt" | "status" | "decidedAt">;
+type ChangeSetCardMetaProps = Pick<SerializedChangeSet, "createdBy" | "approver" | "createdAt" | "status" | "decidedAt" | "views"> & {
+  viewsCount: number;
+};
 
 const STATUS_TONE_MAP: Record<ChangeSetVM["status"], "green" | "yellow" | "blue" | "red"> = {
   DRAFT: "yellow",
@@ -238,12 +236,11 @@ function ChangeSetCardMeta({ createdBy, createdAt, status, approver, decidedAt, 
               {approver.firstName} {approver.lastName}
             </p>
           )}
-          {(status === "APPROVED" || status === "REJECTED") && decidedAt && (
+          {(status === "APPROVED" || status === "REJECTED") && approver && decidedAt && (
             <>
               <p className={styles.changeSetCardMetaField}>
                 <strong>Рішення прийнято: </strong>
                 {formatDateForUA(decidedAt, { withYear: true })}
-                {/* todo - add who approved */}
               </p>
               <p className={styles.changeSetCardMetaField}>
                 <strong>Ким: </strong>
@@ -254,11 +251,12 @@ function ChangeSetCardMeta({ createdBy, createdAt, status, approver, decidedAt, 
         </div>
         <div>
           <Badge tone={tone}>{translate("CHANGE_STATUS", status)}</Badge>
-          <div>
-            {/* lazy popover ???????? or regular popover???? use loading to additional and use just count fecth or not */}
-            <p className="views-block">Переглянули бух. {viewsCount > 0 ? <ViewsPopover viewsCount={viewsCount} views={views} /> : '(0)'}</p>
-            {/* {viewsCount > 0 ? <ViewsPopover viewsCount={viewsCount} views={views} /> : "ще ніхто не переглянув"} */}
-          </div>
+          {/* lazy popover ???????? or regular popover???? use loading to additional and use just count fecth or not */}
+          {status === "APPROVED" && (
+            <p className="views-block">
+              Переглянули бух. {viewsCount > 0 ? <ViewsPopover viewsCount={viewsCount} views={views} /> : "(0)"}
+            </p>
+          )}
         </div>
       </div>
     </div>
@@ -418,7 +416,7 @@ function ChangeSetCardActions({ role, id, status, userId, approverId, approvers 
 }
 
 export default function ChangeSet() {
-  const data = useLoaderData();
+  const data = useLoaderData<typeof loader>();
   const navigation = useNavigation();
   const isLoading = navigation.state === "loading";
   // skeleton
@@ -432,6 +430,8 @@ export default function ChangeSet() {
 
   // const fetcher = useFetcher()
   // console.log(121212, data);
+  if (!data) return null;
+
   const { role, userId, changeSet, approvers } = data;
   const { id, status, createdAt, diff, createdBy, approver, approverId, decidedAt, product, _count } = changeSet;
   return (
@@ -450,14 +450,14 @@ export default function ChangeSet() {
           {/* viewes = [] or empty [] */}
           <ChangeSetCardMeta
             views={changeSet.views}
-            viewsCount={_count?.views}
+            viewsCount={_count.views}
             createdBy={createdBy}
             createdAt={createdAt}
             status={status}
             approver={approver}
             decidedAt={decidedAt}
           />
-          <ChangeSetCardSummary diff={diff} />
+          <ChangeSetCardSummary diff={diff as NormDiff} />
           <ChangeSetCardActions role={role} id={id} status={status} userId={userId} approverId={approverId} approvers={approvers} />
         </div>
         <Outlet />

@@ -989,6 +989,9 @@ a.active {
 .configurableGroup {
   flex: 1 1 49%;
 }
+.configurableGroup .table-sticky-header {
+  max-height: 75vh;
+}
 .yellow {
   color: rgb(177, 177, 21);
   font-weight: 700;
