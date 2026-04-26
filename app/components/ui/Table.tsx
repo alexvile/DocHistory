@@ -74,10 +74,15 @@ function TableRow({ children, className }: TableRowProps) {
 type TableCellProps = {
   children: ReactNode;
   className?: string;
+  colSpan?: number;
 };
 
-function TableCell({ children, className }: TableCellProps) {
-  return <td className={clsx(styles.tableCell, className)}>{children}</td>;
+function TableCell({ children, className, colSpan }: TableCellProps) {
+  return (
+    <td className={clsx(styles.tableCell, className)} colSpan={colSpan}>
+      {children}
+    </td>
+  );
 }
 
 Table.Row = TableRow;

@@ -50,10 +50,25 @@ const asString = (v: unknown): string | undefined => {
 
 // Бізнес-ключ: стабільний ID рядка
 function makeBusinessKey(r: Partial<CanonicalRow>) {
+  const groupName = (r.groupName ?? "").toUpperCase().trim();
   const name = (r.name ?? "").toUpperCase().trim();
+  const assortment = (r.assortment ?? "").toUpperCase().trim();
   const dstu = (r.dstu ?? "").toUpperCase().trim();
   const unit = (r.unit ?? "").toUpperCase().trim();
-  return `NAME:${name}|DSTU:${dstu}|UNIT:${unit}`;
+  const notes = (r.notes ?? "").toUpperCase().trim();
+  return `GROUP:${groupName}|NAME:${name}|ASSORTMENT:${assortment}|DSTU:${dstu}|UNIT:${unit}|NOTES:${notes}`;
+}
+
+function isGroupRow(r: Partial<CanonicalRow>) {
+  return Boolean(
+    r.name &&
+      !r.assortment &&
+      !r.dstu &&
+      !r.unit &&
+      r.consumption == null &&
+      r.consumptionPerUnit == null &&
+      !r.notes,
+  );
 }
 
 // Знайти рядок заголовків у перших N рядках (де збігається 3+ відомих колонок)
@@ -115,6 +130,8 @@ export function parseXlsxToRows(buf: Buffer) {
 
   // 4) Будуємо канонічні рядки
   const out: CanonicalRow[] = [];
+  let currentGroupName: string | undefined;
+
   for (const row of table) {
     const c: any = {};
 
@@ -147,6 +164,12 @@ export function parseXlsxToRows(buf: Buffer) {
     const allEmpty = !c.name && !c.assortment && !c.dstu && !c.unit && c.consumption == null && c.consumptionPerUnit == null && !c.notes;
     if (allEmpty) continue;
 
+    if (isGroupRow(c)) {
+      currentGroupName = c.name;
+      continue;
+    }
+
+    c.groupName = currentGroupName;
     const businessKey = makeBusinessKey(c);
     out.push({ ...c, businessKey });
   }

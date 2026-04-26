@@ -117,7 +117,8 @@ export type NormChange = GroupAdded | GroupRemoved | GroupUpdated | DetailAdded 
 
 // Канонічний рядок під твої колонки
 export type CanonicalRow = {
-  businessKey: string; // NAME+DSTU+UNIT (нормалізовані)
+  businessKey: string; // GROUP+NAME+ASSORTMENT+DSTU+UNIT+NOTES (нормалізовані)
+  groupName?: string; // Група норм із Excel-рядка, де заповнена тільки назва
   name?: string; // Назва
   assortment?: string; // Сортамент
   dstu?: string; // ДСТУ
