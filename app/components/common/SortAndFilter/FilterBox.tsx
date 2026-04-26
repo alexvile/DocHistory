@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { debounce } from "~/utils/debounce";
 
 export function FilterBox({
   searchParams,
@@ -15,21 +16,24 @@ export function FilterBox({
   }, [searchParams]);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
+    const updateSearchParams = debounce(() => {
       const trimmed = inputValue.trim();
+      const next = new URLSearchParams(searchParams);
 
       if (trimmed) {
-        searchParams.set("q", trimmed);
-        searchParams.set("page", "1");
+        next.set("q", trimmed);
+        next.set("page", "1");
       } else {
-        searchParams.delete("q");
+        next.delete("q");
       }
 
-      setSearchParams(searchParams);
-    }, 400); // debounce 400ms
+      setSearchParams(next);
+    }, 400);
 
-    return () => clearTimeout(timeout);
-  }, [inputValue]);
+    updateSearchParams();
+
+    return () => updateSearchParams.cancel();
+  }, [inputValue, searchParams, setSearchParams]);
 
   // todo - fix error when using "(" in query
 

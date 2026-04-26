@@ -1,6 +1,5 @@
 import styles from "./Status.module.css";
 
-// add size
 type StatusProps = {
   tone?: "default" | "yellow" | "red" | "green" | "blue";
 };

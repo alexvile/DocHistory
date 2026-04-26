@@ -2,7 +2,6 @@ import { UserVM } from "~/types";
 import { Icon } from "../ui/Icon";
 import styles from "./UserBar.module.css";
 import translate from "~/utils/translate";
-import { Form } from "@remix-run/react";
 
 type UserBarProps = {
   user: UserVM;

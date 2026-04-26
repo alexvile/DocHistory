@@ -17,12 +17,3 @@ export default function Page({ children, className }: PageProps) {
     </div>
   );
 }
-
-// useEffect(() => {
-//   if (isNavigating) {
-//     const t = setTimeout(() => setShowLoading(true), 150);
-//     return () => clearTimeout(t);
-//   } else {
-//     setShowLoading(false);
-//   }
-// }, [isNavigating]);

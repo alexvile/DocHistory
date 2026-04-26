@@ -2,14 +2,13 @@ import { useSearchParams } from "@remix-run/react";
 import { SortBox } from "./SortBox";
 import { FilterBox } from "./FilterBox";
 import { LimitSelect } from "./LimitSelect";
-import styles from "./SortAndFilterBar.module.css";
 import { SortAndFilterBarProps } from "~/types";
-import ChangeStatusFilter from "./ChangesStatusSelect";
-import MyChangesFilter from "./MyChangesFilter";
 import { DateRange } from "./DateRange";
-import ComboBox from "./Combobox";
 import { ProductCombobox } from "./ProductCombobox";
 import { Icon } from "~/components/ui/Icon";
+import ChangeStatusFilter from "./ChangesStatusSelect";
+import MyChangesFilter from "./MyChangesFilter";
+import styles from "./SortAndFilterBar.module.css";
 
 export function SortAndFilterBar({
   sortConfig,

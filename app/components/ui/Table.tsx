@@ -10,23 +10,17 @@ type TableProps = {
   layout?: boolean;
   stickyHeader?: boolean;
 };
-// todo - check this error
 
 function EmptyState() {
   return (
     <div className={styles.emptyStateContainer}>
       <Icon name="magnify" />
-      <p className={styles.emptyStateHeading}>No data found</p>
-      <p className={styles.emptyStateDescription}>Try changing the filters or search term</p>
+      <p className={styles.emptyStateHeading}>Інформації не знайдено</p>
+      <p className={styles.emptyStateDescription}>Спробуйте змінити фільтри або пошуковий запит</p>
     </div>
   );
 }
 function Table({ children, headings, layout, stickyHeader = false }: TableProps) {
-  //   Children.forEach(children, (child) => {
-  //     if (!isValidElement(child) || child.type !== TableRow) {
-  //       throw new Error("Table accepts only Table.Row as children.");
-  //     }
-  //   });
   const hasChildren = React.Children.count(children) > 0;
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   const tableHeadRef = React.useRef<HTMLTableSectionElement>(null);
@@ -90,12 +84,6 @@ type TableRowProps = {
   className?: string;
 };
 function TableRow({ children, className }: TableRowProps) {
-  //   Children.forEach(children, (child) => {
-  //     if (!isValidElement(child) || child.type !== Table.Cell) {
-  //       throw new Error("Table.Row accepts only Table.Cell as children.");
-  //     }
-  //   });
-
   return <tr className={clsx(styles.tableRow, className)}>{children}</tr>;
 }
 

@@ -2,7 +2,6 @@ import { LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { getUser, requireUserRole } from "~/server/auth.server";
 
-import { ModalProvider } from "~/components/ModalProvider";
 import SideMenu from "~/components/common/SideMenu";
 import { getUnreadCount } from "~/server/changes.server";
 import Page from "~/components/ui/Page";
@@ -35,7 +34,6 @@ export default function Home() {
   // ts check
   return (
     <>
-      <ModalProvider>
         {/* <header>
           <UserBar user={user} />
         </header> */}
@@ -47,8 +45,6 @@ export default function Home() {
           </Page>
         </main>
         {/* <footer><p style={{ marginBlock: "6px" }}>&copy; 2026 Your Company</p></footer> */}
-        <div id="modal-root"></div>
-      </ModalProvider>
     </>
   );
 }
