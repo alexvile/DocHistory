@@ -33,7 +33,7 @@ export default function NormsTableWithChanges({ changes }: NormsTableWithChanges
   let currentGroupName: string | undefined;
 
   return (
-    <Table headings={["№", "Назва", "Сортамент", "ДСТУ", "Од.", "Норма", "Норма на од.", "Примітки"]}>
+    <Table headings={["№", "Назва", "Сортамент", "ДСТУ", "Од.", "Норма", "Норма на од.", "Примітки"]} stickyHeader>
       {changes.flatMap(({ before, after, fields }, index) => {
         const rows = [];
         const groupName = after.groupName ?? before.groupName;

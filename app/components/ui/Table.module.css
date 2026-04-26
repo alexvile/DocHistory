@@ -27,6 +27,27 @@
   padding: 8px 6px;
 }
 
+.stickyHeader {
+  --sticky-table-header-height: 0px;
+  max-height: 100%;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+.stickyHeader .tableHead {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background-color: rgb(251, 251, 251);
+}
+
+.stickyHeader :global(.tableGroupRow) {
+  position: sticky;
+  top: var(--sticky-table-header-height);
+  z-index: 3;
+  background-color: #f7f7f7;
+}
+
 .tableCell {
   padding: 6px 6px;
 }

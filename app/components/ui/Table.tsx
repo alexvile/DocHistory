@@ -2,11 +2,13 @@ import React, { ReactNode } from "react";
 import styles from "./Table.module.css";
 import { Icon } from "./Icon";
 import clsx from "clsx";
+import { debounce } from "~/utils/debounce";
 
 type TableProps = {
   headings: string[];
   children: ReactNode;
   layout?: boolean;
+  stickyHeader?: boolean;
 };
 // todo - check this error
 
@@ -19,15 +21,41 @@ function EmptyState() {
     </div>
   );
 }
-function Table({ children, headings, layout }: TableProps) {
+function Table({ children, headings, layout, stickyHeader = false }: TableProps) {
   //   Children.forEach(children, (child) => {
   //     if (!isValidElement(child) || child.type !== TableRow) {
   //       throw new Error("Table accepts only Table.Row as children.");
   //     }
   //   });
   const hasChildren = React.Children.count(children) > 0;
+  const wrapperRef = React.useRef<HTMLDivElement>(null);
+  const tableHeadRef = React.useRef<HTMLTableSectionElement>(null);
+
+  React.useEffect(() => {
+    if (!stickyHeader || !wrapperRef.current || !tableHeadRef.current) return;
+
+    const wrapper = wrapperRef.current;
+    const tableHead = tableHeadRef.current;
+
+    function updateHeaderHeight() {
+      wrapper.style.setProperty("--sticky-table-header-height", `${tableHead.offsetHeight - 2}px`);
+    }
+
+    const debouncedUpdateHeaderHeight = debounce(updateHeaderHeight, 50);
+
+    updateHeaderHeight();
+
+    const resizeObserver = new ResizeObserver(debouncedUpdateHeaderHeight);
+    resizeObserver.observe(tableHead);
+
+    return () => {
+      debouncedUpdateHeaderHeight.cancel();
+      resizeObserver.disconnect();
+    };
+  }, [stickyHeader]);
+
   return (
-    <div className={styles.tableWrapper}>
+    <div ref={wrapperRef} className={clsx(styles.tableWrapper, stickyHeader && [styles.stickyHeader, "table-sticky-header"])}>
       {!hasChildren ? (
         <EmptyState />
       ) : (
@@ -40,7 +68,7 @@ function Table({ children, headings, layout }: TableProps) {
             </colgroup>
           )}
           {headings && (
-            <thead className={styles.tableHead}>
+            <thead ref={tableHeadRef} className={styles.tableHead}>
               <tr>
                 {headings.map((heading, index) => (
                   <th key={index} className={styles.tableHeadingCell}>

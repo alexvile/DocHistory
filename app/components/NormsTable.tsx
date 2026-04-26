@@ -7,7 +7,7 @@ export default function NormsTable({ normsJson }: NormsTableProps) {
   let currentGroupName: string | undefined;
 
   return (
-    <Table headings={["№", "Назва", "Сортамент", "ДСТУ", "Од.", "Норма", "Норма на од.", "Примітки"]}>
+    <Table headings={["№", "Назва", "Сортамент", "ДСТУ", "Од.", "Норма", "Норма на од.", "Примітки"]} stickyHeader>
       {normsJson.flatMap(({ businessKey, groupName, name, assortment, dstu, unit, consumption, consumptionPerUnit, notes }, index) => {
         const rows = [];
 

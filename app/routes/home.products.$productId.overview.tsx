@@ -202,7 +202,6 @@ export default function ProductNorm() {
     setIsEditable(true);
   };
 
-
   const discardChanges = () => {
     // TODO: confirm discard / clear child
     setRows(null);
@@ -259,30 +258,35 @@ export default function ProductNorm() {
       {actionData?.message && <div className="alert alert-warning">{actionData.message}</div>}
 
       <div className="products-details__main-form">
-        {rows && (
-          <>
-            <button type="button" className="button button--secondary" onClick={dialog.show}>
-              Порівняти
-            </button>
-            <Ariakit.Dialog store={dialog} backdrop={<div className="backdrop" />} className="dialog dialog--comparison">
-              <div className="flex justify-between">
-                <Ariakit.DialogHeading className="heading">Порівняння норм</Ariakit.DialogHeading>
-                <Ariakit.DialogDismiss className="button">Х</Ariakit.DialogDismiss>
-              </div>
-              {/* todo - fix ts */}
-              <Comparison currentNorms={loaderData.norms as CanonicalRow[]} newNorms={rows as CanonicalRow[]} />
-            </Ariakit.Dialog>
-          </>
-        )}
         <div className={`columns ${comparison ? "columns--side-by-side" : ""}`}>
           {rows && (
-            <div>
-              {!comparison && <p>Перевірте правильність сформованих даних</p>}
-              Нові дані
-              <NormsTable normsJson={rows} />{" "}
-            </div>
+            <>
+              <div>
+                {!comparison && (
+                  <div className="flex items-center justify-between my-8">
+                    <p className="margin-0 bold">Перевірте правильність сформованих даних</p>
+                    <div>
+                      <button type="button" className="button button--secondary" onClick={dialog.show}>
+                        Порівняти
+                      </button>
+                      <Ariakit.Dialog store={dialog} backdrop={<div className="backdrop" />} className="dialog dialog--comparison">
+                        <div className="flex justify-between">
+                          <Ariakit.DialogHeading className="heading">Порівняння норм</Ariakit.DialogHeading>
+                          <Ariakit.DialogDismiss className="button">Х</Ariakit.DialogDismiss>
+                        </div>
+                        {/* todo - fix ts */}
+                        <Comparison currentNorms={loaderData.norms as CanonicalRow[]} newNorms={rows as CanonicalRow[]} />
+                      </Ariakit.Dialog>
+                    </div>
+                  </div>
+                )}
+                <p className="margin-0 mb-8 bold">Нові дані</p>
+                <NormsTable normsJson={rows} />{" "}
+              </div>
+              <hr className="full-width"/>
+            </>
           )}
-          {rows && "Поточні дані"}
+          {rows && <p className="margin-0 mb-8 bold">Поточні дані</p>}
           <NormsTable normsJson={loaderData.norms as CanonicalRow[]} />
         </div>
       </div>

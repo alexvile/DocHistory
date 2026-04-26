@@ -36,7 +36,7 @@ export default function ConfigurableNormsTable({
   let currentGroupName: string | undefined;
 
   return (
-    <Table headings={activeColumns.map((c) => c.label)}>
+    <Table headings={activeColumns.map((c) => c.label)} stickyHeader>
       {data.flatMap((row, rowIndex) => {
         const rows = [];
         let rowClass = "";
