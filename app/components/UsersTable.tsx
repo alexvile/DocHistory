@@ -1,6 +1,10 @@
-import { UsersListProps } from "~/types";
+import { UserVM } from "~/types";
 import Table from "./ui/Table";
 import translate from "~/utils/translate";
+
+type UsersListProps = {
+  users: UserVM[];
+};
 
 export default function UsersTable({ users }: UsersListProps) {
   return (

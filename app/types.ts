@@ -1,135 +1,20 @@
-import type { User, Product, ChangeSet, Prisma, ChangeSetView } from "@prisma/client";
-
-// todo - USE DTO - for DB and backend
-// todo - use VM (view model) for frontend
+import type { User, Product, ChangeSet } from "@prisma/client";
 
 export type UserRoleVM = User["role"];
 export type UserVM = Pick<User, "id" | "email" | "firstName" | "lastName" | "role">;
+export type ProductVM = Pick<Product, "id" | "title" | "code" | "updatedAt">;
 
-export type UsersListProps = {
-  users: UserVM[];
-};
-
-export type FilteredProduct = Pick<Product, "id" | "title" | "code" | "updatedAt">;
-
-export type ProductsListProps = {
-  products: FilteredProduct[];
-  from: number;
-};
-
-// export type FilteredChanges = Pick<Change, "id"  | "createdAt">;
-
-type FilteredChangeWithRelations = Prisma.ChangeGetPayload<{
-  select: {
-    id: true;
-    createdAt: true;
-    creator: {
-      select: {
-        firstName: true;
-        lastName: true;
-      };
-    };
-    product: {
-      select: {
-        productTitle: true;
-      };
-    };
-  };
-}>;
-export type ChangesListProps = {
-  changes: FilteredChangeWithRelations[];
-};
-
-export type ProductWithNorms = Pick<Product, "id" | "productTitle" | "updatedAt">;
-export type ProductNormsTableProps = {
-  normsRows: any;
-  // norms: ProductWithNorms['norms'],
-  isEditable: boolean;
-};
-
-// delete | addGroup | addElement
-export type TableAction<T> = [name: string, handler: (arg: T) => void];
-
-// type TableAction<T> = [name: string, handler: (arg: T) => void];
-
-// const updateCell: TableAction<number> = ["Update", (id) => console.log(`Updating cell ${id}`)];
-
-// processAction(updateCell, 42);
-export type Detail = {
-  id: string;
-  type: "detail";
-  order: number;
-  title?: string;
-  assortment?: string;
-  standard?: string;
-  unit?: string;
-  consuption_rate?: number;
-  consuption_rate_per_item?: number;
-  price?: number;
-  sum?: number;
-  notes?: string;
-};
-
-export type Group = {
-  id: string;
-  type: "group";
-  title: string;
-  details: Detail[];
-  code?: string;
-  unit?: string;
-  quantity?: number;
-  [key: string]: any;
-};
-// todo - check if needed
-export type Norm = Group;
-
-// Change types
-export type GroupAdded = { type: "group-added"; group: Group };
-export type GroupRemoved = { type: "group-removed"; group: Group };
-export type GroupUpdated = {
-  type: "group-updated";
-  groupId: string;
-  oldGroupTitle: string;
-  changes: { field: string; old: any; new: any }[];
-};
-export type DetailAdded = {
-  type: "detail-added";
-  groupId: string;
-  groupTitle: string;
-  detail: Detail;
-};
-export type DetailRemoved = {
-  type: "detail-removed";
-  groupId: string;
-  groupTitle: string;
-  detail: Detail;
-};
-export type DetailUpdated = {
-  type: "detail-updated";
-  groupId: string;
-  groupTitle: string;
-  detailId: string;
-  detailTitle: string;
-  changes: { field: string; old: any; new: any }[];
-};
-
-export type NormChange = GroupAdded | GroupRemoved | GroupUpdated | DetailAdded | DetailRemoved | DetailUpdated;
-
-// Канонічний рядок під твої колонки
+// Canonical row mapped from the Excel columns
 export type CanonicalRow = {
-  businessKey: string; // GROUP+NAME+ASSORTMENT+DSTU+UNIT+NOTES (нормалізовані)
-  groupName?: string; // Група норм із Excel-рядка, де заповнена тільки назва
-  name?: string; // Назва
-  assortment?: string; // Сортамент
-  dstu?: string; // ДСТУ
-  unit?: string; // Од. виміру
-  consumption?: number; // Норма розходу
-  consumptionPerUnit?: number; // Норма розходу на одиницю
-  notes?: string; // Нотатки / Примітки
-};
-
-export type NormsTableProps = {
-  normsJson: CanonicalRow[];
+  businessKey: string; // GROUP+NAME+ASSORTMENT+DSTU+UNIT+NOTES (normalized)
+  groupName?: string; // Norm group from an Excel row where only the name is filled
+  name?: string; // Name
+  assortment?: string; // Assortment
+  dstu?: string; // DSTU
+  unit?: string; // Unit of measure
+  consumption?: number; // Consumption rate
+  consumptionPerUnit?: number; // Consumption rate per unit
+  notes?: string; // Notes
 };
 
 export type NormDiff = {
@@ -143,14 +28,14 @@ export type NormDiff = {
   }[];
 };
 
-// for table
+// For the changes table
 export type ChangeVM = Pick<ChangeSet, "id" | "status" | "createdAt"> & {
   createdBy: Pick<User, "firstName" | "lastName">;
   product: Pick<Product, "id" | "title">;
   approver: Pick<User, "firstName" | "lastName">;
 };
 
-// for set and individual view
+// For change set details and individual view
 export type ChangeSetVM = Pick<ChangeSet, "id" | "status" | "approverId" | "decidedAt"> & {
   createdAt: string;
   diff: NormDiff;
@@ -158,7 +43,7 @@ export type ChangeSetVM = Pick<ChangeSet, "id" | "status" | "approverId" | "deci
   approver: Pick<User, "firstName" | "lastName"> | null;
 };
 
-// sort and filterbar
+// Sort and filter bar
 export type SortOption = {
   value: string;
   label: string;
@@ -209,15 +94,16 @@ export type FilterOption = {
 };
 
 export type FilterConfig = {
-  /** query param key, наприклад "status" */
+  /** Query param key, for example "status" */
   key: string;
-
-  /** label для UI */
+  /** UI label */
   label: string;
-
-  /** значення селекта */
+  /** Select options */
   options: FilterOption[];
-
-  /** дефолтне значення */
+  /** Default value */
   default: string;
 };
+
+
+// todo - Use DTOs for DB and backend boundaries
+// todo - Use VMs (view models) for frontend data

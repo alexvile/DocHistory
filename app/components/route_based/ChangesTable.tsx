@@ -1,20 +1,18 @@
 import { formatDateShortUA } from "~/utils/formatDateUA";
 import Table from "../ui/Table";
-import { ChangeSetVM, ChangeVM } from "~/types";
+import { ChangeSetVM, ChangeVM, UserRoleVM } from "~/types";
 import translate from "~/utils/translate";
 import Status from "../ui/Status";
 import { Link } from "@remix-run/react";
 import { Icon } from "../ui/Icon";
+import { shortenFirstName } from "~/utils/formatName";
 
 type ChangesTableProps = {
   changes: Pick<ChangeVM, "id" | "createdAt" | "status" | "product" | "createdBy" | "approver">[];
   from: number;
-  role: any;
+  role: UserRoleVM;
 };
 
-function shortenFirstName(firstName?: string) {
-  return firstName ? `${firstName.charAt(0)}.` : "";
-}
 const STATUS_TONE_MAP: Record<ChangeSetVM["status"], "green" | "yellow" | "blue" | "red"> = {
   DRAFT: "yellow",
   ON_REVIEW: "blue",
@@ -23,9 +21,7 @@ const STATUS_TONE_MAP: Record<ChangeSetVM["status"], "green" | "yellow" | "blue"
 };
 
 export default function ChangesTable({ changes, from, role }: ChangesTableProps) {
-  // console.log("changes", changes);
   return (
-    // todo - icons checked or not fot viewers
     <Table
       headings={[
         "№",

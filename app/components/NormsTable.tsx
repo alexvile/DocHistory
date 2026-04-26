@@ -1,5 +1,9 @@
-import { NormsTableProps } from "~/types";
+import { CanonicalRow } from "~/types";
 import Table from "./ui/Table";
+
+type NormsTableProps = {
+  normsJson: CanonicalRow[];
+};
 
 const COLUMNS_COUNT = 8;
 

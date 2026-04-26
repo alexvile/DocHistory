@@ -1,7 +1,12 @@
 import { Link } from "@remix-run/react";
-import { ProductsListProps } from "~/types";
 import Table from "./ui/Table";
 import { formatDateForUA } from "~/utils/formatDateUA";
+import { ProductVM } from "~/types";
+
+type ProductsListProps = {
+  products: ProductVM[];
+  from: number;
+};
 
 export default function ProductsTable({ products, from }: ProductsListProps) {
   return (

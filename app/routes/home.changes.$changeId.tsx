@@ -26,6 +26,7 @@ import { useState } from "react";
 import * as Ariakit from "@ariakit/react";
 import { ApproverCombobox } from "~/components/route_based/ApproverCombobox";
 import clsx from "clsx";
+import { shortenFirstName } from "~/utils/formatName";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.changeId, "Missing contactId param");
@@ -168,9 +169,6 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 //   return <p>Щось пішло не так</p>;
 // }
 
-function shortenFirstName(firstName?: string) {
-  return firstName ? `${firstName.charAt(0)}.` : "";
-}
 type ChangeSetRouteData = ReturnType<typeof useLoaderData<typeof loader>>;
 type SerializedChangeSet = NonNullable<ChangeSetRouteData>["changeSet"];
 type ChangeSetView = SerializedChangeSet["views"][number];
@@ -182,7 +180,7 @@ function ViewsPopover({ views, viewsCount }: { views: ChangeSetView[]; viewsCoun
         <Ariakit.HovercardAnchor className="anchor">({viewsCount})</Ariakit.HovercardAnchor>
         <Ariakit.HovercardDisclosure className="disclosure">
           <Ariakit.VisuallyHidden>Інформація про перегляди</Ariakit.VisuallyHidden>
-          <Icon name="asda"/>
+            <Icon name="asda"/>
         </Ariakit.HovercardDisclosure>
         <Ariakit.Hovercard portal gutter={16} className="hovercard">
           <ul className="list-unstyled viewes-list">
