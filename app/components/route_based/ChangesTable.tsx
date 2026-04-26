@@ -29,12 +29,11 @@ export default function ChangesTable({ changes, from, role }: ChangesTableProps)
     <Table
       headings={[
         "№",
-        "Посилання",
+        "Зміна від",
         "Продукт",
         "Статус",
         "Створено",
         "Відповідальний",
-        "Дата",
         "Дата рішення",
 
         ...(role === "VIEWER" ? ["Перегляд"] : []),
@@ -44,8 +43,8 @@ export default function ChangesTable({ changes, from, role }: ChangesTableProps)
         <Table.Row key={id}>
           <Table.Cell>{from + index}</Table.Cell>
           <Table.Cell>
-            <Link className="link link--with-icon" to={`/home/changes/${id}`} aria-label="Оглянути зміну">
-              лінка <Icon name="link" />
+            <Link className="link" to={`/home/changes/${id}`} aria-label="Оглянути зміну">
+              {formatDateShortUA(createdAt)}
             </Link>
           </Table.Cell>
           <Table.Cell>
@@ -67,7 +66,6 @@ export default function ChangesTable({ changes, from, role }: ChangesTableProps)
               ? `${shortenFirstName(approver.firstName)} ${approver.lastName}`
               : "—"}
           </Table.Cell>
-          <Table.Cell>{formatDateShortUA(createdAt)}</Table.Cell>
           <Table.Cell>{decidedAt && formatDateShortUA(decidedAt)}</Table.Cell>
 
           {role === "VIEWER" ? (
