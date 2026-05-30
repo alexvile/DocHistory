@@ -15,6 +15,7 @@ import * as Ariakit from "@ariakit/react";
 import Comparison from "~/components/route_based/NormsComparison/Comparison";
 import { Icon } from "~/components/ui/Icon";
 import RouteError from "~/components/ui/RouteError";
+import { throwDevelopmentActionTestError } from "~/server/development-errors.server";
 
 const ExcelUploadContainer = lazy(() => import("~/components/ExcelUploadContainer"));
 
@@ -24,6 +25,7 @@ const ExcelUploadContainer = lazy(() => import("~/components/ExcelUploadContaine
 // 3) make extra request
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
+  throwDevelopmentActionTestError(request);
   // invariant(params.productId, "Missing contactId param");
   // const userIdFromSession = await getUserId(request);
 
@@ -40,7 +42,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
   if (hasErrors) {
     return new Response(JSON.stringify({ errors }), {
-      status: 400,
+      status: 422,
       headers: { "Content-Type": "application/json" },
     });
   }
@@ -172,6 +174,16 @@ export default function ProductNorm() {
         </div>
       )}
       {actionData?.message && <div className="alert alert-warning">{actionData.message}</div>}
+      {actionData?.errors && (
+        <div className="form-errors">
+          <p className="form-errors__title">Будь ласка, виправте помилки:</p>
+          <ul className="form-errors__list">
+            {Object.values(actionData.errors).map((message, index) => (
+              <li key={index}>{message}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="products-details__main-form">
         <div className="columns">

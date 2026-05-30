@@ -1,4 +1,4 @@
-import { Link, isRouteErrorResponse, useRouteError } from "@remix-run/react";
+import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import styles from "./RouteError.module.css";
 
 type ErrorContent = {
@@ -10,6 +10,18 @@ type ErrorContent = {
 function getErrorContent(error: unknown): ErrorContent {
   if (isRouteErrorResponse(error)) {
     switch (error.status) {
+      case 401:
+        return {
+          status: 401,
+          title: "Потрібна авторизація",
+          description: "Увійдіть у систему, щоб продовжити роботу.",
+        };
+      case 403:
+        return {
+          status: 403,
+          title: "Недостатньо прав",
+          description: "У вас немає доступу до цієї сторінки або дії.",
+        };
       case 404:
         return {
           status: 404,
@@ -21,6 +33,12 @@ function getErrorContent(error: unknown): ErrorContent {
           status: 409,
           title: "Не вдалося виконати дію",
           description: "Дані змінилися або перебувають у некоректному стані. Оновіть сторінку та спробуйте ще раз.",
+        };
+      case 422:
+        return {
+          status: 422,
+          title: "Не вдалося обробити дані",
+          description: "Перевірте введені дані та спробуйте ще раз.",
         };
       case 500:
         return {
@@ -52,9 +70,6 @@ export default function RouteError() {
       <p className={styles.status}>{content.status}</p>
       <h1 className={styles.title}>{content.title}</h1>
       <p className={styles.description}>{content.description}</p>
-      <Link className="button button--primary" to="/home/products">
-        До списку продуктів
-      </Link>
     </div>
   );
 }

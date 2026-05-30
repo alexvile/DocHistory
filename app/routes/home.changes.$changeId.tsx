@@ -27,9 +27,12 @@ import * as Ariakit from "@ariakit/react";
 import { ApproverCombobox } from "~/components/route_based/ApproverCombobox";
 import clsx from "clsx";
 import { shortenFirstName } from "~/utils/formatName";
+import RouteError from "~/components/ui/RouteError";
+import { throwDevelopmentActionTestError, throwDevelopmentLoaderTestError } from "~/server/development-errors.server";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.changeId, "Missing contactId param");
+  throwDevelopmentActionTestError(request);
   const changeSetId = params.changeId;
   const role = await requireUserRole(request);
   const userId = await requireUserId(request);
@@ -45,8 +48,9 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
     const approverId = formData.get("approverId");
 
-    if (!approverId) return null;
-    if (typeof approverId !== "string") return null;
+    if (typeof approverId !== "string" || !approverId) {
+      throw new Response("Approver is required", { status: 422 });
+    }
 
     await assignApproverToChangeSet({
       changeSetId,
@@ -79,7 +83,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     const changeSet = await getLightChangeById(changeSetId);
 
     if (!changeSet) {
-      throw new Error("ChangeSet not found");
+      throw new Response("ChangeSet not found", { status: 404 });
     }
 
     if (changeSet.createdById !== userId || changeSet.status !== "DRAFT") {
@@ -120,11 +124,12 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     console.log("approve", res);
     return null;
   }
-  return null;
+  throw new Response("Unknown action", { status: 422 });
 };
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   invariant(params.changeId, "Missing productId param");
+  throwDevelopmentLoaderTestError(params.changeId);
 
   // todo optimize
 
@@ -155,23 +160,9 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   return { role, userId, changeSet, approvers };
 };
 
-// export function ErrorBoundary() {
-//   const error = useRouteError();
-//   if (isRouteErrorResponse(error)) {
-//     if (error.status === 404) {
-//       return <p>Зміну не знайдено (404)</p>;
-//     }
-
-//     return (
-//       <div>
-//         <h1>Помилка: {error.status}</h1>
-//         <p>{error.statusText}</p>
-//       </div>
-//     );
-//   }
-
-//   return <p>Щось пішло не так</p>;
-// }
+export function ErrorBoundary() {
+  return <RouteError />;
+}
 
 type ChangeSetRouteData = ReturnType<typeof useLoaderData<typeof loader>>;
 type SerializedChangeSet = NonNullable<ChangeSetRouteData>["changeSet"];

@@ -9,11 +9,14 @@ import { validateProductForm } from "~/utils/vanildateNewProduct.server";
 import BackControls from "~/components/common/BackControls";
 import clsx from "clsx";
 import { CanonicalRow } from "~/types";
+import RouteError from "~/components/ui/RouteError";
+import { throwDevelopmentActionTestError } from "~/server/development-errors.server";
 
 const ExcelUploadContainer = lazy(() => import("~/components/ExcelUploadContainer"));
 
 // todo use _new !!!!
 export const action: ActionFunction = async ({ request }: ActionFunctionArgs) => {
+  throwDevelopmentActionTestError(request);
   const role = await requireUserRole(request);
   if (role !== "COMMITTER") {
     throw new Response("Forbidden: Access denied", { status: 403 });
@@ -26,7 +29,7 @@ export const action: ActionFunction = async ({ request }: ActionFunctionArgs) =>
 
   if (hasErrors) {
     return new Response(JSON.stringify({ errors }), {
-      status: 400,
+      status: 422,
       headers: { "Content-Type": "application/json" },
     });
   }
@@ -66,6 +69,10 @@ export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) =>
   }
   return null;
 };
+
+export function ErrorBoundary() {
+  return <RouteError />;
+}
 
 // todo - create can commiter or ADMIN
 // todo - show errors in the frontend ?

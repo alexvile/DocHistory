@@ -7,6 +7,7 @@ import ProductNavigation from "~/components/ProductNavigation";
 import RouteError from "~/components/ui/RouteError";
 import { mapProductErrorToResponse } from "~/server/products.http.server";
 import { getProductWithNormsById } from "~/server/products.server";
+import { throwDevelopmentLoaderTestError } from "~/server/development-errors.server";
 
 import productNavStyles from "~/styles/product-nav.css?url";
 
@@ -16,18 +17,7 @@ export function links() {
 // todo - use props to path deeper
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.productId, "Missing productId param");
-  if (process.env.NODE_ENV === "development") {
-    const testErrorStatuses: Record<string, number> = {
-      "test-403": 403,
-      "test-404": 404,
-      "test-409": 409,
-      "test-500": 500,
-    };
-    const testErrorStatus = testErrorStatuses[params.productId];
-    if (testErrorStatus) {
-      throw new Response("Development test error", { status: testErrorStatus });
-    }
-  }
+  throwDevelopmentLoaderTestError(params.productId);
   try {
     const { product, currentSnapshot } = await getProductWithNormsById(params.productId);
     return {
