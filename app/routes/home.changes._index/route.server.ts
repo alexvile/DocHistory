@@ -34,7 +34,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const statusParam = url.searchParams.get("status"); // DRAFT | APPROVED | REJECTED
   const fromParam = url.searchParams.get("from");
   const toParam = url.searchParams.get("to");
-  const myOnly = url.searchParams.get("my") === "1"; // admin and committer only
+  const myOnly = url.searchParams.get("my") === "1"; // approver and committer only
   const onlyUnread = url.searchParams.get("unread") === "1"; // viewer only
 
   let createdAtFilter: Prisma.DateTimeFilter | undefined;
@@ -60,7 +60,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   // 🔥 myOnly
   if (myOnly) {
-    if (role === "ADMIN" || role === "APPROVER") {
+    if (role === "APPROVER") {
       where.approverId = userId;
     }
 
