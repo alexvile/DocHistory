@@ -54,9 +54,7 @@ function makeBusinessKey(r: Partial<CanonicalRow>) {
   const name = (r.name ?? "").toUpperCase().trim();
   const assortment = (r.assortment ?? "").toUpperCase().trim();
   const dstu = (r.dstu ?? "").toUpperCase().trim();
-  const unit = (r.unit ?? "").toUpperCase().trim();
-  const notes = (r.notes ?? "").toUpperCase().trim();
-  return `GROUP:${groupName}|NAME:${name}|ASSORTMENT:${assortment}|DSTU:${dstu}|UNIT:${unit}|NOTES:${notes}`;
+  return `GROUP:${groupName}|NAME:${name}|ASSORTMENT:${assortment}|DSTU:${dstu}`;
 }
 
 function isGroupRow(r: Partial<CanonicalRow>) {
