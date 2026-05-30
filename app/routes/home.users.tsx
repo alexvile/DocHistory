@@ -10,7 +10,7 @@ export const loader: LoaderFunction = async ({
   request,
 }: LoaderFunctionArgs) => {
   const role = await requireUserRole(request);
-  if (role !== "ADMIN") {
+  if (role !== "SUPER_ADMIN" && role !== "ADMIN") {
     throw new Response("Forbidden: Access denied", { status: 403 });
   }
   // return null;

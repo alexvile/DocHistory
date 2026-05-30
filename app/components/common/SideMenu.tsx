@@ -15,7 +15,7 @@ export default function SideMenu({ user, count }: SideMenuProps) {
       <UserBar user={user} />
       <nav aria-label="Main navigation">
         <ul className={styles.sideMenuList}>
-          {user.role === "ADMIN" ? (
+          {user.role === "SUPER_ADMIN" || user.role === "ADMIN" ? (
             <>
               <li className={styles.sideMenuItem}>
                 <NavLink className={({ isActive, isPending }) => (isActive ? "active" : isPending ? "pending" : "")} to={"register"}>

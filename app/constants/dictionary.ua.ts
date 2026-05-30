@@ -2,6 +2,7 @@ import type { Role } from "@prisma/client";
 
 export const DICTIONARY_UA = {
   ROLES: {
+    SUPER_ADMIN: "Супер адміністратор",
     ADMIN: "Адміністратор",
     APPROVER: "Апрувер",
     COMMITTER: "Нормувальник",

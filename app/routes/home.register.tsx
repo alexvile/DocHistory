@@ -1,25 +1,37 @@
-import { ActionFunctionArgs, json, LoaderFunction, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { ActionFunctionArgs, json, LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { register, requireUserRole } from "~/server/auth.server";
 import { RegisterForm } from "~/server/types.server";
 import { validateEmail, validateName, validatePassword } from "~/server/validators.server";
 import { Role } from "@prisma/client";
 import translate from "~/utils/translate";
-import { Form } from "@remix-run/react";
+import { Form, useLoaderData } from "@remix-run/react";
 import TextField from "~/components/ui/TextField";
 
-// todo - fix Role issue later
-const REGISTERABLE_ROLES = ["APPROVER", Role.COMMITTER, Role.VIEWER] as const;
+const ADMIN_REGISTERABLE_ROLES = [Role.APPROVER, Role.COMMITTER, Role.VIEWER] as const;
+const SUPER_ADMIN_REGISTERABLE_ROLES = [Role.ADMIN] as const;
 
-export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
+function getRegisterableRoles(role: Role): readonly Role[] {
+  if (role === Role.SUPER_ADMIN) {
+    return SUPER_ADMIN_REGISTERABLE_ROLES;
+  }
+  if (role === Role.ADMIN) {
+    return ADMIN_REGISTERABLE_ROLES;
+  }
+  return [];
+}
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const role = await requireUserRole(request);
-  if (role !== "ADMIN") {
+  const registerableRoles = getRegisterableRoles(role);
+  if (registerableRoles.length === 0) {
     throw new Response("Forbidden: Access denied", { status: 403 });
   }
-  return null;
+  return { registerableRoles };
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
   const currentUserRole = await requireUserRole(request);
-  if (currentUserRole !== "ADMIN") {
+  const registerableRoles = getRegisterableRoles(currentUserRole);
+  if (registerableRoles.length === 0) {
     throw new Response("Forbidden: Access denied", { status: 403 });
   }
 
@@ -28,7 +40,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const data = Object.fromEntries(formData);
   // ts as FormdataProps and refactor
   const { firstName, lastName, email, password, role } = data as RegisterForm;
-  if (!REGISTERABLE_ROLES.includes(role as (typeof REGISTERABLE_ROLES)[number])) {
+  if (!registerableRoles.includes(role)) {
     throw new Response("Invalid role", { status: 400 });
   }
   // todo - etc
@@ -62,6 +74,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Register() {
+  const { registerableRoles } = useLoaderData<typeof loader>();
+
   return (
     <>
       <h2>Register (only for admin)</h2>
@@ -74,7 +88,7 @@ export default function Register() {
         <div className="form__field">
           <label htmlFor="role" className="p-label">Роль</label>
           <select className="p-select" name="role" id="role">
-            {REGISTERABLE_ROLES.map((role) => (
+            {registerableRoles.map((role) => (
               <option key={role} value={role}>
                 {translate("ROLES", role)}
               </option>

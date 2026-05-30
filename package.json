@@ -7,6 +7,7 @@
     "postinstall": "prisma generate",
     "build": "remix vite:build",
     "dev": "remix vite:dev",
+    "bootstrap:super-admin": "node --env-file=.env scripts/create-super-admin.mjs",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve build/server/index.js",
     "typecheck": "tsc"
