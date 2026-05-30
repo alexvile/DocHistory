@@ -19,7 +19,7 @@ export default function ProductSnapshots() {
   // Стан від
   return (
     <div>
-      Product snapshots{loaderData.snapshots.length ? <ProductSnapshotsTable snapshots={loaderData.snapshots} /> : null}
+      Product snapshots (в розробці) {loaderData.snapshots.length ? <ProductSnapshotsTable snapshots={loaderData.snapshots} /> : null}
       <Outlet />
     </div>
   );
