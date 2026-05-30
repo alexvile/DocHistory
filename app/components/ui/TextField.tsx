@@ -30,7 +30,7 @@ export default function TextField({
 
   return (
     <label
-      className={clsx({
+      className={clsx("block", {
         "full-width": fullWidth,
       })}
     >

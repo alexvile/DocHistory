@@ -151,7 +151,13 @@ fieldset {
     border-color: #000;
   }
 }
-
+/* todo - fix */
+.form.form--register {
+  .p-input,
+  .p-select {
+    width: 100%;
+  }
+}
 /* Buttons */
 .button {
   padding: 6px 12px;
@@ -342,6 +348,14 @@ fieldset {
 
 .inline-flex {
   display: inline-flex;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.block {
+  display: block;
 }
 
 .flex-col {
