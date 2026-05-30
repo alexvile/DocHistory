@@ -5,7 +5,15 @@ export const getTotalChangesCount = async (whereFilter: Prisma.ChangeSetWhereInp
   return await prisma.changeSet.count({ where: whereFilter });
 };
 
-export const getViewerChangesCount = async ({ where, userId, onlyUnread = false }: any) => {
+export const getViewerChangesCount = async ({
+  where,
+  userId,
+  onlyUnread = false,
+}: {
+  where: Prisma.ChangeSetWhereInput;
+  userId: string;
+  onlyUnread?: boolean;
+}) => {
   return prisma.changeSet.count({
     where: {
       ...where,
@@ -233,7 +241,10 @@ export const getViewerChangeSets = async ({
   userId: string;
 }) => {
   return prisma.changeSet.findMany({
-    where,
+    where: {
+      ...where,
+      status: ChangeSetStatus.APPROVED,
+    },
     orderBy,
     skip,
     take,

@@ -15,7 +15,7 @@ export default function Changes() {
     <>
       <SortAndFilterBar
         sortConfig={changesSortConfig}
-        showChangeStatusFilter={true}
+        showChangeStatusFilter={data.role !== "VIEWER"}
         showMyFilter={data.role === "ADMIN" || data.role === "COMMITTER"}
         productOptions={data?.products}
         showCalendar={true}

@@ -1,14 +1,14 @@
 import { LoaderFunction } from "@remix-run/node";
-import { getUserId, requireUserRole } from "~/server/auth.server";
+import { requireUserId, requireUserRole } from "~/server/auth.server";
 import { ChangeSetStatus, Prisma } from "@prisma/client";
-import { getFilteredChangeSets, getTotalChangesCount, getViewerChangesCount, getViewerChangeSets } from "~/server/changes.server";
+import { getFilteredChangeSets, getTotalChangesCount, getViewerChangeSets } from "~/server/changes.server";
 import changesSortConfig from "./changesSortConfig";
 import { getAllProducts } from "~/server/products.server";
 import { parsePaginationParams } from "~/utils/pagination.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const role = await requireUserRole(request);
-  const userId = await getUserId(request);
+  const userId = await requireUserId(request);
 
   const url = new URL(request.url);
   // todo - can be optimized in future
@@ -52,7 +52,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   // 🔥 базовий where
   const where: Prisma.ChangeSetWhereInput = {
     ...(productId && { productId }),
-    ...(statusParam && { status: statusParam as ChangeSetStatus }),
+    ...(role === "VIEWER"
+      ? { status: ChangeSetStatus.APPROVED }
+      : statusParam && { status: statusParam as ChangeSetStatus }),
     ...(createdAtFilter && { createdAt: createdAtFilter }),
   };
 
