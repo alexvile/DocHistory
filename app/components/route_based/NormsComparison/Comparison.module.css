@@ -13,3 +13,9 @@
   flex-wrap: wrap;
   column-gap: 4px;
 }
+
+.diffControls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}

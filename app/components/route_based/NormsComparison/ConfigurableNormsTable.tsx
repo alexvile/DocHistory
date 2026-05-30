@@ -7,6 +7,7 @@ type Props = {
   visibleColumns: Set<ColumnKey>;
   mode: "before" | "after";
   diffMode?: boolean;
+  hideUnchangedRows?: boolean;
   diff?: NormDiff;
 };
 
@@ -30,14 +31,28 @@ export default function ConfigurableNormsTable({
   visibleColumns,
   mode,
   diffMode,
+  hideUnchangedRows,
   diff,
 }: Props) {
   const activeColumns = columns.filter((col) => visibleColumns.has(col.key));
+  const changedKeys = new Set(diff?.changed.map((item) => item.key));
+  const addedKeys = new Set(diff?.added.map((row) => row.businessKey));
+  const removedKeys = new Set(diff?.removed.map((row) => row.businessKey));
+  const rowsToRender = data
+    .map((row, rowIndex) => ({ row, rowIndex }))
+    .filter(({ row }) => {
+      if (!diffMode || !hideUnchangedRows || !diff) {
+        return true;
+      }
+
+      return changedKeys.has(row.businessKey)
+        || (mode === "before" ? removedKeys.has(row.businessKey) : addedKeys.has(row.businessKey));
+    });
   let currentGroupName: string | undefined;
 
   return (
     <Table headings={activeColumns.map((c) => c.label)} stickyHeader>
-      {data.flatMap((row, rowIndex) => {
+      {rowsToRender.flatMap(({ row, rowIndex }) => {
         const rows = [];
         let rowClass = "";
         let changedFields: ColumnKey[] = [];

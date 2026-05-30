@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ColumnKey, columns } from "./constants";
-import { CanonicalRow, NormDiff } from "~/types";
+import { CanonicalRow } from "~/types";
 import ConfigurableNormsTable from "./ConfigurableNormsTable";
 import { diffNorms } from "~/utils/comparison";
 import { ToggleSwitch } from "~/components/ToggleSwitch";
@@ -34,7 +34,10 @@ export default function Comparison({ currentNorms, newNorms }: ComparisonProps) 
   const diff = useMemo(() => diffNorms(currentNorms, newNorms), [currentNorms, newNorms]);
 
   const [diffMode, setDiffMode] = useState(false);
+  const [hideUnchangedRows, setHideUnchangedRows] = useState(false);
   console.log(9997, diff);
+  console.log("currentNorms", currentNorms);
+  console.log("newNorms", newNorms);
 
   // todo - finish comparator
   return (
@@ -49,18 +52,29 @@ export default function Comparison({ currentNorms, newNorms }: ComparisonProps) 
             </label>
           ))}
         </div>
-        <ToggleSwitch checked={diffMode} onChange={setDiffMode} label="Показати зміни" />
+        <div className={styles.diffControls}>
+          <ToggleSwitch checked={diffMode} onChange={setDiffMode} label="Показати зміни" />
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={hideUnchangedRows}
+              disabled={!diffMode}
+              onChange={(event) => setHideUnchangedRows(event.target.checked)}
+            />
+            Приховати рядки без змін
+          </label>
+        </div>
       </div>
 
       {/* 🔹 Tables */}
       <div className="flex gap-16 items-start">
         <div className="configurableGroup">
-          Поточне
-          <ConfigurableNormsTable data={currentNorms} visibleColumns={visibleColumns} mode="before" diffMode={diffMode} diff={diff} />
+          <h3>Поточне</h3>
+          <ConfigurableNormsTable data={currentNorms} visibleColumns={visibleColumns} mode="before" diffMode={diffMode} hideUnchangedRows={hideUnchangedRows} diff={diff} />
         </div>
         <div className="configurableGroup">
-          Нове
-          <ConfigurableNormsTable data={newNorms} visibleColumns={visibleColumns} mode="after" diffMode={diffMode} diff={diff} />
+          <h3>Нове</h3>
+          <ConfigurableNormsTable data={newNorms} visibleColumns={visibleColumns} mode="after" diffMode={diffMode} hideUnchangedRows={hideUnchangedRows} diff={diff} />
         </div>
       </div>
     </div>
