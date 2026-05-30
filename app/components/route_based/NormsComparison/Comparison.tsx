@@ -43,11 +43,16 @@ export default function Comparison({ currentNorms, newNorms }: ComparisonProps) 
     <div>
       {/* 🔹 Controls */}
       <div className={styles.controls}>
-        <div className={styles.columns}>
+        <div className={styles.columns} role="group" aria-label="Видимі колонки">
           {columns.map((col) => (
-            <label key={col.key} className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" checked={visibleColumns.has(col.key)} onChange={() => toggleColumn(col.key)} />
-              {col.label}
+            <label key={col.key} className={styles.columnOption}>
+              <input
+                className="visually-hidden"
+                type="checkbox"
+                checked={visibleColumns.has(col.key)}
+                onChange={() => toggleColumn(col.key)}
+              />
+              <span>{col.label}</span>
             </label>
           ))}
         </div>
@@ -57,11 +62,11 @@ export default function Comparison({ currentNorms, newNorms }: ComparisonProps) 
       {/* 🔹 Tables */}
       <div className="flex gap-16 items-start">
         <div className="configurableGroup">
-          <h3>Поточне</h3>
+          <h3 className={styles.groupTitle}>Поточне</h3>
           <ConfigurableNormsTable data={currentNorms} visibleColumns={visibleColumns} mode="before" diffMode={diffMode} diff={diff} />
         </div>
         <div className="configurableGroup">
-          <h3>Нове</h3>
+          <h3 className={styles.groupTitle}>Нове</h3>
           <ConfigurableNormsTable data={newNorms} visibleColumns={visibleColumns} mode="after" diffMode={diffMode} diff={diff} />
         </div>
       </div>

@@ -990,7 +990,7 @@ a.active {
   flex: 1 1 49%;
 }
 .configurableGroup .table-sticky-header {
-  max-height: 75vh;
+  max-height: 70vh;
 }
 .yellow {
   color: rgb(177, 177, 21);
