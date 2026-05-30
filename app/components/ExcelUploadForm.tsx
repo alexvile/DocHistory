@@ -10,8 +10,8 @@ type ExcelUploadFormProps<T = unknown> = {
   isParsed: boolean;
 };
 
-export function ExcelUploadForm({ onParsed, onClear, isParsed }: ExcelUploadFormProps) {
-  const fetcher = useFetcher<{ rows: any[] }>();
+export function ExcelUploadForm<T>({ onParsed, onClear, isParsed }: ExcelUploadFormProps<T>) {
+  const fetcher = useFetcher<{ rows: T[] }>();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handledRef = useRef(false);
   const [hasFile, setHasFile] = useState(false);
@@ -22,7 +22,7 @@ export function ExcelUploadForm({ onParsed, onClear, isParsed }: ExcelUploadForm
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data?.rows && !handledRef.current) {
       handledRef.current = true;
-      onParsed(fetcher.data.rows);
+      onParsed(fetcher.data.rows as T[]);
     }
   }, [fetcher.state, fetcher.data, onParsed]);
 

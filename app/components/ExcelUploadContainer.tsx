@@ -3,18 +3,17 @@ import { ExcelUploadForm } from "./ExcelUploadForm";
 import NormsTable from "./NormsTable";
 import styles from "./ExcelUploadContainer.module.css";
 import { ToggleSwitch } from "./ToggleSwitch";
-
-type ExcelRow = Record<string, unknown>;
+import { CanonicalRow } from "~/types";
 
 type ExcelUploadContainerProps = {
-  onChange?: (rows: ExcelRow[]) => void;
+  onChange?: (rows: CanonicalRow[]) => void;
   preview?: boolean;
 };
 export default function ExcelUploadContainer({ onChange, preview = true }: ExcelUploadContainerProps) {
-  const [rows, setRows] = useState<any[] | null>(null);
+  const [rows, setRows] = useState<CanonicalRow[] | null>(null);
   const [showPreview, setShowPreview] = useState(true);
 
-  function handleParsed(parsed: any[]) {
+  function handleParsed(parsed: CanonicalRow[]) {
     setRows(parsed);
     setShowPreview(true);
     onChange?.(parsed);

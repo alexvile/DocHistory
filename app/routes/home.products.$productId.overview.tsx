@@ -17,11 +17,6 @@ import { Icon } from "~/components/ui/Icon";
 
 const ExcelUploadContainer = lazy(() => import("~/components/ExcelUploadContainer"));
 
-type ActionResponse = {
-  success: boolean;
-  errors: Record<string, string>;
-};
-
 // todo - to prevent extra request
 // 1) do diffCHange at frontend
 // 2) save frontentd in json and then send it to backend
@@ -84,17 +79,6 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   });
 
   return redirect(`/home/changes/${changeSetId}`);
-  // const userId = await getUserId(request);
-  // if (!userId) {
-  //   const res: ActionResponse = {
-  //     success: false,
-  //     errors: { global: "Unauthorized" },
-  //   };
-  //   return Response.json(res, { status: 401 });
-  // }
-  // todo - check role !!
-
-  return null;
 };
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
@@ -157,34 +141,6 @@ export function ErrorBoundary() {
   return <h1>Unknown error</h1>;
 }
 
-const test2 = [
-  {
-    name: "Базальтове волокно",
-    unit: "м2",
-    consumption: 0.4,
-    consumptionPerUnit: 0.5,
-    businessKey: "NAME:БАЗАЛЬТОВЕ ВОЛОКНО|DSTU:|UNIT:М2",
-  },
-  {
-    name: "Гвинт з головкою",
-    assortment: "4,2X14",
-    dstu: "21321",
-    unit: "м2",
-    consumption: 0.6,
-    consumptionPerUnit: 0.06,
-    notes: "Нотатка 2",
-    businessKey: "NAME:ГВИНТ З ГОЛОВКОЮ|DSTU:21321|UNIT:М2",
-  },
-  {
-    name: "Солідол",
-    dstu: "4366-76",
-    unit: "кг",
-    consumption: 0.005,
-    consumptionPerUnit: 0.005,
-    businessKey: "NAME:СОЛІДОЛ|DSTU:4366-76|UNIT:КГ",
-  },
-];
-
 export default function ProductNorm() {
   const loaderData = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
@@ -193,11 +149,9 @@ export default function ProductNorm() {
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
 
-  const [rows, setRows] = useState<any[] | null>(null);
-  // const [rows, setRows] = useState<any[] | null>(test2);
+  const [rows, setRows] = useState<CanonicalRow[] | null>(null);
 
   const [isEditable, setIsEditable] = useState(false);
-  const [comparison, setComparison] = useState(false);
 
   // todo - move to tsx if no need extend
   const enableEdit = () => {
@@ -260,12 +214,11 @@ export default function ProductNorm() {
       {actionData?.message && <div className="alert alert-warning">{actionData.message}</div>}
 
       <div className="products-details__main-form">
-        <div className={`columns ${comparison ? "columns--side-by-side" : ""}`}>
+        <div className="columns">
           {rows && (
             <>
               <div>
-                {!comparison && (
-                  <div className="flex items-center justify-between my-8">
+                <div className="flex items-center justify-between my-8">
                     <p className="margin-0 bold">Перевірте правильність сформованих даних</p>
                     <div>
                       <button type="button" className="button button--secondary" onClick={dialog.show}>
@@ -282,8 +235,7 @@ export default function ProductNorm() {
                         <Comparison currentNorms={loaderData.norms as CanonicalRow[]} newNorms={rows as CanonicalRow[]} />
                       </Ariakit.Dialog>
                     </div>
-                  </div>
-                )}
+                </div>
                 <p className="margin-0 mb-8 bold">Нові дані</p>
                 <NormsTable normsJson={rows} />{" "}
               </div>
