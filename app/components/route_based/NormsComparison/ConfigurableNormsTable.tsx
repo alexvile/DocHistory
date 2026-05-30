@@ -7,7 +7,6 @@ type Props = {
   visibleColumns: Set<ColumnKey>;
   mode: "before" | "after";
   diffMode?: boolean;
-  hideUnchangedRows?: boolean;
   diff?: NormDiff;
 };
 
@@ -31,7 +30,6 @@ export default function ConfigurableNormsTable({
   visibleColumns,
   mode,
   diffMode,
-  hideUnchangedRows,
   diff,
 }: Props) {
   const activeColumns = columns.filter((col) => visibleColumns.has(col.key));
@@ -41,7 +39,7 @@ export default function ConfigurableNormsTable({
   const rowsToRender = data
     .map((row, rowIndex) => ({ row, rowIndex }))
     .filter(({ row }) => {
-      if (!diffMode || !hideUnchangedRows || !diff) {
+      if (!diffMode || !diff) {
         return true;
       }
 
