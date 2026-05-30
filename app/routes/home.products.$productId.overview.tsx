@@ -1,6 +1,6 @@
 import invariant from "tiny-invariant";
 import { lazy, Suspense, useState } from "react";
-import { Form, isRouteErrorResponse, Outlet, redirect, useActionData, useLoaderData, useNavigation, useRouteError } from "@remix-run/react";
+import { Form, Outlet, redirect, useActionData, useLoaderData, useNavigation } from "@remix-run/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { getProductWithNormsById } from "~/server/products.server";
 import { requireUserId, requireUserRole } from "~/server/auth.server";
@@ -14,6 +14,7 @@ import clsx from "clsx";
 import * as Ariakit from "@ariakit/react";
 import Comparison from "~/components/route_based/NormsComparison/Comparison";
 import { Icon } from "~/components/ui/Icon";
+import RouteError from "~/components/ui/RouteError";
 
 const ExcelUploadContainer = lazy(() => import("~/components/ExcelUploadContainer"));
 
@@ -97,48 +98,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 };
 
 export function ErrorBoundary() {
-  const error = useRouteError();
-  // 🔹 HTTP errors (throw Response)
-  if (isRouteErrorResponse(error)) {
-    switch (error.status) {
-      case 404:
-        return (
-          <div>
-            <h1>Продукт не знайдено</h1>
-            <p>Запитуваний продукт не існує.</p>
-          </div>
-        );
-
-      case 409:
-        return (
-          <div>
-            <h1>Некоректний стан продукту</h1>
-            <p>Для цього продукту немає активних норм.</p>
-          </div>
-        );
-
-      default:
-        return (
-          <div>
-            <h1>{error.status}</h1>
-            <p>{error.statusText}</p>
-          </div>
-        );
-    }
-  }
-
-  // 🔥 Unexpected JS / runtime errors
-  if (error instanceof Error) {
-    return (
-      <div>
-        <h1>Щось пішло не так...</h1>
-        <pre>{error.message}</pre>
-      </div>
-    );
-  }
-
-  // ❓ Fallback (дуже рідко)
-  return <h1>Unknown error</h1>;
+  return <RouteError />;
 }
 
 export default function ProductNorm() {

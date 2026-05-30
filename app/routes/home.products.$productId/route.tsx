@@ -1,9 +1,10 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
-import { NavLink, Outlet, useActionData, useLoaderData, useParams } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import BackLink from "~/components/common/BackControls";
 import { LastChanged } from "~/components/LastChangedTooltip";
 import ProductNavigation from "~/components/ProductNavigation";
+import RouteError from "~/components/ui/RouteError";
 import { mapProductErrorToResponse } from "~/server/products.http.server";
 import { getProductWithNormsById } from "~/server/products.server";
 
@@ -15,6 +16,18 @@ export function links() {
 // todo - use props to path deeper
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.productId, "Missing productId param");
+  if (process.env.NODE_ENV === "development") {
+    const testErrorStatuses: Record<string, number> = {
+      "test-403": 403,
+      "test-404": 404,
+      "test-409": 409,
+      "test-500": 500,
+    };
+    const testErrorStatus = testErrorStatuses[params.productId];
+    if (testErrorStatus) {
+      throw new Response("Development test error", { status: testErrorStatus });
+    }
+  }
   try {
     const { product, currentSnapshot } = await getProductWithNormsById(params.productId);
     return {
@@ -27,7 +40,6 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 };
 
 export default function ProductLayout() {
-  const { productId } = useParams();
   const loaderData = useLoaderData<typeof loader>();
   // const actionData = useActionData<typeof action>();
 
@@ -48,4 +60,8 @@ export default function ProductLayout() {
       <Outlet />
     </div>
   );
+}
+
+export function ErrorBoundary() {
+  return <RouteError />;
 }
