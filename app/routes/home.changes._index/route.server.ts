@@ -60,7 +60,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   // 🔥 myOnly
   if (myOnly) {
-    if (role === "ADMIN") {
+    if (role === "ADMIN" || role === "APPROVER") {
       where.approverId = userId;
     }
 

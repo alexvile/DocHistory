@@ -79,11 +79,30 @@ export async function createChangeSet(params: CreateChangeSetParams) {
 type AssignApproverParams = {
   changeSetId: string;
   approverId: string;
+  createdById: string;
 };
 
-export async function assignApproverToChangeSet({ changeSetId, approverId }: AssignApproverParams) {
+export async function assignApproverToChangeSet({ changeSetId, approverId, createdById }: AssignApproverParams) {
+  const approver = await prisma.user.findFirst({
+    where: {
+      id: approverId,
+      role: "APPROVER",
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!approver) {
+    throw new Error("Approver not found");
+  }
+
   return prisma.changeSet.update({
-    where: { id: changeSetId },
+    where: {
+      id: changeSetId,
+      createdById,
+      status: "DRAFT",
+    },
     data: {
       approverId,
       status: "ON_REVIEW",

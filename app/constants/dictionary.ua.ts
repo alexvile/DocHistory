@@ -3,6 +3,7 @@ import type { Role } from "@prisma/client";
 export const DICTIONARY_UA = {
   ROLES: {
     ADMIN: "Адміністратор",
+    APPROVER: "Апрувер",
     COMMITTER: "Нормувальник",
     VIEWER: "Бухгалтер",
   } satisfies Record<Role, string>,

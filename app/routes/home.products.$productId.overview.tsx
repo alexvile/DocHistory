@@ -1,9 +1,9 @@
 import invariant from "tiny-invariant";
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Form, isRouteErrorResponse, Outlet, redirect, useActionData, useLoaderData, useNavigation, useRouteError } from "@remix-run/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { getProductWithNormsById } from "~/server/products.server";
-import { getUserId, requireUserRole } from "~/server/auth.server";
+import { requireUserId, requireUserRole } from "~/server/auth.server";
 import NormsTable from "~/components/NormsTable";
 import { CanonicalRow } from "~/types";
 import { validateProductNorms } from "~/utils/vanildateNewProduct.server";
@@ -31,10 +31,11 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   // invariant(params.productId, "Missing contactId param");
   // const userIdFromSession = await getUserId(request);
 
-  const userId = await getUserId(request);
-  if (!userId) {
-    throw new Response("Unauthorized", { status: 401 });
+  const role = await requireUserRole(request);
+  if (role !== "COMMITTER") {
+    throw new Response("Forbidden: Access denied", { status: 403 });
   }
+  const userId = await requireUserId(request);
 
   const formData = await request.formData();
   const raw = Object.fromEntries(formData);

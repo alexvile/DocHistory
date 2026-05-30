@@ -11,9 +11,9 @@ import {
   rejectChangeSet,
   viewChange,
 } from "~/server/changes.server";
-import { getUserId, requireUserRole } from "~/server/auth.server";
+import { requireUserId, requireUserRole } from "~/server/auth.server";
 import { getApprovers } from "~/server/user.server";
-import { ChangeSetVM, NormDiff, UserRoleVM } from "~/types";
+import { CanonicalRow, ChangeSetVM, NormDiff, UserRoleVM } from "~/types";
 import styles from "~/components/route_based/ChangeSetCard.module.css";
 import Badge from "~/components/ui/Badge";
 import translate from "~/utils/translate";
@@ -31,14 +31,18 @@ import { shortenFirstName } from "~/utils/formatName";
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.changeId, "Missing contactId param");
   const changeSetId = params.changeId;
-  const userId = await getUserId(request);
-  if (!userId) return null;
+  const role = await requireUserRole(request);
+  const userId = await requireUserId(request);
 
   const formData = await request.formData();
   const intent = formData.get("intent");
   console.log(intent);
 
   if (intent === "assign-approver") {
+    if (role !== "COMMITTER") {
+      throw new Response("Forbidden: Access denied", { status: 403 });
+    }
+
     const approverId = formData.get("approverId");
 
     if (!approverId) return null;
@@ -47,6 +51,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     await assignApproverToChangeSet({
       changeSetId,
       approverId,
+      createdById: userId,
     });
 
     return null;
@@ -54,6 +59,10 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   }
   // todo validation!!!!!!
   if (intent === "reject") {
+    if (role !== "APPROVER") {
+      throw new Response("Forbidden: Access denied", { status: 403 });
+    }
+
     await rejectChangeSet({
       changeSetId,
       decidedById: userId,
@@ -62,26 +71,20 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     // return redirect(request.url);
   }
 
-  // if role === commiter - status == draft and intent === 'remove'
-
   if (intent === "remove") {
-    console.log("remove");
-    // todo remove changset
-    // todo remove connected product snapshot
-    // todo redirect to home/changes
-  }
+    if (role !== "COMMITTER") {
+      throw new Response("Forbidden: Access denied", { status: 403 });
+    }
 
-  if (intent === "remove") {
     const changeSet = await getLightChangeById(changeSetId);
 
     if (!changeSet) {
       throw new Error("ChangeSet not found");
     }
 
-    // // ❌ не даємо видаляти підтверджені
-    // if (changeSet.status === "APPROVED") {
-    //   throw new Error("Cannot delete approved ChangeSet");
-    // }
+    if (changeSet.createdById !== userId || changeSet.status !== "DRAFT") {
+      throw new Response("Forbidden: Access denied", { status: 403 });
+    }
 
     //   if (!changeSet) {
     //   return {
@@ -109,6 +112,10 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   }
 
   if (intent === "approve") {
+    if (role !== "APPROVER") {
+      throw new Response("Forbidden: Access denied", { status: 403 });
+    }
+
     const res = await approveChangeSet({ changeSetId, decidedById: userId });
     console.log("approve", res);
     return null;
@@ -122,9 +129,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   // todo optimize
 
   const role = await requireUserRole(request);
-  const userId = await getUserId(request);
-
-  if (typeof userId !== "string") return null;
+  const userId = await requireUserId(request);
 
   let approvers: Awaited<ReturnType<typeof getApprovers>> = [];
   if (role === "COMMITTER") {
@@ -132,15 +137,6 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   }
 
   const changeId = params.changeId;
-  if (role === "VIEWER") {
-    await viewChange(userId, changeId);
-  }
-
-  // todo
-  // const viewersCount = await prisma.changeSetView.count({
-  //   where: { changeSetId: id },
-  // });
-
   const changeSet = await getPopulatedChangeSetById(params.changeId);
   if (!changeSet) {
     throw new Response(null, {
@@ -148,6 +144,14 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
       statusText: "Not Found",
     });
   }
+
+  if (role === "VIEWER") {
+    if (changeSet.status !== "APPROVED") {
+      throw new Response("Forbidden: Access denied", { status: 403 });
+    }
+    await viewChange(userId, changeId);
+  }
+
   return { role, userId, changeSet, approvers };
 };
 
@@ -263,7 +267,7 @@ function ChangeSetCardMeta({ createdBy, createdAt, status, approver, decidedAt, 
 
 type ChangeType = "added" | "removed" | "changed";
 
-function renderSummaryCard(type: ChangeType, items?: any[]) {
+function renderSummaryCard(type: ChangeType, items?: unknown[]) {
   if (!items || items.length === 0) return null;
 
   let icon: React.ReactNode;
@@ -276,19 +280,19 @@ function renderSummaryCard(type: ChangeType, items?: any[]) {
     case "added":
       icon = <Icon name="change-added" color="#2ea44f" />;
       label = <>Додано ({count})</>;
-      content = <NormsTable normsJson={items} />;
+      content = <NormsTable normsJson={items as CanonicalRow[]} />;
       break;
 
     case "removed":
       icon = <Icon name="change-removed" color="#cb2431" />;
       label = <>Видалено ({count})</>;
-      content = <NormsTable normsJson={items} />;
+      content = <NormsTable normsJson={items as CanonicalRow[]} />;
       break;
 
     case "changed":
       icon = <Icon name="change-modified" color="#1f72eb" />;
       label = <>Змінено ({count})</>;
-      content = <NormsTableWithChanges changes={items} />;
+      content = <NormsTableWithChanges changes={items as { before: CanonicalRow; after: CanonicalRow; fields: (keyof CanonicalRow)[] }[]} />;
       break;
 
     default:
@@ -321,9 +325,9 @@ function ChangeSetCardSummary({ diff }: ChangeSetCardSummaryProps) {
   );
 }
 
-function AdminActions({ id }: { id: string }) {
+function ApproverActions() {
   return (
-    <div role="group" aria-label="Admin actions" className="adminActions">
+    <div role="group" aria-label="Approver actions" className="adminActions">
       <Form method="post">
         <button type="submit" name="intent" value="reject" className="button button--primary button--critical">
           Відхилити
@@ -338,7 +342,7 @@ function AdminActions({ id }: { id: string }) {
   );
 }
 
-function CommitterActions({ id, approvers }: { id: string; approvers: any }) {
+function CommitterActions({ approvers }: { approvers: Awaited<ReturnType<typeof getApprovers>> }) {
   const [approverId, setApproverId] = useState<string | undefined>();
   const dialog = Ariakit.useDialogStore();
   const navigation = useNavigation();
@@ -391,21 +395,21 @@ function ViewerActions() {
 
 type ChangeSetCardActionsProps = {
   role: UserRoleVM;
-  id: string;
   status: ChangeSetVM["status"];
   userId: string;
   approverId: ChangeSetVM["approverId"];
-  approvers: any;
+  approvers: Awaited<ReturnType<typeof getApprovers>>;
 };
 
-function ChangeSetCardActions({ role, id, status, userId, approverId, approvers }: ChangeSetCardActionsProps) {
+function ChangeSetCardActions({ role, status, userId, approverId, approvers }: ChangeSetCardActionsProps) {
   switch (role) {
-    case "ADMIN":
+    case "APPROVER": {
       const isApprover = Boolean(approverId && approverId === userId);
-      return status === "ON_REVIEW" && isApprover && <AdminActions id={id} />;
+      return status === "ON_REVIEW" && isApprover && <ApproverActions />;
+    }
 
     case "COMMITTER":
-      return status === "DRAFT" ? <CommitterActions id={id} approvers={approvers} /> : null;
+      return status === "DRAFT" ? <CommitterActions approvers={approvers} /> : null;
 
     case "VIEWER":
     default:
@@ -415,8 +419,6 @@ function ChangeSetCardActions({ role, id, status, userId, approverId, approvers 
 
 export default function ChangeSet() {
   const data = useLoaderData<typeof loader>();
-  const navigation = useNavigation();
-  const isLoading = navigation.state === "loading";
   // skeleton
   // fade
   // overlay
@@ -431,7 +433,7 @@ export default function ChangeSet() {
   if (!data) return null;
 
   const { role, userId, changeSet, approvers } = data;
-  const { id, status, createdAt, diff, createdBy, approver, approverId, decidedAt, product, _count } = changeSet;
+  const { status, createdAt, diff, createdBy, approver, approverId, decidedAt, product, _count } = changeSet;
   return (
     <>
       <div>
@@ -456,7 +458,7 @@ export default function ChangeSet() {
             decidedAt={decidedAt}
           />
           <ChangeSetCardSummary diff={diff as NormDiff} />
-          <ChangeSetCardActions role={role} id={id} status={status} userId={userId} approverId={approverId} approvers={approvers} />
+          <ChangeSetCardActions role={role} status={status} userId={userId} approverId={approverId} approvers={approvers} />
         </div>
         <Outlet />
       </div>

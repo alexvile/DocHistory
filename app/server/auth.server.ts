@@ -126,7 +126,7 @@ export async function register(user: RegisterForm) {
       { status: 400 }
     );
   }
-  return createUserSession(newUser.id, newUser.role, "/home");
+  return newUser;
 }
 
 export async function login({ email, password }: LoginForm) {

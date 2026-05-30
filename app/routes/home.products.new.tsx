@@ -1,6 +1,6 @@
 import { ActionFunction, ActionFunctionArgs, LoaderFunction, LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { Form, useActionData, useNavigation } from "@remix-run/react";
-import { getUserId, requireUserRole } from "~/server/auth.server";
+import { requireUserId, requireUserRole } from "~/server/auth.server";
 import { createProduct } from "~/server/products.server";
 import { lazy, Suspense, useState } from "react";
 import { Icon } from "~/components/ui/Icon";
@@ -8,15 +8,17 @@ import TextField from "~/components/ui/TextField";
 import { validateProductForm } from "~/utils/vanildateNewProduct.server";
 import BackControls from "~/components/common/BackControls";
 import clsx from "clsx";
+import { CanonicalRow } from "~/types";
 
 const ExcelUploadContainer = lazy(() => import("~/components/ExcelUploadContainer"));
 
 // todo use _new !!!!
 export const action: ActionFunction = async ({ request }: ActionFunctionArgs) => {
-  const userId = await getUserId(request);
-  if (!userId) {
-    throw new Response("Unauthorized", { status: 401 });
+  const role = await requireUserRole(request);
+  if (role !== "COMMITTER") {
+    throw new Response("Forbidden: Access denied", { status: 403 });
   }
+  const userId = await requireUserId(request);
   const formData = await request.formData();
   const raw = Object.fromEntries(formData);
 
@@ -59,8 +61,9 @@ export const action: ActionFunction = async ({ request }: ActionFunctionArgs) =>
 
 export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
   const role = await requireUserRole(request);
-  // console.log(1212, role);
-  // return null;
+  if (role !== "COMMITTER") {
+    throw new Response("Forbidden: Access denied", { status: 403 });
+  }
   return null;
 };
 
@@ -76,7 +79,7 @@ export default function NewProduct() {
   const actionData = useActionData() as { errors?: Record<string, string> } | undefined;
   const errors = actionData?.errors;
   const hasErrors = errors && Object.keys(errors).length > 0;
-  const [rows, setRows] = useState<any[] | null>(null);
+  const [rows, setRows] = useState<CanonicalRow[] | null>(null);
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
   const isSaveDisabled = !rows || rows.length === 0 || isSubmitting;

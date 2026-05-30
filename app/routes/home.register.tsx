@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, json, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, json, LoaderFunction, LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { register, requireUserRole } from "~/server/auth.server";
 import { RegisterForm } from "~/server/types.server";
 import { validateEmail, validateName, validatePassword } from "~/server/validators.server";
@@ -6,6 +6,9 @@ import { Role } from "@prisma/client";
 import translate from "~/utils/translate";
 import { Form } from "@remix-run/react";
 import TextField from "~/components/ui/TextField";
+
+// todo - fix Role issue later
+const REGISTERABLE_ROLES = ["APPROVER", Role.COMMITTER, Role.VIEWER] as const;
 
 export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
   const role = await requireUserRole(request);
@@ -15,11 +18,19 @@ export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) =>
   return null;
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
+  const currentUserRole = await requireUserRole(request);
+  if (currentUserRole !== "ADMIN") {
+    throw new Response("Forbidden: Access denied", { status: 403 });
+  }
+
   // invariant(params.contactId, "Missing contactId param");
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
   // ts as FormdataProps and refactor
   const { firstName, lastName, email, password, role } = data as RegisterForm;
+  if (!REGISTERABLE_ROLES.includes(role as (typeof REGISTERABLE_ROLES)[number])) {
+    throw new Response("Invalid role", { status: 400 });
+  }
   // todo - etc
   // if (typeof email !== "string" || typeof password !== "string" || typeof firstName !== "string") {
   //   return json({ error: `Invalid Form Data`, form: action }, { status: 400 });
@@ -47,6 +58,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     lastName,
     role,
   });
+  return redirect("/home/users");
 };
 
 export default function Register() {
@@ -60,10 +72,9 @@ export default function Register() {
         <TextField type="email" label="Email" name="email" isRequired autoComplete="off" />
         <TextField type="password" label="Пароль" name="password" isRequired autoComplete="off" />
         <div className="form__field">
-          {/* todo - only superadmin can create ADMIN */}
           <label htmlFor="role" className="p-label">Роль</label>
           <select className="p-select" name="role" id="role">
-            {Object.values(Role).map((role) => (
+            {REGISTERABLE_ROLES.map((role) => (
               <option key={role} value={role}>
                 {translate("ROLES", role)}
               </option>

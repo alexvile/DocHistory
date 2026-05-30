@@ -39,7 +39,7 @@ export const getFilteredUsers = async (sortFilter: Prisma.UserOrderByWithRelatio
 export const getApprovers = async (userId: string) => {
   return await prisma.user.findMany({
     where: {
-      role: "ADMIN",
+      role: "APPROVER",
       id: { not: userId },
     },
     select: {
