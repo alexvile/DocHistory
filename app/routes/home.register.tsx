@@ -4,7 +4,7 @@ import { RegisterForm } from "~/server/types.server";
 import { validateEmail, validateName, validatePassword } from "~/server/validators.server";
 import { Role } from "@prisma/client";
 import translate from "~/utils/translate";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import TextField from "~/components/ui/TextField";
 
 const ADMIN_REGISTERABLE_ROLES = [Role.APPROVER, Role.COMMITTER, Role.VIEWER] as const;
@@ -63,22 +63,28 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       { status: 400 },
     );
   // todo - ts check
-  await register({
+  const result = await register({
     email,
     password,
     firstName,
     lastName,
     role,
   });
+  if (result instanceof Response) {
+    return result;
+  }
   return redirect("/home/users");
 };
 
 export default function Register() {
   const { registerableRoles } = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof action>();
 
   return (
     <>
       <h2>Register (only for admin)</h2>
+
+      {actionData && "error" in actionData && <div className="alert alert-warning">{actionData.error}</div>}
 
       <Form method="post" className="form form--register">
         <TextField label="Ім'я" name="firstName" isRequired />
