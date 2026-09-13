@@ -11,6 +11,7 @@ type TextFieldProps = {
   autoComplete?: React.HTMLInputAutoCompleteAttribute;
   type?: React.HTMLInputTypeAttribute;
   fullWidth?: boolean;
+  size?: "default" | "big";
 };
 
 export default function TextField({
@@ -22,6 +23,7 @@ export default function TextField({
   autoComplete,
   type = "text",
   fullWidth = false,
+  size = "default",
 }: TextFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -46,6 +48,7 @@ export default function TextField({
           <input
             type={inputType}
             className={clsx("p-input", {
+              "input-big": size === "big",
               "full-width": fullWidth,
             })}
             name={name}
@@ -69,6 +72,7 @@ export default function TextField({
         <input
           type={type}
           className={clsx("p-input", {
+            "input-big": size === "big",
             "full-width": fullWidth,
           })}
           name={name}

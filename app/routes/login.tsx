@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, json, LoaderFunction, LoaderFunctionArgs, redirect } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { Form, useNavigation } from "@remix-run/react";
 import TextField from "~/components/ui/TextField";
 import { getUserId, login } from "~/server/auth.server";
 import { LoginForm } from "~/server/types.server";
@@ -60,16 +60,26 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Login() {
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state !== "idle";
   return (
-    <>
-      <h1 className="text-center">Логін</h1>
-      <main>
-        <Form method="post" className="form form--vertical">
-          <TextField label="Email" type="email" name="email" autoComplete="username" isRequired fullWidth />
-          <TextField label="Пароль" type="password" name="password" autoComplete="current-password" isRequired fullWidth />
-          <button className="button button--primary">Відправити</button>
+    <main className="login-page">
+      <section className="login-card" aria-labelledby="login-heading">
+        <div className="login-brand">
+          {/* Add the enterprise logo here when the asset is available. */}
+          <p className="login-brand__name">Контроль виробничих норм</p>
+        </div>
+        <h1 id="login-heading" className="login-heading">Вхід до системи</h1>
+        <p className="login-description">Увійдіть у свій обліковий запис.</p>
+        <Form method="post" className="login-form">
+          <TextField label="Email" type="email" name="email" autoComplete="username" size="big" isRequired fullWidth />
+          <TextField label="Пароль" type="password" name="password" autoComplete="current-password" size="big" isRequired fullWidth />
+          <button type="submit" className="button button--primary button--brand button-big full-width" disabled={isSubmitting}>
+            {isSubmitting ? "Входимо…" : "Увійти"}
+          </button>
         </Form>
-      </main>
-    </>
+        <p className="login-help">Для отримання доступу зверніться до адміністратора.</p>
+      </section>
+    </main>
   );
 }
