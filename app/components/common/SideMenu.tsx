@@ -1,4 +1,5 @@
-import { Form, Link, NavLink } from "@remix-run/react";
+import { Form, Link, NavLink, useNavigation } from "@remix-run/react";
+import * as Ariakit from "@ariakit/react";
 import { Icon } from "../ui/Icon";
 import styles from "./SideMenu.module.css";
 import UserBar from "./UserBar";
@@ -10,6 +11,10 @@ type SideMenuProps = {
 };
 
 export default function SideMenu({ user, count }: SideMenuProps) {
+  const dialog = Ariakit.useDialogStore();
+  const navigation = useNavigation();
+  const isLoggingOut = navigation.state !== "idle" && navigation.formAction === "/logout";
+
   return (
     <aside className="aside">
       <UserBar user={user} />
@@ -61,11 +66,25 @@ export default function SideMenu({ user, count }: SideMenuProps) {
           </li>
         </ul>
       </nav>
-      <Form className="logoutForm" action="/logout" method="post">
-        <button type="submit" aria-label="Вийти" className="logout">
+      <div className="logoutForm">
+        <Ariakit.DialogDisclosure store={dialog} type="button" aria-label="Вийти" className="logout">
           <Icon name="logout" /> Вийти
-        </button>
-      </Form>
+        </Ariakit.DialogDisclosure>
+      </div>
+      <Ariakit.Dialog store={dialog} backdrop={<div className="backdrop" />} className="dialog">
+        <Ariakit.DialogHeading className="heading">Вийти з облікового запису?</Ariakit.DialogHeading>
+        <Ariakit.DialogDescription className="text-md margin-0">Ви точно впевнені?</Ariakit.DialogDescription>
+        <div className="flex justify-end gap-12">
+          <Ariakit.DialogDismiss type="button" disabled={isLoggingOut} className="button button--secondary">
+            Скасувати
+          </Ariakit.DialogDismiss>
+          <Form action="/logout" method="post">
+            <button type="submit" disabled={isLoggingOut} className="button button--primary">
+              {isLoggingOut ? "Виходимо…" : "Вийти"}
+            </button>
+          </Form>
+        </div>
+      </Ariakit.Dialog>
     </aside>
   );
 }
