@@ -78,6 +78,10 @@ function buildBreadcrumbs(pathname: string, matches: ReturnType<typeof useMatche
     return [{ label: "Домашня" }];
   }
 
+  if (normalizedPath === "/home/users") {
+    return [...breadcrumbs, { label: "Користувачі" }];
+  }
+
   if (normalizedPath.startsWith("/home/uikit")) {
     return [];
   }
