@@ -13,7 +13,7 @@ export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) =>
 export default function Help() {
   return (
     <>
-      Допомога
+      Допомога (в розробці)
       <Outlet />
     </>
   );
