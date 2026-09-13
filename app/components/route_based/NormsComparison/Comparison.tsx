@@ -6,6 +6,7 @@ import ConfigurableNormsTable from "./ConfigurableNormsTable";
 import { diffNorms } from "~/utils/comparison";
 import { ToggleSwitch } from "~/components/ToggleSwitch";
 import styles from "./Comparison.module.css";
+import { Icon } from "~/components/ui/Icon";
 
 type ComparisonProps = {
   currentNorms: CanonicalRow[];
@@ -64,12 +65,12 @@ export default function Comparison({ currentNorms, newNorms }: ComparisonProps) 
           <Ariakit.TooltipAnchor
             store={tooltip}
             render={<button type="button" />}
-            className={styles.helpButton}
+            className="button button--icon rounded-full"
             aria-label="Як користуватися порівнянням норм"
             aria-describedby={helpId}
             onClick={tooltip.show}
           >
-            <span aria-hidden="true">?</span>
+            <Icon name="question" />
           </Ariakit.TooltipAnchor>
           <Ariakit.Tooltip store={tooltip} id={helpId} className={styles.tooltip}>
             <p>Фільтри колонок показують або приховують відповідні колонки в обох таблицях. Самі дані не змінюються.</p>

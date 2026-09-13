@@ -24,33 +24,6 @@
   line-height: 1.5;
 }
 
-.helpButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: 1px solid #555;
-  border-radius: 50%;
-  background-color: #fff;
-  color: #555;
-  font: inherit;
-  font-weight: 700;
-  cursor: help;
-}
-
-.helpButton:hover {
-  background-color: #f3f3f3;
-  color: #111;
-}
-
-.helpButton:focus-visible {
-  outline: 2px solid #005bd3;
-  outline-offset: 2px;
-}
-
 .tooltip {
   z-index: 1000;
   max-width: min(420px, calc(100vw - 32px));
