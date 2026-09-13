@@ -4,9 +4,11 @@ import { debounce } from "~/utils/debounce";
 export function FilterBox({
   searchParams,
   setSearchParams,
+  placeholder = "Пошук за назвою",
 }: {
   searchParams: URLSearchParams;
   setSearchParams: (params: URLSearchParams) => void;
+  placeholder?: string;
 }) {
   const initialFilter = searchParams.get("q") ?? "";
   const [inputValue, setInputValue] = useState(initialFilter);
@@ -16,16 +18,18 @@ export function FilterBox({
   }, [searchParams]);
 
   useEffect(() => {
+    if (inputValue.trim() === (searchParams.get("q") ?? "")) return;
+
     const updateSearchParams = debounce(() => {
       const trimmed = inputValue.trim();
       const next = new URLSearchParams(searchParams);
 
       if (trimmed) {
         next.set("q", trimmed);
-        next.set("page", "1");
       } else {
         next.delete("q");
       }
+      next.delete("page");
 
       setSearchParams(next);
     }, 400);
@@ -45,7 +49,7 @@ export function FilterBox({
         type="search"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        placeholder="Пошук за назвою"
+        placeholder={placeholder}
         className="p-input"
       />
     </label>

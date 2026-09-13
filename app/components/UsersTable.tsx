@@ -22,7 +22,7 @@ export default function UsersTable({ users }: UsersListProps) {
                 to={`/home/changes?${role === "APPROVER" ? "approverId" : "createdById"}=${id}`}
                 aria-label={`Показати зміни: ${firstName} ${lastName}`}
               >
-                show
+                Показати
               </Link>
             )}
           </Table.Cell>

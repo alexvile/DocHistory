@@ -5,14 +5,17 @@ function hasGroups(config: SortConfig): config is Extract<SortConfig, { groups: 
 }
 
 export function SortBox({ searchParams, setSearchParams, config }: SortBoxProps) {
-  const sort = searchParams.get("sort") ?? "title";
-  const dir = searchParams.get("dir") ?? "asc";
+  const [defaultSort, defaultDir] = config.default.split(":");
+  const sort = searchParams.get("sort") ?? defaultSort;
+  const dir = searchParams.get("dir") ?? defaultDir;
 
   function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const [newSort, newDir] = e.target.value.split(":");
-    searchParams.set("sort", newSort);
-    searchParams.set("dir", newDir);
-    setSearchParams(searchParams);
+    const next = new URLSearchParams(searchParams);
+    next.set("sort", newSort);
+    next.set("dir", newDir);
+    next.delete("page");
+    setSearchParams(next);
   }
 
   return (

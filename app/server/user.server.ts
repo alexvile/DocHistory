@@ -17,12 +17,18 @@ export const createUser = async ({ email, firstName, lastName, role, password }:
   return { id: newUser.id, email, role };
 };
 
-export const getFilteredUsers = async (sortFilter: Prisma.UserOrderByWithRelationInput, whereFilter: Prisma.UserWhereInput) => {
-  // todo - pagination !!!!
+export const getUsersCount = (where: Prisma.UserWhereInput) => prisma.user.count({ where });
+
+export const getFilteredUsers = async (
+  sortFilter: Prisma.UserOrderByWithRelationInput[],
+  whereFilter: Prisma.UserWhereInput,
+  skip: number,
+  take: number,
+) => {
   return await prisma.user.findMany({
-    orderBy: {
-      ...sortFilter,
-    },
+    orderBy: sortFilter,
+    skip,
+    take,
     where: {
       ...whereFilter,
     },

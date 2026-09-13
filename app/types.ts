@@ -83,6 +83,7 @@ export type SortAndFilterBarProps = {
   showChangeStatusFilter?: boolean;
   filterConfigs?: FilterConfig[];
   showQueryFilter?: boolean;
+  queryPlaceholder?: string;
   showMyFilter?: boolean;
   showLimit?: boolean;
   productOptions?: ProductOption[];

@@ -14,6 +14,7 @@ export function SortAndFilterBar({
   sortConfig,
   showChangeStatusFilter = false,
   showQueryFilter = false,
+  queryPlaceholder,
   showLimit = true,
   showMyFilter = false,
   productOptions,
@@ -39,7 +40,7 @@ export function SortAndFilterBar({
   return (
     <div className={styles.filterBar}>
       {sortConfig && <SortBox searchParams={searchParams} setSearchParams={setSearchParams} config={sortConfig} />}
-      {showQueryFilter && <FilterBox searchParams={searchParams} setSearchParams={setSearchParams} />}
+      {showQueryFilter && <FilterBox searchParams={searchParams} setSearchParams={setSearchParams} placeholder={queryPlaceholder} />}
       {showChangeStatusFilter && <ChangeStatusFilter searchParams={searchParams} setSearchParams={setSearchParams} />}
       {productOptions?.length && (
         <ProductCombobox searchParams={searchParams} setSearchParams={setSearchParams} productOptions={productOptions} />
