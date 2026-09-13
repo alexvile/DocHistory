@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
+import * as Ariakit from "@ariakit/react";
 import { ColumnKey, columns } from "./constants";
 import { CanonicalRow } from "~/types";
 import ConfigurableNormsTable from "./ConfigurableNormsTable";
@@ -22,6 +23,8 @@ export type DiffRow = {
 // todo - finish norm change - NO CHANGES DETECTED
 
 export default function Comparison({ currentNorms, newNorms }: ComparisonProps) {
+  const helpId = useId();
+  const tooltip = Ariakit.useTooltipStore({ placement: "bottom-end" });
   const [visibleColumns, setVisibleColumns] = useState<Set<ColumnKey>>(new Set(columns.map((c) => c.key)));
 
   const toggleColumn = (key: ColumnKey) => {
@@ -56,7 +59,31 @@ export default function Comparison({ currentNorms, newNorms }: ComparisonProps) 
             </label>
           ))}
         </div>
-        <ToggleSwitch checked={diffMode} onChange={setDiffMode} label="Показати зміни" />
+        <div className={styles.actions}>
+          <ToggleSwitch checked={diffMode} onChange={setDiffMode} label="Показати зміни" />
+          <Ariakit.TooltipAnchor
+            store={tooltip}
+            render={<button type="button" />}
+            className={styles.helpButton}
+            aria-label="Як користуватися порівнянням норм"
+            aria-describedby={helpId}
+            onClick={tooltip.show}
+          >
+            <span aria-hidden="true">?</span>
+          </Ariakit.TooltipAnchor>
+          <Ariakit.Tooltip store={tooltip} id={helpId} className={styles.tooltip}>
+            <p>Фільтри колонок показують або приховують відповідні колонки в обох таблицях. Самі дані не змінюються.</p>
+            <p>Увімкніть «Показати зміни», щоб залишити лише змінені, додані та видалені рядки й позначити відмінності кольором.</p>
+            <p>Якщо перемикач вимкнений, відображаються всі поточні й нові рядки без підсвічування відмінностей, з урахуванням вибраних колонок.</p>
+            <p>Якщо приховати колонку зі зміненим значенням, його підсвічування також не буде видно.</p>
+            <div className={styles.legend} role="group" aria-label="Легенда змін">
+              <strong>Позначення в режимі «Показати зміни»:</strong>
+              <span><span className="norm-diff--changed">Жовтий</span> — змінене значення</span>
+              <span><span className="norm-diff--added">Зелений</span> — доданий рядок у «Нове»</span>
+              <span><span className="norm-diff--removed line-through opacity-70">Червоний, перекреслений</span> — видалений рядок у «Поточне»</span>
+            </div>
+          </Ariakit.Tooltip>
+        </div>
       </div>
 
       {/* 🔹 Tables */}

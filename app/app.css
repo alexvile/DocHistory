@@ -1006,14 +1006,22 @@ a.active {
 .configurableGroup .table-sticky-header {
   max-height: 70vh;
 }
-.yellow {
+.norm-diff--changed {
   color: rgb(177, 177, 21);
   font-weight: 700;
 }
+.norm-diff--added {
+  color: #27ae60;
+}
+
+.norm-diff--removed {
+  color: #eb5757;
+}
+
 .line-through {
   text-decoration: line-through;
-  opacity: 0.7;
 }
-.bg-green-100 {
-  color: green;
+
+.opacity-70 {
+  opacity: 0.7;
 }

@@ -62,17 +62,14 @@ export default function ConfigurableNormsTable({
           const isAdded = diff.added.some((r) => r.businessKey === key);
           const changedItem = diff.changed.find((c) => c.key === key);
 
-          // 🔴 removed → тільки ліва таблиця
           if (isRemoved && mode === "before") {
-            rowClass = "line-through opacity-50";
+            rowClass = "norm-diff--removed line-through opacity-70";
           }
 
-          // 🟢 added → тільки права таблиця
           if (isAdded && mode === "after") {
-            rowClass = "bg-green-100";
+            rowClass = "norm-diff--added";
           }
 
-          // 🟡 changed → обидві
           if (changedItem) {
             changedFields = changedItem.fields.filter(isColumnKey);
           }
@@ -97,7 +94,7 @@ export default function ConfigurableNormsTable({
               return (
                 <Table.Cell
                   key={col.key}
-                  className={isChanged ? "yellow" : ""}
+                  className={isChanged ? "norm-diff--changed" : ""}
                 >
                   {cellMap[col.key](row, rowIndex)}
                 </Table.Cell>
