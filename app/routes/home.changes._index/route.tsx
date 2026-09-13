@@ -14,6 +14,7 @@ export default function Changes() {
   return (
     <>
       <SortAndFilterBar
+        personFilters={data.personFilters}
         sortConfig={changesSortConfig}
         showChangeStatusFilter={data.role !== "VIEWER"}
         showMyFilter={data.role === "APPROVER" || data.role === "COMMITTER"}

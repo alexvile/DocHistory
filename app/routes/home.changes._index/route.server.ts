@@ -5,12 +5,34 @@ import { getFilteredChangeSets, getTotalChangesCount, getViewerChangeSets } from
 import changesSortConfig from "./changesSortConfig";
 import { getAllProducts } from "~/server/products.server";
 import { parsePaginationParams } from "~/utils/pagination.server";
+import { prisma } from "~/server/prisma.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const role = await requireUserRole(request);
   const userId = await requireUserId(request);
 
   const url = new URL(request.url);
+  const personFilters: { key: "createdById" | "approverId"; label: string }[] = [];
+  const personWhere: Prisma.ChangeSetWhereInput = {};
+  for (const key of ["createdById", "approverId"] as const) {
+    const id = url.searchParams.get(key);
+    if (id === null) continue;
+    if (!/^[a-f\d]{24}$/i.test(id)) {
+      throw new Response("Некоректний ідентифікатор користувача", { status: 400 });
+    }
+    const person = await prisma.user.findUnique({
+      where: { id },
+      select: { firstName: true, lastName: true },
+    });
+    if (!person) {
+      throw new Response("Користувача не знайдено", { status: 404 });
+    }
+    personWhere[key] = id;
+    personFilters.push({
+      key,
+      label: `${key === "createdById" ? "Автор" : "Погоджувач"}: ${person.firstName} ${person.lastName}`,
+    });
+  }
   // todo - can be optimized in future
   const products = await getAllProducts();
 
@@ -51,6 +73,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   // 🔥 базовий where
   const where: Prisma.ChangeSetWhereInput = {
+    AND: [personWhere],
     ...(productId && { productId }),
     ...(role === "VIEWER"
       ? { status: ChangeSetStatus.APPROVED }
@@ -95,6 +118,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   return {
+    personFilters,
     products,
     changes,
     page,

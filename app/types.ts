@@ -78,6 +78,7 @@ type ProductOption = {
 };
 
 export type SortAndFilterBarProps = {
+  personFilters?: { key: "createdById" | "approverId"; label: string }[];
   sortConfig?: SortConfig;
   showChangeStatusFilter?: boolean;
   filterConfigs?: FilterConfig[];

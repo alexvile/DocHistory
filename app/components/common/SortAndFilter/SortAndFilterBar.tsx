@@ -18,6 +18,7 @@ export function SortAndFilterBar({
   showMyFilter = false,
   productOptions,
   showCalendar = false,
+  personFilters = [],
 }: SortAndFilterBarProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const hasActiveFilters =
@@ -27,7 +28,9 @@ export function SortAndFilterBar({
     searchParams.has("page") ||
     searchParams.has("limit") ||
     searchParams.has("status") ||
-    searchParams.has("my");
+    searchParams.has("my") ||
+    searchParams.has("createdById") ||
+    searchParams.has("approverId");
 
   function handleClear() {
     setSearchParams({});
@@ -38,7 +41,7 @@ export function SortAndFilterBar({
       {sortConfig && <SortBox searchParams={searchParams} setSearchParams={setSearchParams} config={sortConfig} />}
       {showQueryFilter && <FilterBox searchParams={searchParams} setSearchParams={setSearchParams} />}
       {showChangeStatusFilter && <ChangeStatusFilter searchParams={searchParams} setSearchParams={setSearchParams} />}
-        {productOptions?.length && (
+      {productOptions?.length && (
         <ProductCombobox searchParams={searchParams} setSearchParams={setSearchParams} productOptions={productOptions} />
       )}
       {showCalendar && <DateRange searchParams={searchParams} setSearchParams={setSearchParams} />}
@@ -46,9 +49,25 @@ export function SortAndFilterBar({
       {showLimit && <LimitSelect searchParams={searchParams} setSearchParams={setSearchParams} />}
       {hasActiveFilters && (
         <button onClick={handleClear} className="button button--icon" aria-label="Очистити фільтра">
-         <Icon name="close" />
+          <Icon name="close" />
         </button>
       )}
+      {personFilters.map(({ key, label }) => (
+        <button
+          key={key}
+          type="button"
+          className="button"
+          aria-label={`Прибрати фільтр «${label}»`}
+          onClick={() => {
+            const next = new URLSearchParams(searchParams);
+            next.delete(key);
+            next.delete("page");
+            setSearchParams(next);
+          }}
+        >
+          {label} ×
+        </button>
+      ))}
     </div>
   );
 }
